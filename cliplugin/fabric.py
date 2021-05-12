@@ -8,6 +8,7 @@ import datetime
 
 # JvB added
 import logging
+import traceback
 ############################ INPUTs here... ############################
 
 # interfaces = ['ethernet-1/1.0', 'ethernet-1/2.0']
@@ -183,9 +184,17 @@ class Plugin(CliPlugin):
             data_child.link_status = self.int_oper_state_data.interface.get().subinterface.get().oper_state or '<Unknown>'
             data_child.ebgp_status = self.session_state_data.network_instance.get().protocols.get().bgp.get().neighbor.get().session_state or '<Unknown>'
             data_child.remote_router = self.lldp_neighbor_data.system.get().lldp.get().interface.get().neighbor.get().system_name or '<Unknown>'
-            data_child.remote_router = self.lldp_neighbor_data.system.get().lldp.get().interface.get().neighbor.get().system_name or '<Unknown>'
             data_child.remote_interface = self.lldp_neighbor_data.system.get().lldp.get().interface.get().neighbor.get().port_id or '<Unknown>'
             data_child.synchronizer.flush_fields(data_child)
+
+            # JvB Test gNMI connection; assumes DNS maps lldp name
+            # SRL sends with mgmt IP source -> must send to mgmt IP
+            try:
+              gnmi = GNMIHandlerLite.setup_connection( data_child.remote_router + ':57400' )
+              hostname = gnmi.get("/system/name/host-name")
+              logging.info( f'Remote GNMI result: {hostname}' )
+            except Exception as e:
+              logging.info(traceback.format_exc())
 
         result.synchronizer.flush_children(result.uplink_header)
         return result
