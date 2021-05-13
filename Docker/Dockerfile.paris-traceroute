@@ -1,0 +1,30 @@
+#
+# Usage: docker build . -t dublin-traceroute
+#
+# Use minimal Ubuntu 18.04? Not much better
+# FROM ubuntu:20.04 AS build
+FROM centos:7 AS build
+
+ENV WORKDIR=/work
+# ENV DEBIAN_FRONTEND=noninteractive
+
+# Install tools needed for development
+# RUN apt-get update && \
+#    apt-get upgrade --yes && \
+#    apt-get install -y --no-install-recommends tzdata && \
+#    apt-get install -y build-essential git curl cmake3 vim 
+
+RUN yum update -y && \
+    yum install -y autoconf git make libtool libc6-dev 
+
+WORKDIR $WORKDIR
+
+RUN mkdir -p $WORKDIR && \ 
+    git clone https://github.com/libparistraceroute/libparistraceroute.git && \
+    cd libparistraceroute && \
+    mkdir m4 && \
+    ./autogen.sh && \
+    ./configure && \
+    make && make install
+
+CMD ["/bin/bash"]

@@ -20,9 +20,12 @@ COPY cliplugin/*.py /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/
 RUN sudo sh -c ' echo "fabric = srlinux.mgmt.cli.plugins.reports.fabric:Plugin" >> /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux-0.1-py3.6.egg-info/entry_points.txt'
 
 # Add Dublin trace-route
-RUN sudo curl -4sL https://copr.fedorainfracloud.org/coprs/teknoraver/networking/repo/epel-7/teknoraver-networking-epel-7.repo -o /etc/yum.repos.d/teknoraver-networking-epel-7.repo && \
-    sudo yum install -y epel-release && \
-    sudo yum install -y dublin-traceroute
+#RUN sudo curl -4sL https://copr.fedorainfracloud.org/coprs/teknoraver/networking/repo/epel-7/teknoraver-networking-epel-7.repo -o /etc/yum.repos.d/teknoraver-networking-epel-7.repo && \
+#    sudo yum install -y epel-release && \
+#    sudo yum install -y dublin-traceroute
+
+# Add Paris traceroute
+COPY --from=paris-traceroute /usr/local/bin/paris-* /usr/bin/
 
 # Using a build arg to set the release tag, set a default for running docker build manually
 ARG SRL_AUTO_CONFIG_RELEASE="[custom build]"
