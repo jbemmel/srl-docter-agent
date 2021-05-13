@@ -25,7 +25,8 @@ RUN sudo sh -c ' echo "fabric = srlinux.mgmt.cli.plugins.reports.fabric:Plugin" 
 #    sudo yum install -y dublin-traceroute
 
 # Add Paris traceroute
-COPY --from=paris-traceroute /usr/local/bin/paris-* /usr/bin/
+COPY --from=paris-traceroute /usr/local/bin/paris-* /usr/local/bin/
+COPY --from=paris-traceroute /usr/local/lib/* /usr/local/lib/
 
 # Using a build arg to set the release tag, set a default for running docker build manually
 ARG SRL_AUTO_CONFIG_RELEASE="[custom build]"
