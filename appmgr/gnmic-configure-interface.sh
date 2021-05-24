@@ -46,7 +46,8 @@ EOF
   --replace-path /interface[name=$INTF] --replace-file $temp_file
 exitcode=$?
 
-# Set loopback IP, TODO only once not every LLDP message
+# Set loopback IP, if provided
+if [[ "$ROUTER_ID" != "" ]]; then
 cat > $temp_file << EOF
 {
   "admin-state": "enable",
@@ -68,6 +69,7 @@ EOF
 /sbin/ip netns exec srbase-mgmt /usr/local/bin/gnmic -a 127.0.0.1:57400 -u admin -p admin --skip-verify -e json_ietf set \
   --replace-path /interface[name=lo0] --replace-file $temp_file
 exitcode+=$?
+fi
 
 if [[ "$PEER_IP" == "*" ]]; then
 IFS='' read -r -d '' DYNAMIC_NEIGHBORS << EOF

@@ -125,8 +125,10 @@ def Handle_Notification(obj, state):
             _r = 1
             link_index = state.max_spines * (int(my_port_id) - 1) + int(to_port_id) - 1
 
-          if m: # Only for valid to_port
+          router_id_changed = False
+          if m and not hasattr(state,"router_id"): # Only for valid to_port, if not set
             state.router_id = f"1.1.{_r}.{to_port_id}"
+            router_id_changed = True
 
           # Configure IP on interface and BGP for leaves
           script_update_interface(
@@ -135,7 +137,7 @@ def Handle_Notification(obj, state):
               obj.lldp_neighbor.data.system_description if m else 'host',
               str( list(state.peerlinks[link_index].hosts())[0] ) if _r==1 else '*',
               state.base_as + (int(to_port_id) if _r==1 else 0),
-              state.router_id,
+              state.router_id if router_id_changed else "",
               state.base_as if (state.role == 'ROLE_leaf') else state.base_as + 1,
               state.base_as if (state.role == 'ROLE_leaf') else state.base_as + state.max_leaves,
               state.peerlinks_prefix
