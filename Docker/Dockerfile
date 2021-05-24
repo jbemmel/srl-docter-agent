@@ -1,6 +1,8 @@
 FROM registry.srlinux.dev/pub/srlinux:latest
 
-RUN sudo curl -sL https://github.com/karimra/gnmic/releases/download/v0.10.0/gnmic_0.10.0_Linux_x86_64.rpm -o /tmp/gnmic.rpm && sudo yum localinstall -y /tmp/gnmic.rpm
+# CLI does not have permissions to enter namespaces
+# RUN sudo sh -c '. /opt/srlinux/python/virtual-env/bin/activate && pip3 install nsenter'
+RUN sudo curl -sL https://github.com/karimra/gnmic/releases/download/v0.13.0/gnmic_0.13.0_Linux_x86_64.rpm -o /tmp/gnmic.rpm && sudo yum localinstall -y /tmp/gnmic.rpm
 
 # --chown=srlinux:srlinux
 # COPY ./appmgr/ /etc/opt/srlinux/appmgr/ # doesn't stick
@@ -15,9 +17,10 @@ COPY 42_sr_copy_custom_appmgr.sh /opt/srlinux/bin/bootscript/
 # sudo docker run -it --privileged -v /tmp/var_lib_docker:/var/lib/balena-engine srl/auto-config:latest
 RUN curl -sfL https://balena.io/engine/install.sh | sh
 
-# Integrate CLI agent
+# Integrate CLI agent, change CLI network namespace to 'default'
 COPY cliplugin/*.py /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux/mgmt/cli/plugins/reports/
 RUN sudo sh -c ' echo "fabric = srlinux.mgmt.cli.plugins.reports.fabric:Plugin" >> /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux-0.1-py3.6.egg-info/entry_points.txt'
+RUN sudo sed -i 's|/opt/srlinux/bin/sr_cli|/usr/sbin/ip netns exec srbase-mgmt /opt/srlinux/bin/sr_cli|g' /opt/srlinux/bin/ssh_sr_cli
 
 # Add Dublin trace-route
 #RUN sudo curl -4sL https://copr.fedorainfracloud.org/coprs/teknoraver/networking/repo/epel-7/teknoraver-networking-epel-7.repo -o /etc/yum.repos.d/teknoraver-networking-epel-7.repo && \

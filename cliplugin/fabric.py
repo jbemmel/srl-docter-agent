@@ -3,12 +3,13 @@ from srlinux.mgmt.cli import CliPlugin
 from srlinux.schema import FixedSchemaRoot
 from srlinux.syntax import Syntax
 from srlinux.location import build_path
-from srlinux.mgmt.cli.plugins.reports.gnmi_lite import GNMIHandlerLite
+# from srlinux.mgmt.cli.plugins.reports.gnmi_lite import GNMIHandlerLite
 import datetime
 
 # JvB added
 import logging
 import traceback
+# from nsenter import Namespace
 ############################ INPUTs here... ############################
 
 # interfaces = ['ethernet-1/1.0', 'ethernet-1/2.0']
@@ -150,16 +151,21 @@ class Plugin(CliPlugin):
     def _populate_peer_list(self, state, group):
         peer_list_path = build_path(f'/network-instance[name={uplink_network_instance}]/protocols/bgp/neighbor/peer-group')
         peer_list_data = state.server_data_store.stream_data(peer_list_path, recursive=True)
-        logging.info(f'JvB peer_list_data={peer_list_data}')
+        # logging.info(f'JvB peer_list_data={peer_list_data}')
         peer_list = []
-        for peer in peer_list_data.network_instance.get().protocols.get().bgp.get().neighbor.items():
-            if peer.peer_group == group :
-                peer_list.append(peer.peer_address)
+        try: # peer_list_data.network_instance may not exist
+           for peer in peer_list_data.network_instance.get().protocols.get().bgp.get().neighbor.items():
+               if peer.peer_group == group:
+                   # logging.info(f'JvB: appending {peer.peer_address}')
+                   peer_list.append(peer.peer_address)
+        except Exception as e:
+           logging.error(f'JvB _populate_peer_list Ex={e}')
+        # logging.info(f'JvB->peer_list={peer_list}')
         return peer_list
 
     # JvB added
     def _get_peer_interfaces(self, state, peer_addr):
-        logging.info(f'JvB _get_peer_interfaces peer_addr={peer_addr}')
+        # logging.info(f'JvB _get_peer_interfaces peer_addr={peer_addr}')
         nexthop_list_path = build_path(f'/network-instance[name={uplink_network_instance}]/route-table/next-hop')
         nexthop_data = state.server_data_store.stream_data(nexthop_list_path, recursive=True)
         intf_list = []
@@ -189,12 +195,14 @@ class Plugin(CliPlugin):
 
             # JvB Test gNMI connection; assumes DNS maps lldp name
             # SRL sends with mgmt IP source -> must send to mgmt IP
-            try:
-              gnmi = GNMIHandlerLite.setup_connection( data_child.remote_router + ':57400' )
-              hostname = gnmi.get("/system/name/host-name")
-              logging.info( f'Remote GNMI result: {hostname}' )
-            except Exception as e:
-              logging.info(traceback.format_exc())
+            #try:
+            #  gnmi = GNMIHandlerLite.setup_connection( data_child.remote_router + ':57400' )
+              # with Namespace('/var/run/netns/srbase-default', 'net'):
+              # gnmi = GNMIHandlerLite.setup_connection( uplink + ':57400' )
+            #  hostname = gnmi.get("/system/name/host-name")
+            #  logging.info( f'Remote GNMI result: {hostname}' )
+            #except Exception as e:
+            #  logging.info(traceback.format_exc())
 
         result.synchronizer.flush_children(result.uplink_header)
         return result
