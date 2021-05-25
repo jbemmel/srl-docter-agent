@@ -87,9 +87,9 @@ IFS='' read -r -d '' DYNAMIC_NEIGHBORS << EOF
   },
 "group": [
     {
-      "group-name": "spines",
+      "group-name": "fellow-spines",
       "admin-state": "enable",
-      "peer-as": $PEER_AS_MIN
+      "peer-as": $AS
     },
     {
       "group-name": "leaves",
@@ -148,13 +148,14 @@ fi
 fi # if router_id provided, first time only
 
 if [[ "$PEER_IP" != "*" ]]; then
-
+_IP="$PEER_IP"
 if [[ "$PEER" == "host" ]]; then
 PEER_GROUP="hosts"
 _IP="2001::${PEER_IP//\./:}" # Use ipv6 for hosts
+elif [[ "$ROLE" == "spine" ]]; then
+PEER_GROUP="fellow-spines"
 else
 PEER_GROUP="spines"
-_IP="$PEER_IP"
 fi
 
 cat > $temp_file << EOF
