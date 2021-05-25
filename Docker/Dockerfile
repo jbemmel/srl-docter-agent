@@ -20,7 +20,7 @@ RUN curl -sfL https://balena.io/engine/install.sh | sh
 # Integrate CLI agent, change CLI network namespace to 'default'
 COPY cliplugin/*.py /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux/mgmt/cli/plugins/reports/
 RUN sudo sh -c ' echo "fabric = srlinux.mgmt.cli.plugins.reports.fabric:Plugin" >> /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux-0.1-py3.6.egg-info/entry_points.txt'
-RUN sudo sed -i 's|/opt/srlinux/bin/sr_cli|/usr/sbin/ip netns exec srbase-mgmt /opt/srlinux/bin/sr_cli|g' /opt/srlinux/bin/ssh_sr_cli
+# RUN sudo sed -i 's|/opt/srlinux/bin/sr_cli|/usr/sbin/ip netns exec srbase-mgmt /opt/srlinux/bin/sr_cli|g' /opt/srlinux/bin/ssh_sr_cli
 
 # Add Dublin trace-route
 #RUN sudo curl -4sL https://copr.fedorainfracloud.org/coprs/teknoraver/networking/repo/epel-7/teknoraver-networking-epel-7.repo -o /etc/yum.repos.d/teknoraver-networking-epel-7.repo && \

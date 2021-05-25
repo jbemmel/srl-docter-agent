@@ -19,6 +19,14 @@ import sdk_service_pb2_grpc
 import lldp_service_pb2
 import config_service_pb2
 import sdk_common_pb2
+
+# To report state back
+import telemetry_service_pb2
+import telemetry_service_pb2_grpc
+
+# See opt/rh/rh-python36/root/usr/lib/python3.6/site-packages/sdk_protos/bfd_service_pb2.py
+import bfd_service_pb2
+
 from logging.handlers import RotatingFileHandler
 
 ############################################################
@@ -44,10 +52,15 @@ def Subscribe(stream_id, option):
     op = sdk_service_pb2.NotificationRegisterRequest.AddSubscription
     if option == 'lldp':
         entry = lldp_service_pb2.LldpNeighborSubscriptionRequest()
+        # TODO filter out 'mgmt0' interfaces
         request = sdk_service_pb2.NotificationRegisterRequest(op=op, stream_id=stream_id, lldp_neighbor=entry)
     elif option == 'cfg':
         entry = config_service_pb2.ConfigSubscriptionRequest()
+        entry.key.js_path = '.' + agent_name
         request = sdk_service_pb2.NotificationRegisterRequest(op=op, stream_id=stream_id, config=entry)
+    elif option == 'bfd':
+        entry = bfd_service_pb2.BfdSessionSubscriptionRequest()
+        request = sdk_service_pb2.NotificationRegisterRequest(op=op, stream_id=stream_id, bfd_session=entry)
     subscription_response = stub.NotificationRegister(request=request, metadata=metadata)
     print('Status of subscription response for {}:: {}'.format(option, subscription_response.status))
 
@@ -65,8 +78,38 @@ def Subscribe_Notifications(stream_id):
     # Subscribe to config changes, first
     Subscribe(stream_id, 'cfg')
 
-    ##Subscribe to LLDP Neighbor Notifications
+    Subscribe(stream_id, 'bfd')  # Test
+
+    ##Subscribe to LLDP Neighbor Notifications -> moved
     ## Subscribe(stream_id, 'lldp')
+
+############################################################
+## Function to populate state of agent config
+## using telemetry -- add/update info from state
+############################################################
+def Add_Telemetry(js_path, js_data):
+    telemetry_stub = telemetry_service_pb2_grpc.SdkMgrTelemetryServiceStub(channel)
+    telemetry_update_request = telemetry_service_pb2.TelemetryUpdateRequest()
+    telemetry_info = telemetry_update_request.state.add()
+    telemetry_info.key.js_path = js_path
+    telemetry_info.data.json_content = js_data
+    logging.info(f"Telemetry_Update_Request :: {telemetry_update_request}")
+    telemetry_response = telemetry_stub.TelemetryAddOrUpdate(request=telemetry_update_request, metadata=metadata)
+    return telemetry_response
+
+############################################################
+## Function to populate state fields of the agent
+## It updates command: info from state fib-agent
+############################################################
+def Update_State(name, peer_ip, bgp_neighbor_count=666):
+    js_path = '.' + agent_name + '.agent_result{.name=="' + name + '"}'
+    data = {
+      "peer" : { "value" : peer_ip },
+      "bgp_neighbor_count" : bgp_neighbor_count
+    }
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+    logging.info(f"Telemetry_Update_Response :: {response}")
+    return True
 
 ##################################################################
 ## Proc to process the config Notifications received by auto_config_agent
@@ -75,7 +118,7 @@ def Subscribe_Notifications(stream_id):
 def Handle_Notification(obj, state):
     if obj.HasField('config') and obj.config.key.js_path != ".commit.end":
         logging.info(f"GOT CONFIG :: {obj.config.key.js_path}")
-        if "auto_config" in obj.config.key.js_path:
+        if agent_name in obj.config.key.js_path:
             logging.info(f"Got config for agent, now will handle it :: \n{obj.config}\
                             Operation :: {obj.config.op}\nData :: {obj.config.data.json}")
             if obj.config.op == 2:
@@ -84,6 +127,7 @@ def Handle_Notification(obj, state):
                 #    Update_Result(file_name, action='delete')
                 response=stub.AgentUnRegister(request=sdk_service_pb2.AgentRegistrationRequest(), metadata=metadata)
                 logging.info('Handle_Config: Unregister response:: {}'.format(response))
+                state = State() # Reset state, works?
             else:
                 json_acceptable_string = obj.config.data.json.replace("'", "\"")
                 data = json.loads(json_acceptable_string)
@@ -148,8 +192,9 @@ def Handle_Notification(obj, state):
                  state.peerlinks_prefix
              )
              setattr( state, link_name, _ip )
+             Update_State( link_name, _ip, 666 )
     else:
-        logging.info(f"Unexpected notification : {obj}")
+        logging.info(f"Unexpected notification (BFD?) : {obj}")
 
     # dont subscribe to LLDP now
     return False
