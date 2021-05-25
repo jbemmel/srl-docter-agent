@@ -168,7 +168,7 @@ def get_app_id(app_name):
 # JvB: Invokes gnmic client to update interface configuration, via bash script
 ###########################
 def script_update_interface(role,name,ip,peer,peer_ip,_as,router_id,peer_as_min,peer_as_max,peer_links):
-    logging.info(f'Calling update script: name={name} ip={ip} peer_ip={peer_ip} peer={peer} as={_as} ' +
+    logging.info(f'Calling update script: role={role} name={name} ip={ip} peer_ip={peer_ip} peer={peer} as={_as} ' +
                  f'router_id={router_id} peer_links={peer_links}' )
     try:
        script_proc = subprocess.Popen(['/etc/opt/srlinux/appmgr/gnmic-configure-interface.sh',

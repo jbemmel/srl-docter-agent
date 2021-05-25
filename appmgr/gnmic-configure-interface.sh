@@ -10,7 +10,7 @@ AS="$6"
 ROUTER_ID="$7"
 PEER_AS_MIN="$8"
 PEER_AS_MAX="$9"
-LINK_PREFIX="$10"  # IP subnet used for allocation of IPs to BGP peers
+LINK_PREFIX="${10}"  # IP subnet used for allocation of IPs to BGP peers
 
 temp_file=$(mktemp --suffix=.json)
 _IP127="${IP_PREFIX//\/31/\/127}"
