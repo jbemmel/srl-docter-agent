@@ -1,0 +1,37 @@
+name: demonet
+
+topology:
+  kinds:
+    srl:
+      type: ixr6 # See https://www.nokia.com/networks/products/7250-interconnect-router/
+      # Uses custom container image containing auto-config agent
+      # image: registry.srlinux.dev/pub/srlinux # latest, or srlinux:21.3.1-410
+      image: srl/docter-agent:latest
+      license: ../license.key
+      binds:
+      - balena:/var/lib/balena-engine
+
+  nodes:
+    # Site1 (THN)
+    site1-c1: { kind: srl, config: auto-spine.cfg.json }
+    # site1-c2: { kind: srl, config: auto-spine.cfg.json }
+    site1-c3: { kind: srl, config: auto-spine.cfg.json }
+    site1-c4: { kind: srl, config: auto-spine.cfg.json }
+
+    site1-e1:  { kind: srl, config: auto-leaf.cfg.json }
+    site1-e2:  { kind: srl, config: auto-leaf.cfg.json }
+    site1-e3:  { kind: srl, config: auto-leaf.cfg.json }
+    site1-e4:  { kind: srl, config: auto-leaf.cfg.json }
+
+  links:
+  # Core-core links
+  - endpoints: ["site1-c1:e1-1","site1-c3:e1-1"]
+
+  - endpoints: ["site1-e1:e1-1","site1-c3:e1-5"]
+  - endpoints: ["site1-e1:e1-2","site1-c4:e1-5"]
+  - endpoints: ["site1-e2:e1-1","site1-c3:e1-6"]
+  - endpoints: ["site1-e2:e1-2","site1-c4:e1-6"]
+  - endpoints: ["site1-e3:e1-1","site1-c3:e1-7"]
+  - endpoints: ["site1-e3:e1-2","site1-c4:e1-7"]
+  - endpoints: ["site1-e4:e1-1","site1-c3:e1-8"]
+  - endpoints: ["site1-e4:e1-2","site1-c4:e1-8"]
