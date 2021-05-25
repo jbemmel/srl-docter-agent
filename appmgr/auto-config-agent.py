@@ -109,6 +109,7 @@ def Handle_Notification(obj, state):
         logging.info(f"process LLDP notification : {obj}")
         my_port = obj.lldp_neighbor.key.interface_name  # ethernet-1/x
         to_port = obj.lldp_neighbor.data.port_id
+        peer_sys_name = obj.lldp_neighbor.data.system_name
 
         if my_port != 'mgmt0' and to_port != 'mgmt0' and hasattr(state,'peerlinks'):
           my_port_id = re.split("/",re.split("-",my_port)[1])[1]
@@ -118,7 +119,8 @@ def Handle_Notification(obj, state):
           else:
             to_port_id = my_port_id  # FRR Linux host or other element not sending port name
 
-          if (state.role == 'ROLE_spine'):
+          # For spine-spine connections, build iBGP
+          if (state.role == 'ROLE_spine') and 'spine' not in peer_sys_name:
             _r = 0
             link_index = state.max_spines * (int(to_port_id) - 1) + int(my_port_id) - 1
           else:
@@ -135,6 +137,7 @@ def Handle_Notification(obj, state):
           if not hasattr(state,link_name):
              _ip = str( list(state.peerlinks[link_index].hosts())[_r] ) + '/31'
              script_update_interface(
+                 'spine' if state.role == 'ROLE_spine' else 'leaf',
                  my_port,
                  _ip,
                  obj.lldp_neighbor.data.system_description if m else 'host',
@@ -164,12 +167,12 @@ def get_app_id(app_name):
 ###########################
 # JvB: Invokes gnmic client to update interface configuration, via bash script
 ###########################
-def script_update_interface(name,ip,peer,peer_ip,_as,router_id,peer_as_min,peer_as_max,peer_links):
+def script_update_interface(role,name,ip,peer,peer_ip,_as,router_id,peer_as_min,peer_as_max,peer_links):
     logging.info(f'Calling update script: name={name} ip={ip} peer_ip={peer_ip} peer={peer} as={_as} ' +
                  f'router_id={router_id} peer_links={peer_links}' )
     try:
        script_proc = subprocess.Popen(['/etc/opt/srlinux/appmgr/gnmic-configure-interface.sh',
-                                       name,ip,peer,peer_ip,str(_as),router_id,
+                                       role,name,ip,peer,peer_ip,str(_as),router_id,
                                        str(peer_as_min),str(peer_as_max),peer_links],
                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
        stdoutput, stderroutput = script_proc.communicate()

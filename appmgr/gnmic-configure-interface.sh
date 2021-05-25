@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Sample script to provision SRLinux using gnmic
-
-INTF="$1"
-IP_PREFIX="$2"
-PEER="$3"         # 'host' for Linux nodes
-PEER_IP="$4"
-AS="$5"
-ROUTER_ID="$6"
-PEER_AS_MIN="$7"
-PEER_AS_MAX="$8"
-LINK_PREFIX="$9"  # IP subnet used for allocation of IPs to BGP peers
+ROLE="$1"  # "spine" or "leaf"
+INTF="$2"
+IP_PREFIX="$3"
+PEER="$4"         # 'host' for Linux nodes
+PEER_IP="$5"
+AS="$6"
+ROUTER_ID="$7"
+PEER_AS_MIN="$8"
+PEER_AS_MAX="$9"
+LINK_PREFIX="$10"  # IP subnet used for allocation of IPs to BGP peers
 
 temp_file=$(mktemp --suffix=.json)
 _IP127="${IP_PREFIX//\/31/\/127}"
@@ -69,9 +69,8 @@ EOF
 /sbin/ip netns exec srbase-mgmt /usr/local/bin/gnmic -a 127.0.0.1:57400 -u admin -p admin --skip-verify -e json_ietf set \
   --replace-path /interface[name=lo0] --replace-file $temp_file
 exitcode+=$?
-fi
 
-if [[ "$PEER_IP" == "*" ]]; then
+if [[ "$ROLE" == "spine" ]]; then
 IFS='' read -r -d '' DYNAMIC_NEIGHBORS << EOF
 "dynamic-neighbors": {
     "accept": {
@@ -87,6 +86,11 @@ IFS='' read -r -d '' DYNAMIC_NEIGHBORS << EOF
     }
   },
 "group": [
+    {
+      "group-name": "spines",
+      "admin-state": "enable",
+      "peer-as": $PEER_AS_MIN
+    },
     {
       "group-name": "leaves",
       "admin-state": "enable"
@@ -141,6 +145,7 @@ if [[ "$PEER" != "host" ]]; then
   --update-path /network-instance[name=default]/protocols/bgp --update-file $temp_file
 exitcode+=$?
 fi
+fi # if router_id provided, first time only
 
 if [[ "$PEER_IP" != "*" ]]; then
 

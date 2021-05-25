@@ -13,7 +13,7 @@ topology:
 
   nodes:
     # Site1 (THN)
-    site1-c1: { kind: srl, config: auto-spine.cfg.json }
+    site1-c1-spine: { kind: srl, config: auto-spine.cfg.json }
     # site1-c2: { kind: srl, config: auto-spine.cfg.json }
     site1-c3: { kind: srl, config: auto-spine.cfg.json }
     site1-c4: { kind: srl, config: auto-spine.cfg.json }
@@ -25,7 +25,7 @@ topology:
 
   links:
   # Core-core links
-  - endpoints: ["site1-c1:e1-1","site1-c3:e1-1"]
+  - endpoints: ["site1-c1-spine:e1-1","site1-c3:e1-1"]
 
   - endpoints: ["site1-e1:e1-1","site1-c3:e1-5"]
   - endpoints: ["site1-e1:e1-2","site1-c4:e1-5"]
