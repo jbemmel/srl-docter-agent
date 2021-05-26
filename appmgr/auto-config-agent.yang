@@ -62,18 +62,18 @@ module auto_config_agent {
             }
 
             // State
-            list agent-result {
-                key name;
+            list peer-status {
+                key peer-ip;
                 config false;
 
-                leaf name {
+                leaf peer-ip {
                   type string;
                 }
-                leaf peer {
+                leaf status {
                   type string;
                 }
-                leaf bgp-neighbor-count {
-                  type uint64;
+                leaf bgp-health {
+                  type string;
                 }
             }
         }

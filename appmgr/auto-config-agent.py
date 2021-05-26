@@ -101,11 +101,11 @@ def Add_Telemetry(js_path, js_data):
 ## Function to populate state fields of the agent
 ## It updates command: info from state fib-agent
 ############################################################
-def Update_State(name, peer_ip, bgp_neighbor_count=666):
-    js_path = '.' + agent_name + '.agent_result{.name=="' + name + '"}'
+def Update_State(peer_ip, status, bgp_health='?'):
+    js_path = '.' + agent_name + '.peer_status{.peer_ip=="' + peer_ip + '"}'
     data = {
-      "peer" : { "value" : peer_ip },
-      "bgp_neighbor_count" : bgp_neighbor_count
+      "status" : { "value" : status },
+      "bgp_health" : { "value" : bgp_health }
     }
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
@@ -178,11 +178,11 @@ def Handle_Notification(obj, state):
           # Configure IP on interface and BGP for leaves
           link_name = f"link{link_index}"
           if not hasattr(state,link_name):
-             _ip = str( list(state.peerlinks[link_index].hosts())[_r] ) + '/31'
+             _ip = str( list(state.peerlinks[link_index].hosts())[_r] )
              script_update_interface(
                  'spine' if state.role == 'ROLE_spine' else 'leaf',
                  my_port,
-                 _ip,
+                 _ip + '/31',
                  obj.lldp_neighbor.data.system_description if m else 'host',
                  str( list(state.peerlinks[link_index].hosts())[0] ) if _r==1 else '*',
                  state.base_as + (int(to_port_id) if state.role != 'ROLE_spine' else 0),
@@ -192,9 +192,21 @@ def Handle_Notification(obj, state):
                  state.peerlinks_prefix
              )
              setattr( state, link_name, _ip )
-             Update_State( link_name, _ip, 666 )
+             Update_State( _ip, f'LLDP received: {peer_sys_name}', 'pending' )
+    elif obj.HasField('bfd_session'):
+        logging.info(f"process BFD notification : {obj}")
+        src_ip_addr = obj.bfd_session.key.src_ip_addr.addr
+        dst_ip_addr = obj.bfd_session.key.dst_ip_addr.addr
+
+        # Integer, 4=UP
+        status = obj.bfd_session.data.status  # data.src_if_id, not always set
+        src_ip_str = ipaddress.ip_address(src_ip_addr).__str__()
+        dst_ip_str = ipaddress.ip_address(dst_ip_addr).__str__()
+        logging.info(f"BFD : src={src_ip_str} dst={dst_ip_str} status={status}")
+        Update_State( src_ip_str, f'BFD status: {status}',
+                      "promising" if status == 4 else "doubtful" )
     else:
-        logging.info(f"Unexpected notification (BFD?) : {obj}")
+        logging.info(f"Unexpected notification : {obj}")
 
     # dont subscribe to LLDP now
     return False
