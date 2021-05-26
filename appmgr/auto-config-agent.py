@@ -133,7 +133,7 @@ def Handle_Notification(obj, state):
                 # if file_name != None:
                 #    Update_Result(file_name, action='delete')
                 response=stub.AgentUnRegister(request=sdk_service_pb2.AgentRegistrationRequest(), metadata=metadata)
-                logging.info('Handle_Config: Unregister response:: {}'.format(response))
+                logging.info( f'Handle_Config: Unregister response:: {response}' )
                 state = State() # Reset state, works?
             else:
                 json_acceptable_string = obj.config.data.json.replace("'", "\"")
@@ -154,6 +154,13 @@ def Handle_Notification(obj, state):
                     state.max_leaves = int( data['max_leaves']['value'] )
                 if 'bfd_flaps_per_hour_threshold' in data:
                     state.bfd_flap_threshold = int( data['bfd_flaps_per_hour_threshold']['value'] )
+
+                    # Update flap count assesments for each peer
+                    logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.bfd_flap_threshold}' )
+                    for peer_ip in state.flaps.keys():
+                        Update_Flapcounts( state, peer_ip,
+                          f'new threshold:{state.bfd_flap_threshold}')
+
                 return not state.role is None
 
     elif obj.HasField('lldp_neighbor') and not state.role is None:
@@ -203,10 +210,9 @@ def Handle_Notification(obj, state):
              )
              setattr( state, link_name, _ip )
              Update_Peer_State( _peer, obj.lldp_neighbor.data.system_description,
-                                0, datetime.datetime.now() )
+                                1, datetime.datetime.now() )
     elif obj.HasField('bfd_session'):
         logging.info(f"process BFD notification : {obj}")
-        now = datetime.datetime.now()
         src_ip_addr = obj.bfd_session.key.src_ip_addr.addr
         dst_ip_addr = obj.bfd_session.key.dst_ip_addr.addr
 
@@ -216,29 +222,39 @@ def Handle_Notification(obj, state):
         dst_ip_str = ipaddress.ip_address(dst_ip_addr).__str__()
         logging.info(f"BFD : src={src_ip_str} dst={dst_ip_str} status={status}")
 
-        if not state.has_key(dst_ip_str):
-           state[dst_ip_str] = { "flaps" : {} }
-        flaps = state[dst_ip_str].flaps
-        flaps[now] = status
-        flaps_last_hour = 0
-        keep_flaps = {}
-        one_hour_ago = now - datetime.timedelta(hours=1)
-        for i in sorted(flaps.keys(), reverse=True):
-           if ( i > one_hour_ago ):
-               ++flaps_last_hour
-               keep_flaps[i] = flaps[i]
-           else:
-               break
-        logging.info(f"BFD : keeping last hour of flaps {keep_flaps}")
-        state[dst_ip_str].flaps = keep_flaps
-        Update_Peer_State( dst_ip_str,
-            "red" if flaps_last_hour > state.bfd_flap_threshold else "green",
-            flaps_last_hour, now )
+        Update_Flapcounts( state, dst_ip_str, status )
     else:
         logging.info(f"Unexpected notification : {obj}")
 
     # dont subscribe to LLDP now
     return False
+
+##
+# Update agent state flapcounts
+##
+def Update_Flapcounts(state,peer_ip,status):
+    if peer_ip not in state.flaps:
+       logging.info(f"BFD : initializing flap state for {peer_ip}")
+       state.flaps[peer_ip] = {}
+    flaps = state.flaps[peer_ip]
+    now = datetime.datetime.now()
+    flaps[now] = status
+    keep_flaps = {}
+    one_hour_ago = now - datetime.timedelta(hours=1)
+    for i in sorted(flaps.keys(), reverse=True):
+       logging.info(f"BFD : check if {i} is within the last hour {one_hour_ago}")
+       if ( i > one_hour_ago ):
+           keep_flaps[i] = flaps[i]
+       else:
+           logging.info(f"BFD : flap happened more than 1 hour ago: {i}")
+           break
+    logging.info(f"BFD : keeping last hour of flaps for {peer_ip}:{keep_flaps}")
+    state.flaps[peer_ip] = keep_flaps
+    flaps_last_hour = len( keep_flaps )
+    Update_Peer_State( peer_ip,
+        "red" if flaps_last_hour > state.bfd_flap_threshold else "green",
+        flaps_last_hour, now )
+
 ##################################################################################################
 ## This functions get the app_id from idb for a given app_name
 ##################################################################################################
@@ -268,6 +284,7 @@ def script_update_interface(role,name,ip,peer,peer_ip,_as,router_id,peer_as_min,
 class State(object):
     def __init__(self):
         self.role = None       # May not be set in config
+        self.flaps = {}        # Indexed by peer IP
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
