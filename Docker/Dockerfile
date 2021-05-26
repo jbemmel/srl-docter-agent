@@ -1,4 +1,5 @@
-FROM registry.srlinux.dev/pub/srlinux:latest
+ARG SR_LINUX_RELEASE
+FROM registry.srlinux.dev/pub/srlinux:$SR_LINUX_RELEASE
 
 # CLI does not have permissions to enter namespaces
 # RUN sudo sh -c '. /opt/srlinux/python/virtual-env/bin/activate && pip3 install nsenter'

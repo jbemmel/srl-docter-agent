@@ -43,6 +43,11 @@ channel = grpc.insecure_channel('127.0.0.1:50053')
 metadata = [('agent_name', agent_name)]
 stub = sdk_service_pb2_grpc.SdkMgrServiceStub(channel)
 
+def SendKeepAlive():
+    request = sdk_service_pb2.KeepAliveRequest()
+    result = stub.KeepAlive(request=request, metadata=metadata)
+    print( f'Status of KeepAlive response :: {result.status}' )
+
 ############################################################
 ## Subscribe to required event
 ## This proc handles subscription of: Interface, LLDP,
@@ -99,7 +104,7 @@ def Add_Telemetry(js_path, js_data):
 
 ############################################################
 ## Function to populate state fields of the agent
-## It updates command: info from state fib-agent
+## It updates command: info from state auto-config-agent
 ############################################################
 def Update_State(peer_ip, status, bgp_health='?'):
     _ip_key = '.'.join([i.zfill(3) for i in peer_ip.split('.')]) # sortable
@@ -114,7 +119,7 @@ def Update_State(peer_ip, status, bgp_health='?'):
 
 ##################################################################
 ## Proc to process the config Notifications received by auto_config_agent
-## At present processing config from js_path = .fib-agent
+## At present processing config from js_path containing agent_name
 ##################################################################
 def Handle_Notification(obj, state):
     if obj.HasField('config') and obj.config.key.js_path != ".commit.end":
@@ -254,6 +259,7 @@ class State(object):
 def Run():
     sub_stub = sdk_service_pb2_grpc.SdkNotificationServiceStub(channel)
 
+    # optional agent_liveliness=<seconds> to have system kill unresponsive agents
     response = stub.AgentRegister(request=sdk_service_pb2.AgentRegistrationRequest(), metadata=metadata)
     logging.info(f"Registration response : {response.status}")
 
