@@ -158,8 +158,7 @@ def Handle_Notification(obj, state):
                     # Update flap count assesments for each peer
                     logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.bfd_flap_threshold}' )
                     for peer_ip in state.flaps.keys():
-                        Update_Flapcounts( state, peer_ip,
-                          f'new threshold:{state.bfd_flap_threshold}')
+                        Update_Flapcounts( state, peer_ip )
 
                 return not state.role is None
 
@@ -232,13 +231,14 @@ def Handle_Notification(obj, state):
 ##
 # Update agent state flapcounts
 ##
-def Update_Flapcounts(state,peer_ip,status):
+def Update_Flapcounts(state,peer_ip,status=0):
     if peer_ip not in state.flaps:
        logging.info(f"BFD : initializing flap state for {peer_ip}")
        state.flaps[peer_ip] = {}
     flaps = state.flaps[peer_ip]
     now = datetime.datetime.now()
-    flaps[now] = status
+    if status!=0:
+       flaps[now] = status
     keep_flaps = {}
     one_hour_ago = now - datetime.timedelta(hours=1)
     for i in sorted(flaps.keys(), reverse=True):
