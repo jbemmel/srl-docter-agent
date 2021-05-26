@@ -202,7 +202,8 @@ def Handle_Notification(obj, state):
                  state.peerlinks_prefix
              )
              setattr( state, link_name, _ip )
-             Update_Peer_State( _peer, "red", 0, datetime.datetime.now() )
+             Update_Peer_State( _peer, obj.lldp_neighbor.data.system_description,
+                                0, datetime.datetime.now() )
     elif obj.HasField('bfd_session'):
         logging.info(f"process BFD notification : {obj}")
         now = datetime.datetime.now()
@@ -215,7 +216,7 @@ def Handle_Notification(obj, state):
         dst_ip_str = ipaddress.ip_address(dst_ip_addr).__str__()
         logging.info(f"BFD : src={src_ip_str} dst={dst_ip_str} status={status}")
 
-        if not state.HasField(dst_ip_str):
+        if not state.has_key(dst_ip_str):
            state[dst_ip_str] = { "flaps" : {} }
         flaps = state[dst_ip_str].flaps
         flaps[now] = status
