@@ -46,6 +46,22 @@ EOF
   --replace-path /interface[name=$INTF] --replace-file $temp_file
 exitcode=$?
 
+# Enable BFD, except for host facing interfaces
+if [[ "$PEER" != "host" ]]; then
+cat > $temp_file << EOF
+{
+ "admin-state" : "enable",
+ "desired-minimum-transmit-interval" : 250000,
+ "required-minimum-receive" : 250000,
+ "detection-multiplier" : 3
+}
+EOF
+
+/sbin/ip netns exec srbase-mgmt /usr/local/bin/gnmic -a 127.0.0.1:57400 -u admin -p admin --skip-verify -e json_ietf set \
+  --replace-path /bfd/subinterface[id=${INTF}.0] --replace-file $temp_file
+exitcode=$?
+fi
+
 # Set loopback IP, if provided
 if [[ "$ROUTER_ID" != "" ]]; then
 cat > $temp_file << EOF
@@ -85,6 +101,7 @@ IFS='' read -r -d '' DYNAMIC_NEIGHBORS << EOF
       ]
     }
   },
+"failure-detection": { "enable-bfd" : true, "fast-failover" : true },
 "group": [
     {
       "group-name": "fellow-spines",
@@ -103,6 +120,7 @@ IFS='' read -r -d '' DYNAMIC_NEIGHBORS << EOF
     {
       "group-name": "spines",
       "admin-state": "enable",
+      "failure-detection": { "enable-bfd" : true, "fast-failover" : true },
       "peer-as": $PEER_AS_MIN
     },
     {
