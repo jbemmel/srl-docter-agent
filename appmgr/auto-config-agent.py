@@ -179,12 +179,13 @@ def Handle_Notification(obj, state):
           link_name = f"link{link_index}"
           if not hasattr(state,link_name):
              _ip = str( list(state.peerlinks[link_index].hosts())[_r] )
+             _peer = str( list(state.peerlinks[link_index].hosts())[1-_r] )
              script_update_interface(
                  'spine' if state.role == 'ROLE_spine' else 'leaf',
                  my_port,
                  _ip + '/31',
                  obj.lldp_neighbor.data.system_description if m else 'host',
-                 str( list(state.peerlinks[link_index].hosts())[0] ) if _r==1 else '*',
+                 _peer if _r==1 else '*',
                  state.base_as + (int(to_port_id) if state.role != 'ROLE_spine' else 0),
                  state.router_id if router_id_changed else "",
                  state.base_as if (state.role == 'ROLE_leaf') else state.base_as + 1,
@@ -192,7 +193,7 @@ def Handle_Notification(obj, state):
                  state.peerlinks_prefix
              )
              setattr( state, link_name, _ip )
-             Update_State( _ip, f'LLDP received: {peer_sys_name}', 'pending' )
+             Update_State( _peer, f'LLDP received: {peer_sys_name}', 'pending' )
     elif obj.HasField('bfd_session'):
         logging.info(f"process BFD notification : {obj}")
         src_ip_addr = obj.bfd_session.key.src_ip_addr.addr
@@ -203,7 +204,7 @@ def Handle_Notification(obj, state):
         src_ip_str = ipaddress.ip_address(src_ip_addr).__str__()
         dst_ip_str = ipaddress.ip_address(dst_ip_addr).__str__()
         logging.info(f"BFD : src={src_ip_str} dst={dst_ip_str} status={status}")
-        Update_State( src_ip_str, f'BFD status: {status}',
+        Update_State( dst_ip_str, f'BFD status: {status}',
                       "promising" if status == 4 else "doubtful" )
     else:
         logging.info(f"Unexpected notification : {obj}")
