@@ -62,7 +62,7 @@ module auto_config_agent {
             }
 
             leaf bfd-flaps-per-hour-threshold {
-                description "Number of BFD flaps per hour still considered acceptable"
+                description "Number of BFD flaps per hour still considered acceptable";
                 type uint16;
                 default 0;
             }
