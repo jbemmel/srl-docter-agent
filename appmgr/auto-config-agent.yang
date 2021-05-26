@@ -80,11 +80,8 @@ module auto_config_agent {
                   type string;
                 }
                 leaf bfd-status {
-                  type enumeration {
-                    enum green;
-                    enum red;
-                  }
-                  default red;
+                  type string;
+                  default "red";
                 }
                 leaf bfd-flaps-last-hour {
                   type uint16;

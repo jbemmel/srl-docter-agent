@@ -111,7 +111,7 @@ def Update_Peer_State(peer_ip, status, bfd_flaps, now):
     js_path = '.' + agent_name + '.peer{.peer_ip=="' + _ip_key + '"}'
     data = {
       "bfd_status" : { "value" : status },
-      "bfd_flaps_last_hour" : 1234,
+      "bfd_flaps_last_hour" : bfd_flaps,
       "last_bfd_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
     }
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
