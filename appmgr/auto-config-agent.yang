@@ -61,7 +61,17 @@ module auto_config_agent {
                 default 16; // Currently only affects max AS that spines accept BGP peering from
             }
 
-            // State
+            leaf bfd-flaps-per-hour-threshold {
+                description "Number of BFD flaps per hour still considered acceptable"
+                type uint16;
+                default 0;
+            }
+
+            // Info from state
+            leaf total-bfd-flaps-last-hour {
+                type uint16;
+                config false;
+            }
             list peer {
                 key peer-ip;
                 config false;
@@ -69,10 +79,17 @@ module auto_config_agent {
                 leaf peer-ip {
                   type string;
                 }
-                leaf status {
-                  type string;
+                leaf bfd-status {
+                  type enumeration {
+                    enum green;
+                    enum red;
+                  }
+                  default red;
                 }
-                leaf bgp-health {
+                leaf bfd-flaps-last-hour {
+                  type uint16;
+                }
+                leaf last-bfd-flap-timestamp {
                   type string;
                 }
             }

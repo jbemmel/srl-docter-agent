@@ -6,6 +6,10 @@ IMG         := ${NAME}:${TAG}
 
 # HTTP_PROXY  := "http://proxy.lbs.alcatel-lucent.com:8000"
 
+ifndef SR_LINUX_RELEASE
+override SR_LINUX_RELEASE="latest"
+endif
+
 build:
 	echo "Building agent for ${SR_LINUX_RELEASE}..."
 	cd .. && docker build --build-arg SRL_AUTO_CONFIG_RELEASE=${TAG} \

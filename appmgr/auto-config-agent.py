@@ -106,12 +106,13 @@ def Add_Telemetry(js_path, js_data):
 ## Function to populate state fields of the agent
 ## It updates command: info from state auto-config-agent
 ############################################################
-def Update_State(peer_ip, status, bgp_health='?'):
+def Update_Peer_State(peer_ip, status, bfd_flaps, now):
     _ip_key = '.'.join([i.zfill(3) for i in peer_ip.split('.')]) # sortable
     js_path = '.' + agent_name + '.peer{.peer_ip=="' + _ip_key + '"}'
     data = {
-      "status" : { "value" : status },
-      "bgp_health" : { "value" : bgp_health }
+      "bfd_status" : { "value" : status },
+      "bfd_flaps_last_hour" : 1234,
+      "last_bfd_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
     }
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
@@ -151,6 +152,8 @@ def Handle_Notification(obj, state):
                     state.max_spines = int( data['max_spines']['value'] )
                 if 'max_leaves' in data:
                     state.max_leaves = int( data['max_leaves']['value'] )
+                if 'bfd_flaps_per_hour_threshold' in data:
+                    state.bfd_flap_threshold = int( data['bfd_flaps_per_hour_threshold']['value'] )
                 return not state.role is None
 
     elif obj.HasField('lldp_neighbor') and not state.role is None:
@@ -199,9 +202,10 @@ def Handle_Notification(obj, state):
                  state.peerlinks_prefix
              )
              setattr( state, link_name, _ip )
-             Update_State( _peer, f'LLDP received: {peer_sys_name}', 'pending' )
+             Update_Peer_State( _peer, "red", 0, datetime.datetime.now() )
     elif obj.HasField('bfd_session'):
         logging.info(f"process BFD notification : {obj}")
+        now = datetime.datetime.now()
         src_ip_addr = obj.bfd_session.key.src_ip_addr.addr
         dst_ip_addr = obj.bfd_session.key.dst_ip_addr.addr
 
@@ -210,8 +214,25 @@ def Handle_Notification(obj, state):
         src_ip_str = ipaddress.ip_address(src_ip_addr).__str__()
         dst_ip_str = ipaddress.ip_address(dst_ip_addr).__str__()
         logging.info(f"BFD : src={src_ip_str} dst={dst_ip_str} status={status}")
-        Update_State( dst_ip_str, f'BFD status: {status}',
-                      "promising" if status == 4 else "doubtful" )
+
+        if not state.HasField(dst_ip_str):
+           state[dst_ip_str] = { "flaps" : {} }
+        flaps = state[dst_ip_str].flaps
+        flaps[now] = status
+        flaps_last_hour = 0
+        keep_flaps = {}
+        one_hour_ago = now - datetime.timedelta(hours=1)
+        for i in sorted(flaps.keys(), reverse=True):
+           if ( i > one_hour_ago ):
+               ++flaps_last_hour
+               keep_flaps[i] = flaps[i]
+           else:
+               break
+        logging.info(f"BFD : keeping last hour of flaps {keep_flaps}")
+        state[dst_ip_str].flaps = keep_flaps
+        Update_Peer_State( dst_ip_str,
+            "red" if flaps_last_hour > state.bfd_flap_threshold else "green",
+            flaps_last_hour, now )
     else:
         logging.info(f"Unexpected notification : {obj}")
 
