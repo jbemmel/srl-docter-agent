@@ -62,7 +62,7 @@ module auto_config_agent {
             }
 
             // State
-            list peer-status {
+            list peer {
                 key peer-ip;
                 config false;
 

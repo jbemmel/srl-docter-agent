@@ -102,8 +102,8 @@ def Add_Telemetry(js_path, js_data):
 ## It updates command: info from state fib-agent
 ############################################################
 def Update_State(peer_ip, status, bgp_health='?'):
-    _ip_key = ''.join([i.zfill(3) for i in peer_ip.split('.')]) # sortable
-    js_path = '.' + agent_name + '.peer_status{.peer_ip=="' + _ip_key + '"}'
+    _ip_key = '.'.join([i.zfill(3) for i in peer_ip.split('.')]) # sortable
+    js_path = '.' + agent_name + '.peer{.peer_ip=="' + _ip_key + '"}'
     data = {
       "status" : { "value" : status },
       "bgp_health" : { "value" : bgp_health }
