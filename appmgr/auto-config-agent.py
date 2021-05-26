@@ -252,7 +252,7 @@ def Update_Flapcounts(state,peer_ip,status=0):
     state.flaps[peer_ip] = keep_flaps
     flaps_last_hour = len( keep_flaps )
     Update_Peer_State( peer_ip,
-        "red" if flaps_last_hour > state.bfd_flap_threshold else "green",
+        "red" if flaps_last_hour > state.bfd_flap_threshold or status!=4 else "green",
         flaps_last_hour, now )
 
 ##################################################################################################
