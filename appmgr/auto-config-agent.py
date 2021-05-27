@@ -69,6 +69,7 @@ def Subscribe(stream_id, option):
         entry = bfd_service_pb2.BfdSessionSubscriptionRequest()
         request = sdk_service_pb2.NotificationRegisterRequest(op=op, stream_id=stream_id, bfd_session=entry)
     elif option == 'route':
+        # This includes all network namespaces, i.e. including mgmt
         entry = route_service_pb2.IpRouteSubscriptionRequest()
         request = sdk_service_pb2.NotificationRegisterRequest(op=op, stream_id=stream_id, route=entry)
     elif option == 'nexthop_group':
@@ -118,20 +119,13 @@ def Add_Telemetry(js_path, js_data):
 ## Function to populate state fields of the agent
 ## It updates command: info from state auto-config-agent
 ############################################################
-def Update_Peer_State(peer_ip, status, bfd_flaps, bfd_history, now):
+def Update_Peer_State(peer_ip, update_data):
     _ip_key = '.'.join([i.zfill(3) for i in peer_ip.split('.')]) # sortable
     js_path = '.' + agent_name + '.peer{.peer_ip=="' + _ip_key + '"}'
-    data = {
-      "bfd_status" : { "value" : status },
-      "bfd_flaps_last_period" : bfd_flaps,
-      "bfd_flaps_history" : { "value" : bfd_history },
-      "route_flaps_last_period" : 1000000,
-      "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
-    }
-    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
-def Update_Global_State(state):
+def Update_Global_State(state, update_data):
     js_path = '.' + agent_name
     data = {
       "total_bfd_flaps_last_period" : sum( [len(f) for f in state.bfd_flaps.values()] ),
@@ -149,13 +143,21 @@ def Handle_Notification(obj, state):
         addr = ipaddress.ip_address(obj.route.key.ip_prefix.ip_addr.addr).__str__()
         prefix = obj.route.key.ip_prefix.prefix_length
         nhg_id = obj.route.data.nhg_id
-        logging.info( f"ROUTE notification: {addr}/{prefix} nhg={nhg_id}" )
-        # TODO Does nexthop group tell us which BGP peer is involved?
+        nh_ip = state.nhg_map[nhg_id] if nhg_id in state.nhg_map else "?"
+        logging.info( f"ROUTE notification: {addr}/{prefix} nhg={nhg_id} ip={nh_ip}" )
+        if nh_ip != "?":
+           Update_RouteFlapcounts(state, nh_ip, f'{addr}/{prefix}' )
+
     elif obj.HasField('nhg'):
-        if 'ip_nexthop' in obj.nhg.data.next_hop:
+        try:
            nhg_id = obj.nhg.key
-           addr = ipaddress.ip_address(obj.nhg.data.next_hop.ip_nexthop.addr).__str__()
-           logging.info( f"NEXTHOP notification: {addr} nhg={nhg_id}" )
+           for nh in obj.nhg.data.next_hop:
+             if nh.ip_nexthop:
+               addr = ipaddress.ip_address(nh.ip_nexthop.addr).__str__()
+               logging.info( f"NEXTHOP notification: {addr} nhg={nhg_id}" )
+               state.nhg_map[nhg_id] = addr
+        except Exception as e: # ip_nexthop not set
+           logging.error(f'Exception caught while processing nhg :: {e}')
 
     elif obj.HasField('config') and obj.config.key.js_path != ".commit.end":
         logging.info(f"GOT CONFIG :: {obj.config.key.js_path}")
@@ -196,7 +198,7 @@ def Handle_Notification(obj, state):
                 logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.bfd_flap_threshold}' )
                 Update_Global_State( state )
                 for peer_ip in state.bfd_flaps.keys():
-                    Update_Flapcounts( state, peer_ip )
+                    Update_BFDFlapcounts( state, peer_ip )
 
                 return not state.role is None
 
@@ -246,9 +248,13 @@ def Handle_Notification(obj, state):
                  state.peerlinks_prefix
              )
              setattr( state, link_name, _ip )
-             Update_Peer_State( _peer,
-              "Awaiting BFD from: " + obj.lldp_neighbor.data.system_description,
-              1, "none yet", datetime.datetime.now() )
+             state_update = {
+               "bfd_status" : { "value" : "Awaiting BFD from: " + obj.lldp_neighbor.data.system_description,
+               "bfd_flaps_last_period" : 0,
+               "bfd_flaps_history" : { "value" : "none yet" }
+             }
+             Update_Peer_State( _peer, state_update )
+
     elif obj.HasField('bfd_session'):
         logging.info(f"process BFD notification : {obj}")
         src_ip_addr = obj.bfd_session.key.src_ip_addr.addr
@@ -260,7 +266,7 @@ def Handle_Notification(obj, state):
         dst_ip_str = ipaddress.ip_address(dst_ip_addr).__str__()
         logging.info(f"BFD : src={src_ip_str} dst={dst_ip_str} status={status}")
 
-        Update_Flapcounts( state, dst_ip_str, status )
+        Update_BFDFlapcounts( state, dst_ip_str, status )
     else:
         logging.info(f"Unexpected notification : {obj}")
 
@@ -268,34 +274,69 @@ def Handle_Notification(obj, state):
     return False
 
 ##
-# Update agent state flapcounts
+# Update agent state flapcounts for BFD
 ##
-def Update_Flapcounts(state,peer_ip,status=0):
+def Update_BFDFlapcounts(state,peer_ip,status=0):
     if peer_ip not in state.bfd_flaps:
        logging.info(f"BFD : initializing flap state for {peer_ip}")
        state.bfd_flaps[peer_ip] = {}
-    flaps = state.bfd_flaps[peer_ip]
     now = datetime.datetime.now()
-    if status!=0:
+    flaps_this_period, history = Update_Flapcounts(state, now, peer_ip, status,
+                                                   state.bfd_flaps,
+                                                   state.bfd_flap_period_mins)
+    state_update = {
+      "bfd_status" : { "value" : "red" if flaps_this_period > state.bfd_flap_threshold or status!=4 else "green" },
+      "bfd_flaps_last_period" : flaps_this_period,
+      "bfd_flaps_history" : { "value" : history },
+      "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
+    }
+    Update_Peer_State( peer_ip, state_update )
+    global_data = {
+      "total_bfd_flaps_last_period" : sum( [len(f) for f in state.bfd_flaps.values()] )
+    }
+    Update_Global_State( state, global_data )
+
+##
+# Update agent state flapcounts for Route entry
+##
+def Update_RouteFlapcounts(state,peer_ip,nexthop):
+    if peer_ip not in state.route_flaps:
+       logging.info(f"ROUTE : initializing flap state for {peer_ip}")
+       state.route_flaps[peer_ip] = {}
+    now = datetime.datetime.now()
+    flaps_this_period, history = Update_Flapcounts(state, now, peer_ip, status,
+                                                   state.route_flaps,
+                                                   state.bfd_flap_period_mins)
+    state_update = {
+      "bfd_status" : { "value" : "red" if flaps_this_period > state.bfd_flap_threshold else "green" },
+      "route_flaps_last_period" : flaps_this_period,
+      "route_flaps_history" : { "value" : history },
+      "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
+    }
+    Update_Peer_State( peer_ip, state_update )
+    # Update_Global_State( state )
+
+##
+# Update agent state flapcounts
+##
+def Update_Flapcounts(state,now,peer_ip,status,flapmap,period_mins):
+    flaps = flapmap[peer_ip]
+    if status != 0:
        flaps[now] = status
     keep_flaps = {}
     keep_history = ""
-    start_of_period = now - datetime.timedelta(minutes=state.bfd_flap_period_mins)
+    start_of_period = now - datetime.timedelta(minutes=period_mins)
     for i in sorted(flaps.keys(), reverse=True):
        logging.info(f"BFD : check if {i} is within the last period {start_of_period}")
        if ( i > start_of_period ):
            keep_flaps[i] = flaps[i]
            keep_history += f'{ i.strftime("[%H:%M:%S.%f]") } ~ {flaps[i]},'
        else:
-           logging.info(f"BFD : flap happened outside monitoring period: {i}")
+           logging.info(f"flap happened outside monitoring period: {i}")
            break
     logging.info(f"BFD : keeping last period of flaps for {peer_ip}:{keep_flaps}")
-    state.bfd_flaps[peer_ip] = keep_flaps
-    flaps_last_period = len( keep_flaps )
-    Update_Peer_State( peer_ip,
-        "red" if flaps_last_period > state.bfd_flap_threshold or status!=4 else "green",
-        flaps_last_period, keep_history, now )
-    Update_Global_State( state )
+    flaps[peer_ip] = keep_flaps
+    return len( keep_flaps ), keep_history
 
 ##################################################################################################
 ## This functions get the app_id from idb for a given app_name
@@ -327,6 +368,8 @@ class State(object):
     def __init__(self):
         self.role = None       # May not be set in config
         self.bfd_flaps = {}    # Indexed by peer IP
+        self.nhg_map = {}      # Map of nhg_id -> peer IP
+        self.route_flaps = {}  # Indexed by next hop IP
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)

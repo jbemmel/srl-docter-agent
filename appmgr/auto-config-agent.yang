@@ -102,6 +102,9 @@ module auto_config_agent {
                 leaf route-flaps-last-period {
                   type uint64;
                 }
+                leaf route-flaps-history {
+                  type string;
+                }
                 leaf last-flap-timestamp {
                   type string;
                 }
