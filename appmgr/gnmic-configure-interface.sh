@@ -81,7 +81,7 @@ cat > $temp_file << EOF
       "ipv6": {
         "address": [
           {
-            "ip-prefix": "2001::${_IP128//\./:}/128"
+            "ip-prefix": "2001::${ROUTER_ID//\./:}/128"
           }
         ]
       }
@@ -95,7 +95,6 @@ exitcode+=$?
 
 cat > $temp_file << EOF
 {
-  "name": "main",
   "router-id": "$ROUTER_ID",
   "admin-state": "enable",
   "version": "ospf-v3",
@@ -120,7 +119,7 @@ cat > $temp_file << EOF
 }
 EOF
 /sbin/ip netns exec srbase-mgmt /usr/local/bin/gnmic -a 127.0.0.1:57400 -u admin -p admin --skip-verify -e json_ietf set \
-  --update-path /network-instance[name=default]/protocols/ospf --update-file $temp_file
+  --update-path /network-instance[name=default]/protocols/ospf/instance[name=main] --update-file $temp_file
 exitcode+=$?
 
 if [[ "$ROLE" == "spine" ]]; then
