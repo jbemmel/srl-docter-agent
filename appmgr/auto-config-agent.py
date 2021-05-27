@@ -116,7 +116,15 @@ def Update_Peer_State(peer_ip, status, bfd_flaps, now):
     }
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
-    return True
+
+def Update_Global_State(state):
+    js_path = '.' + agent_name
+    data = {
+      "total_bfd_flaps_last_hour" : 999,
+      "bfd_flaps_threshold" : state.bfd_flap_threshold
+    }
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+    logging.info(f"Telemetry_Update_Response :: {response}")
 
 ##################################################################
 ## Proc to process the config Notifications received by auto_config_agent
@@ -157,6 +165,7 @@ def Handle_Notification(obj, state):
 
                     # Update flap count assesments for each peer
                     logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.bfd_flap_threshold}' )
+                    Update_Global_State( state )
                     for peer_ip in state.flaps.keys():
                         Update_Flapcounts( state, peer_ip )
 
@@ -208,8 +217,9 @@ def Handle_Notification(obj, state):
                  state.peerlinks_prefix
              )
              setattr( state, link_name, _ip )
-             Update_Peer_State( _peer, obj.lldp_neighbor.data.system_description,
-                                1, datetime.datetime.now() )
+             Update_Peer_State( _peer,
+              "Awaiting BFD from: " + obj.lldp_neighbor.data.system_description,
+              1, datetime.datetime.now() )
     elif obj.HasField('bfd_session'):
         logging.info(f"process BFD notification : {obj}")
         src_ip_addr = obj.bfd_session.key.src_ip_addr.addr
@@ -254,6 +264,7 @@ def Update_Flapcounts(state,peer_ip,status=0):
     Update_Peer_State( peer_ip,
         "red" if flaps_last_hour > state.bfd_flap_threshold or status!=4 else "green",
         flaps_last_hour, now )
+    Update_Global_State( state )
 
 ##################################################################################################
 ## This functions get the app_id from idb for a given app_name

@@ -72,6 +72,10 @@ module auto_config_agent {
                 type uint16;
                 config false;
             }
+            leaf bfd-flaps-threshold {
+                type uint16;
+                config false;
+            }
             list peer {
                 key peer-ip;
                 config false;
