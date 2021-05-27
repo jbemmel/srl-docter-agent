@@ -61,19 +61,25 @@ module auto_config_agent {
                 default 16; // Currently only affects max AS that spines accept BGP peering from
             }
 
-            leaf bfd-flaps-per-hour-threshold {
-                description "Number of BFD flaps per hour still considered acceptable";
+            leaf bfd-flaps-monitoring-period {
+                description "Monitoring period in minutes, default 1 hour";
                 type uint16;
+                default 60;
+            }
+
+            leaf bfd-flaps-per-period-threshold {
+                description "Number of BFD flaps per period still considered acceptable";
+                type uint32;
                 default 0;
             }
 
             // Info from state
-            leaf total-bfd-flaps-last-hour {
-                type uint16;
+            leaf total-bfd-flaps-last-period {
+                type uint64;
                 config false;
             }
-            leaf bfd-flaps-threshold {
-                type uint16;
+            leaf total-route-flaps-last-period {
+                type uint64;
                 config false;
             }
             list peer {
@@ -87,10 +93,16 @@ module auto_config_agent {
                   type string;
                   default "red";
                 }
-                leaf bfd-flaps-last-hour {
-                  type uint16;
+                leaf bfd-flaps-last-period {
+                  type uint32;
                 }
-                leaf last-bfd-flap-timestamp {
+                leaf bfd-flaps-history {
+                  type string;
+                }
+                leaf route-flaps-last-period {
+                  type uint64;
+                }
+                leaf last-flap-timestamp {
                   type string;
                 }
             }
