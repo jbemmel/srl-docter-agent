@@ -1460,33 +1460,6 @@
           "route-advertisement": {
             "rapid-withdrawal": true
           }
-        },
-	"srl_nokia-ospf:ospf": {
-          "instance": [
-            {
-              "name": "main",
-              "admin-state": "enable",
-              "version": "srl_nokia-ospf-types:ospf-v3",
-              "address-family": "srl_nokia-ospf-types:ipv6-unicast",
-              "max-ecmp-paths": 4,
-              "area": [
-                {
-                  "area-id": "0.0.0.0",
-                  "interface": [
-                    {
-                      "interface-name": "ethernet-1/1.0",
-                      "interface-type": "point-to-point"
-                    },
-                    {
-                      "interface-name": "lo0.0",
-                      "interface-type": "broadcast",
-                      "passive": true
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
         }
       }
     },

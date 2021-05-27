@@ -93,6 +93,36 @@ EOF
   --replace-path /interface[name=lo0] --replace-file $temp_file
 exitcode+=$?
 
+cat > $temp_file << EOF
+{
+  "name": "main",
+  "router-id": "$ROUTER_ID",
+  "admin-state": "enable",
+  "version": "ospf-v3",
+  "address-family": "ipv6-unicast",
+  "max-ecmp-paths": 4,
+  "area": [
+    {
+      "area-id": "0.0.0.0",
+      "interface": [
+        {
+          "interface-name": "ethernet-1/1.0",
+          "interface-type": "point-to-point"
+        },
+        {
+          "interface-name": "lo0.0",
+          "interface-type": "broadcast",
+          "passive": true
+        }
+      ]
+    }
+  ]
+}
+EOF
+/sbin/ip netns exec srbase-mgmt /usr/local/bin/gnmic -a 127.0.0.1:57400 -u admin -p admin --skip-verify -e json_ietf set \
+  --update-path /network-instance[name=default]/protocols/ospf --update-file $temp_file
+exitcode+=$?
+
 if [[ "$ROLE" == "spine" ]]; then
 IFS='' read -r -d '' DYNAMIC_NEIGHBORS << EOF
 "dynamic-neighbors": {
