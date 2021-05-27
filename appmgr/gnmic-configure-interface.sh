@@ -77,6 +77,13 @@ cat > $temp_file << EOF
             "ip-prefix": "$ROUTER_ID/32"
           }
         ]
+      },
+      "ipv6": {
+        "address": [
+          {
+            "ip-prefix": "2001::${_IP128//\./:}/128"
+          }
+        ]
       }
     }
   ]
