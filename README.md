@@ -40,8 +40,9 @@ This example uses eBGP peering to exchange routes within the fabric, and iBGP to
   + only advertise direct attached subnets (don't export AS path length >= 1 routes)
   + not advertise /31 peering links
 
-## IPv6 link local peering using OSPFv3
+## Multihop EBGP peering via IPv6 link local using OSPFv3
 One special feature of the agent, is to configure the nodes without IPv4 /31 peer addresses:
 * Use IPv6 link-local
+* Rename the node to 'n{w}.{x}.{y}.{z}' such that LLDP messages contain peer system IPs
 * Enable OSPFv3 with ipv6 address family, to form IGP neigbors and exchange loopback IPs (v4/v6)
-* Peer using multi-hop EBGP between loopbacks
+* Peer using multi-hop EBGP ipv4/6 between loopbacks (dynamic neighbor on spines)
