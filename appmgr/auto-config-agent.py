@@ -165,9 +165,10 @@ def Handle_Notification(obj, state):
     elif obj.HasField('lldp_neighbor') and not state.role is None:
         # Update the config based on LLDP info, if needed
         logging.info(f"process LLDP notification : {obj}")
+
         my_port = obj.lldp_neighbor.key.interface_name  # ethernet-1/x
         to_port = obj.lldp_neighbor.data.port_id
-        peer_sys_name = obj.lldp_neighbor.data.system_name
+        peer_sys_name = obj.lldp_neighbor.data.system_name # n1.2.3.4
 
         if my_port != 'mgmt0' and to_port != 'mgmt0' and hasattr(state,'peerlinks'):
           my_port_id = re.split("/",re.split("-",my_port)[1])[1]
@@ -193,8 +194,13 @@ def Handle_Notification(obj, state):
           # Configure IP on interface and BGP for leaves
           link_name = f"link{link_index}"
           if not hasattr(state,link_name):
-             _ip = str( list(state.peerlinks[link_index].hosts())[_r] )
-             _peer = str( list(state.peerlinks[link_index].hosts())[1-_r] )
+             if re.match("^n(\d+)\.(\d+).(\d+).(\d+)$", peer_sys_name):
+               _ip = state.router_id
+               _peer = peer_sys_name[1:] # Assumes already renamed
+             else:
+               _ip = str( list(state.peerlinks[link_index].hosts())[_r] )
+               _peer = str( list(state.peerlinks[link_index].hosts())[1-_r] )
+
              script_update_interface(
                  'spine' if state.role == 'ROLE_spine' else 'leaf',
                  my_port,
@@ -208,8 +214,9 @@ def Handle_Notification(obj, state):
                  state.peerlinks_prefix
              )
              setattr( state, link_name, _ip )
-             Update_Peer_State( _peer, obj.lldp_neighbor.data.system_description,
-                                1, datetime.datetime.now() )
+             Update_Peer_State( _peer,
+               "Awaiting BFD from: " + obj.lldp_neighbor.data.system_description,
+               1, datetime.datetime.now() )
     elif obj.HasField('bfd_session'):
         logging.info(f"process BFD notification : {obj}")
         src_ip_addr = obj.bfd_session.key.src_ip_addr.addr

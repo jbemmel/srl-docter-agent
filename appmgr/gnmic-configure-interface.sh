@@ -1,38 +1,36 @@
 #!/bin/bash
 
 # Sample script to provision SRLinux using gnmic
-ROLE="$1"  # "spine" or "leaf"
-INTF="$2"
-IP_PREFIX="$3"
-PEER="$4"         # 'host' for Linux nodes
-PEER_IP="$5"
-AS="$6"
-ROUTER_ID="$7"
+ROLE="$1"       # "spine" or "leaf"
+INTF="$2"       # interface on which LLDP was received, e.g. ethernet-1/1
+ROUTER_ID="$3"  # derived local router ID (ipv4), '?' if undetermined
+LINK_ROLE="$4"  # 0 or 1
+PEER_ID="$5"    # Link peer router ID (ipv4), '?' if undetermined
+PEER_DESC="$6"  # LLDP description received
+LOCAL_AS="$7"
 PEER_AS_MIN="$8"
 PEER_AS_MAX="$9"
-LINK_PREFIX="${10}"  # IP subnet used for allocation of IPs to BGP peers
+ID_RANGE_PREFIX="${10}"  # IP subnet used for allocation of IDs to BGP peers
 
 temp_file=$(mktemp --suffix=.json)
-_IP127="${IP_PREFIX//\/31/\/127}"
+if [[ "${ROUTER_ID}" != "?" ]]; then
+if [[ "${LINK_ROLE}" == "0" ]]; then
+ _IPV6_LINK="2001:${ROUTER_ID//\./:}:${PEER_ID//\./:}::0/127"
+else
+ _IPV6_LINK="2001:${PEER_ID//\./:}:${ROUTER_ID//\./:}::1/127"
+fi
 cat > $temp_file << EOF
 {
-  "description": "To $PEER",
+  "description": "To $PEER_DESC",
   "admin-state": "enable",
   "subinterface": [
     {
       "index": 0,
       "admin-state": "enable",
-      "ipv4": {
-        "address": [
-          {
-            "ip-prefix": "$IP_PREFIX"
-          }
-        ]
-      },
       "ipv6": {
         "address": [
           {
-            "ip-prefix": "2001::${_IP127//\./:}"
+            "ip-prefix": "$_IPV6_LINK"
           }
         ]
       }
@@ -45,6 +43,7 @@ EOF
 /sbin/ip netns exec srbase-mgmt /usr/local/bin/gnmic -a 127.0.0.1:57400 -u admin -p admin --skip-verify -e json_ietf set \
   --replace-path /interface[name=$INTF] --replace-file $temp_file
 exitcode=$?
+fi
 
 # Enable BFD, except for host facing interfaces
 if [[ "$PEER" != "host" ]]; then
@@ -64,6 +63,11 @@ fi
 
 # Set loopback IP, if provided
 if [[ "$ROUTER_ID" != "" ]]; then
+
+# Set system name using router-id
+/sbin/ip netns exec srbase-mgmt /usr/local/bin/gnmic -a 127.0.0.1:57400 -u admin -p admin --skip-verify -e json_ietf set \
+  --replace-path /system/name/host-name --replace-value "n${ROUTER_ID}"
+
 cat > $temp_file << EOF
 {
   "admin-state": "enable",
@@ -106,6 +110,27 @@ cat > $temp_file << EOF
       "interface": [
         {
           "interface-name": "ethernet-1/1.0",
+          "interface-type": "point-to-point"
+        },{
+          "interface-name": "ethernet-1/2.0",
+          "interface-type": "point-to-point"
+        },{
+          "interface-name": "ethernet-1/3.0",
+          "interface-type": "point-to-point"
+        },{
+          "interface-name": "ethernet-1/4.0",
+          "interface-type": "point-to-point"
+        },{
+          "interface-name": "ethernet-1/5.0",
+          "interface-type": "point-to-point"
+        },{
+          "interface-name": "ethernet-1/6.0",
+          "interface-type": "point-to-point"
+        },{
+          "interface-name": "ethernet-1/7.0",
+          "interface-type": "point-to-point"
+        },{
+          "interface-name": "ethernet-1/8.0",
           "interface-type": "point-to-point"
         },
         {
