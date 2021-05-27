@@ -18,6 +18,8 @@ import sdk_service_pb2
 import sdk_service_pb2_grpc
 import lldp_service_pb2
 import config_service_pb2
+import route_service_pb2
+import nexthop_group_service_pb2
 import sdk_common_pb2
 
 # To report state back
@@ -66,6 +68,13 @@ def Subscribe(stream_id, option):
     elif option == 'bfd':
         entry = bfd_service_pb2.BfdSessionSubscriptionRequest()
         request = sdk_service_pb2.NotificationRegisterRequest(op=op, stream_id=stream_id, bfd_session=entry)
+    elif option == 'route':
+        entry = route_service_pb2.IpRouteSubscriptionRequest()
+        request = sdk_service_pb2.NotificationRegisterRequest(op=op, stream_id=stream_id, route=entry)
+    elif option == 'nexthop_group':
+        entry = nexthop_group_service_pb2.NextHopGroupSubscriptionRequest()
+        request = sdk_service_pb2.NotificationRegisterRequest(op=op, stream_id=stream_id, nhg=entry)
+
     subscription_response = stub.NotificationRegister(request=request, metadata=metadata)
     print('Status of subscription response for {}:: {}'.format(option, subscription_response.status))
 
@@ -84,6 +93,9 @@ def Subscribe_Notifications(stream_id):
     Subscribe(stream_id, 'cfg')
 
     Subscribe(stream_id, 'bfd')  # Test
+
+    # To map route notifications to BGP peers
+    Subscribe(stream_id, 'nexthop_group')
 
     ##Subscribe to LLDP Neighbor Notifications -> moved
     ## Subscribe(stream_id, 'lldp')
@@ -122,7 +134,7 @@ def Update_Peer_State(peer_ip, status, bfd_flaps, bfd_history, now):
 def Update_Global_State(state):
     js_path = '.' + agent_name
     data = {
-      "total_bfd_flaps_last_period" : 999,
+      "total_bfd_flaps_last_period" : sum( [len(f) for f in state.bfd_flaps.values()] ),
       "total_route_flaps_last_period" : 9999999,
     }
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
@@ -133,7 +145,18 @@ def Update_Global_State(state):
 ## At present processing config from js_path containing agent_name
 ##################################################################
 def Handle_Notification(obj, state):
-    if obj.HasField('config') and obj.config.key.js_path != ".commit.end":
+    if obj.HasField('route'):
+        addr = ipaddress.ip_address(obj.route.key.ip_prefix.ip_addr.addr).__str__()
+        prefix = obj.route.key.ip_prefix.prefix_length
+        nhg_id = obj.route.data.nhg_id
+        logging.info( f"ROUTE notification: {addr}/{prefix} nhg={nhg_id}" )
+        # TODO Does nexthop group tell us which BGP peer is involved?
+    elif obj.HasField('nhg'):
+        nhg_id = obj.nhg.key
+        addr = ipaddress.ip_address(obj.nhg.data.next_hop.ip_nexthop.addr).__str__()
+        logging.info( f"NEXTHOP notification: {addr} nhg={nhg_id}" )
+
+    elif obj.HasField('config') and obj.config.key.js_path != ".commit.end":
         logging.info(f"GOT CONFIG :: {obj.config.key.js_path}")
         if agent_name in obj.config.key.js_path:
             logging.info(f"Got config for agent, now will handle it :: \n{obj.config}\
@@ -349,6 +372,7 @@ def Run():
                 else:
                     if Handle_Notification(obj, state) and not lldp_subscribed:
                        Subscribe(stream_id, 'lldp')
+                       Subscribe(stream_id, 'route')
                        lldp_subscribed = True
 
                     # Program router_id only when changed
