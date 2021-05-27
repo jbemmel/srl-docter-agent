@@ -152,9 +152,10 @@ def Handle_Notification(obj, state):
         logging.info( f"ROUTE notification: {addr}/{prefix} nhg={nhg_id}" )
         # TODO Does nexthop group tell us which BGP peer is involved?
     elif obj.HasField('nhg'):
-        nhg_id = obj.nhg.key
-        addr = ipaddress.ip_address(obj.nhg.data.next_hop.ip_nexthop.addr).__str__()
-        logging.info( f"NEXTHOP notification: {addr} nhg={nhg_id}" )
+        if 'ip_nexthop' in obj.nhg.data.next_hop:
+           nhg_id = obj.nhg.key
+           addr = ipaddress.ip_address(obj.nhg.data.next_hop.ip_nexthop.addr).__str__()
+           logging.info( f"NEXTHOP notification: {addr} nhg={nhg_id}" )
 
     elif obj.HasField('config') and obj.config.key.js_path != ".commit.end":
         logging.info(f"GOT CONFIG :: {obj.config.key.js_path}")
@@ -284,7 +285,7 @@ def Update_Flapcounts(state,peer_ip,status=0):
        logging.info(f"BFD : check if {i} is within the last period {start_of_period}")
        if ( i > start_of_period ):
            keep_flaps[i] = flaps[i]
-           keep_history += f'{ i.strftime("[%H:%M:%S]") } ~ {flaps[i]},'
+           keep_history += f'{ i.strftime("[%H:%M:%S.%f]") } ~ {flaps[i]},'
        else:
            logging.info(f"BFD : flap happened outside monitoring period: {i}")
            break

@@ -5,9 +5,9 @@ FROM registry.srlinux.dev/pub/srlinux:$SR_LINUX_RELEASE
 # RUN sudo sh -c '. /opt/srlinux/python/virtual-env/bin/activate && pip3 install nsenter'
 RUN sudo curl -sL https://github.com/karimra/gnmic/releases/download/v0.13.0/gnmic_0.13.0_Linux_x86_64.rpm -o /tmp/gnmic.rpm && sudo yum localinstall -y /tmp/gnmic.rpm
 
-# --chown=srlinux:srlinux
-# COPY ./appmgr/ /etc/opt/srlinux/appmgr/ # doesn't stick
-COPY ./appmgr/ /home/appmgr
+# Add Paris traceroute
+COPY --from=paris-traceroute /usr/local/bin/paris-* /usr/local/bin/
+COPY --from=paris-traceroute /usr/local/lib/* /usr/local/lib/
 
 COPY 42_sr_copy_custom_appmgr.sh /opt/srlinux/bin/bootscript/
 
@@ -28,9 +28,9 @@ RUN sudo sh -c ' echo "fabric = srlinux.mgmt.cli.plugins.reports.fabric:Plugin" 
 #    sudo yum install -y epel-release && \
 #    sudo yum install -y dublin-traceroute
 
-# Add Paris traceroute
-COPY --from=paris-traceroute /usr/local/bin/paris-* /usr/local/bin/
-COPY --from=paris-traceroute /usr/local/lib/* /usr/local/lib/
+# --chown=srlinux:srlinux
+# COPY ./appmgr/ /etc/opt/srlinux/appmgr/ # doesn't stick
+COPY ./appmgr/ /home/appmgr
 
 # Using a build arg to set the release tag, set a default for running docker build manually
 ARG SRL_AUTO_CONFIG_RELEASE="[custom build]"
