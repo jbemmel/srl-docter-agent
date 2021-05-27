@@ -249,7 +249,7 @@ def Handle_Notification(obj, state):
              )
              setattr( state, link_name, _ip )
              state_update = {
-               "bfd_status" : { "value" : "Awaiting BFD from: " + obj.lldp_neighbor.data.system_description,
+               "bfd_status" : { "value" : "Awaiting BFD from: " + obj.lldp_neighbor.data.system_description },
                "bfd_flaps_last_period" : 0,
                "bfd_flaps_history" : { "value" : "none yet" }
              }
