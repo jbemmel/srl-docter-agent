@@ -127,11 +127,7 @@ def Update_Peer_State(peer_ip, update_data):
 
 def Update_Global_State(state, update_data):
     js_path = '.' + agent_name
-    data = {
-      "total_bfd_flaps_last_period" : sum( [len(f) for f in state.bfd_flaps.values()] ),
-      "total_route_flaps_last_period" : 9999999,
-    }
-    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
 ##################################################################
@@ -152,7 +148,7 @@ def Handle_Notification(obj, state):
         try:
            nhg_id = obj.nhg.key
            for nh in obj.nhg.data.next_hop:
-             if nh.ip_nexthop:
+             if 'ip_nexthop' in nh:
                addr = ipaddress.ip_address(nh.ip_nexthop.addr).__str__()
                logging.info( f"NEXTHOP notification: {addr} nhg={nhg_id}" )
                state.nhg_map[nhg_id] = addr
@@ -196,7 +192,10 @@ def Handle_Notification(obj, state):
 
                 # Update flap count assesments for each peer
                 logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.bfd_flap_threshold}' )
-                Update_Global_State( state )
+                global_data = {
+                  "total_bfd_flaps_last_period" : sum( [len(f) for f in state.bfd_flaps.values()] )
+                }
+                Update_Global_State( state, global_data )
                 for peer_ip in state.bfd_flaps.keys():
                     Update_BFDFlapcounts( state, peer_ip )
 
