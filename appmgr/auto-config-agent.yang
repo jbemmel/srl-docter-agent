@@ -61,16 +61,18 @@ module auto_config_agent {
                 default 16; // Currently only affects max AS that spines accept BGP peering from
             }
 
-            leaf bfd-flaps-monitoring-period {
+            container bfd {
+             leaf flaps-monitoring-period {
                 description "Monitoring period in minutes, default 1 hour";
                 type uint16;
                 default 60;
-            }
+             }
 
-            leaf bfd-flaps-per-period-threshold {
+             leaf flaps-per-period-threshold {
                 description "Number of BFD flaps per period still considered acceptable";
                 type uint32;
                 default 0;
+             }
             }
 
             // Info from state
@@ -89,24 +91,31 @@ module auto_config_agent {
                 leaf peer-ip {
                   type string;
                 }
-                leaf bfd-status {
+                container bfd {
+                 leaf status {
                   type string;
                   default "red";
-                }
-                leaf bfd-flaps-last-period {
+                 }
+                 leaf flaps-last-period {
                   type uint32;
-                }
-                leaf bfd-flaps-history {
+                 }
+                 leaf flaps-history {
                   type string;
+                 }
+                 leaf last-flap-timestamp {
+                   type string;
+                 }
                 }
-                leaf route-flaps-last-period {
+                container routes {
+                 leaf flaps-last-period {
                   type uint64;
-                }
-                leaf route-flaps-history {
+                 }
+                 leaf flaps-history {
                   type string;
-                }
-                leaf last-flap-timestamp {
-                  type string;
+                 }
+                 leaf last-flap-timestamp {
+                   type string;
+                 }
                 }
             }
         }
