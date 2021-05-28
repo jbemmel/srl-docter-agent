@@ -11,6 +11,11 @@ module auto_config_agent {
     //    prefix srl_nokia-comm;
     // }
 
+    // Note that this module needs to be in the path for source-directories
+    import srl_nokia-extensions {
+      prefix srl_nokia-ext;
+    }
+
     revision "2021-04-11" {
         description "Initial revision";
         reference "TBD";
@@ -91,35 +96,43 @@ module auto_config_agent {
                 leaf peer-ip {
                   type string;
                 }
-                // container bfd {
-                 leaf bfd-status {
+                container bfd {
+                 srl_nokia-ext:delivery-node-override true;
+                 srl_nokia-ext:stream-mode sample=5;
+                 presence "State BFD operational parameters";
+
+                 leaf status {
                   type string;
                   default "red";
                  }
-                 leaf bfd-flaps-last-period {
+                 leaf flaps-last-period {
                   type uint32;
                  }
-                 leaf bfd-flaps-history {
+                 leaf flaps-history {
                   type string;
                  }
-                 leaf bfd-last-flap-timestamp {
+                 leaf last-flap-timestamp {
                    type string;
                  }
-                // }
-                // container routes {
-                 leaf route-status {
+                }
+                container routes {
+                 srl_nokia-ext:delivery-node-override true;
+                 srl_nokia-ext:stream-mode sample=5;
+                 presence "State Routes operational parameters";
+
+                 leaf status {
                   type string;
                  }
-                 leaf route-flaps-last-period {
+                 leaf flaps-last-period {
                   type uint64;
                  }
-                 leaf route-flaps-history {
+                 leaf flaps-history {
                   type string;
                  }
-                 leaf route-last-flap-timestamp {
+                 leaf last-flap-timestamp {
                    type string;
                  }
-                // }
+              }
             }
         }
     }
