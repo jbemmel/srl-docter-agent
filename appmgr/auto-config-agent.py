@@ -184,10 +184,11 @@ def Handle_Notification(obj, state):
                     state.max_spines = int( data['max_spines']['value'] )
                 if 'max_leaves' in data:
                     state.max_leaves = int( data['max_leaves']['value'] )
-                if 'bfd_flaps_per_period_threshold' in data:
-                    state.bfd_flap_threshold = int( data['bfd_flaps_per_period_threshold']['value'] )
-                if 'bfd_flaps_monitoring_period' in data:
-                    state.bfd_flap_period_mins = int( data['bfd_flaps_monitoring_period']['value'] )
+                if 'bfd' in data:
+                  if 'flaps_per_period_threshold' in data.bfd:
+                    state.bfd_flap_threshold = int( data.bfd['flaps_per_period_threshold']['value'] )
+                  if 'flaps_monitoring_period' in data.bfd:
+                    state.bfd_flap_period_mins = int( data.bfd['flaps_monitoring_period']['value'] )
 
 
                 # Update flap count assesments for each peer
