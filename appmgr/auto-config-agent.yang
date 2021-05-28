@@ -91,32 +91,35 @@ module auto_config_agent {
                 leaf peer-ip {
                   type string;
                 }
-                container bfd {
-                 leaf status {
+                // container bfd {
+                 leaf bfd-status {
                   type string;
                   default "red";
                  }
-                 leaf flaps-last-period {
+                 leaf bfd-flaps-last-period {
                   type uint32;
                  }
-                 leaf flaps-history {
+                 leaf bfd-flaps-history {
                   type string;
                  }
-                 leaf last-flap-timestamp {
+                 leaf bfd-last-flap-timestamp {
                    type string;
                  }
-                }
-                container routes {
-                 leaf flaps-last-period {
+                // }
+                // container routes {
+                 leaf route-status {
+                  type string;
+                 }
+                 leaf route-flaps-last-period {
                   type uint64;
                  }
-                 leaf flaps-history {
+                 leaf route-flaps-history {
                   type string;
                  }
-                 leaf last-flap-timestamp {
+                 leaf route-last-flap-timestamp {
                    type string;
                  }
-                }
+                // }
             }
         }
     }

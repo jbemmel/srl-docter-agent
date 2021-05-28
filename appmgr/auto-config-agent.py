@@ -119,9 +119,9 @@ def Add_Telemetry(js_path, js_data):
 ## Function to populate state fields of the agent
 ## It updates command: info from state auto-config-agent
 ############################################################
-def Update_Peer_State(peer_ip, section, update_data):
+def Update_Peer_State(peer_ip, update_data):
     _ip_key = '.'.join([i.zfill(3) for i in peer_ip.split('.')]) # sortable
-    js_path = '.' + agent_name + '.peer{.peer_ip=="' + _ip_key + '"}.' + section
+    js_path = '.' + agent_name + '.peer{.peer_ip=="' + _ip_key + '"}'
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
@@ -185,10 +185,10 @@ def Handle_Notification(obj, state):
                 if 'max_leaves' in data:
                     state.max_leaves = int( data['max_leaves']['value'] )
                 if 'bfd' in data:
-                  if 'flaps_per_period_threshold' in data.bfd:
-                    state.bfd_flap_threshold = int( data.bfd['flaps_per_period_threshold']['value'] )
-                  if 'flaps_monitoring_period' in data.bfd:
-                    state.bfd_flap_period_mins = int( data.bfd['flaps_monitoring_period']['value'] )
+                  if 'flaps_per_period_threshold' in data['bfd']:
+                    state.bfd_flap_threshold = int( data['bfd']['flaps_per_period_threshold']['value'] )
+                  if 'flaps_monitoring_period' in data['bfd']:
+                    state.bfd_flap_period_mins = int( data['bfd']['flaps_monitoring_period']['value'] )
 
 
                 # Update flap count assesments for each peer
@@ -247,11 +247,11 @@ def Handle_Notification(obj, state):
              )
              setattr( state, link_name, _ip )
              state_update = {
-               "status" : { "value" : "Awaiting BFD from: " + obj.lldp_neighbor.data.system_description },
-               "flaps_last_period" : 0,
-               "flaps_history" : { "value" : "none yet" }
+               "bfd_status" : { "value" : "Awaiting BFD from: " + obj.lldp_neighbor.data.system_description },
+               "bfd_flaps_last_period" : 0,
+               "bfd_flaps_history" : { "value" : "none yet" }
              }
-             Update_Peer_State( _peer, 'bfd', state_update )
+             Update_Peer_State( _peer, state_update )
 
     elif obj.HasField('bfd_session'):
         logging.info(f"process BFD notification : {obj}")
@@ -283,12 +283,12 @@ def Update_BFDFlapcounts(state,peer_ip,status=0):
                                                    state.bfd_flaps,
                                                    state.bfd_flap_period_mins)
     state_update = {
-      "status" : { "value" : "red" if flaps_this_period > state.bfd_flap_threshold or status!=4 else "green" },
-      "flaps_last_period" : flaps_this_period,
-      "flaps_history" : { "value" : history },
-      "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
+      "bfd_status" : { "value" : "red" if flaps_this_period > state.bfd_flap_threshold or status!=4 else "green" },
+      "bfd_flaps_last_period" : flaps_this_period,
+      "bfd_flaps_history" : { "value" : history },
+      "bfd_last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
     }
-    Update_Peer_State( peer_ip, 'bfd', state_update )
+    Update_Peer_State( peer_ip, state_update )
     Update_Global_State( state, "total_bfd_flaps_last_period", # Works??
       sum( [len(f) for f in state.bfd_flaps.values()] ) )
 
@@ -304,12 +304,12 @@ def Update_RouteFlapcounts(state,peer_ip,prefix):
                                                    state.route_flaps,
                                                    state.bfd_flap_period_mins)
     state_update = {
-      "status" : { "value" : "red" if flaps_this_period > state.bfd_flap_threshold else "green" },
-      "flaps_last_period" : flaps_this_period,
-      "flaps_history" : { "value" : history },
-      "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
+      "route_status" : { "value" : "red" if flaps_this_period > state.bfd_flap_threshold else "green" },
+      "route_flaps_last_period" : flaps_this_period,
+      "route_flaps_history" : { "value" : history },
+      "route_last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
     }
-    Update_Peer_State( peer_ip, 'routes', state_update )
+    Update_Peer_State( peer_ip, state_update )
     # Update_Global_State( state )
 
 ##
