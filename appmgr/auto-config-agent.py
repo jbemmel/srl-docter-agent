@@ -140,15 +140,18 @@ def Handle_Notification(obj, state):
         prefix = obj.route.key.ip_prefix.prefix_length
         nhg_id = obj.route.data.nhg_id
         owner_id = obj.route.data.owner_id # To correlate Delete later on
-        nh_ip = state.nhg_map[nhg_id] or "?"
+        nh_ip = "?"
+        if nhg_id in state.nhg_map:
+           nh_ip = state.nhg_map[nhg_id]
         _op = ""
         if obj.route.op == "Delete":
            _op = "-"
-           nh_ip = state.owner_id_map[ owner_id ] or "?"
-           delattr( state.owner_id_map, owner_id )
+           if owner_id in state.owner_id_map:
+             nh_ip = state.owner_id_map[ owner_id ]
+             delattr( state.owner_id_map, owner_id )
         elif nh_ip != "?":
            state.owner_id_map[owner_id] = nh_ip # Remember for Delete
-        logging.info( f"ROUTE notification: {addr}/{prefix} nhg={nhg_id} ip={nh_ip} owner_id={owner_id}" )
+        logging.info( f"ROUTE notification: {_op}{addr}/{prefix} nhg={nhg_id} ip={nh_ip} owner_id={owner_id}" )
         if nh_ip != "?":
            Update_RouteFlapcounts(state, nh_ip, f'{_op}{addr}/{prefix}' )
 
@@ -159,13 +162,14 @@ def Handle_Notification(obj, state):
              logging.info( f"NEXTHOP Delete notification: nhg={nhg_id}" )
              if nhg_id in state.nhg_map:
                peer_ip = state.nhg_map[ nhg_id ]
-               state.route_flaps[peer_ip][ datetime.datetime.now() ] = f'-{nhg_id}'
+               Update_RouteFlapcounts(state, peer_ip, f'-nhg{nhg_id}')
                delattr( state.nhg_map, nhg_id )
            else:
              for nh in obj.nhg.data.next_hop:
               if nh.ip_nexthop.addr != "":
                addr = ipaddress.ip_address(nh.ip_nexthop.addr).__str__()
                logging.info( f"NEXTHOP notification: {addr} nhg={nhg_id}" )
+               Update_RouteFlapcounts(state, addr, f'+nhg{nhg_id}')
                state.nhg_map[nhg_id] = addr
                break
         except Exception as e: # ip_nexthop not set
