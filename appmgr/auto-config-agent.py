@@ -139,19 +139,35 @@ def Handle_Notification(obj, state):
         addr = ipaddress.ip_address(obj.route.key.ip_prefix.ip_addr.addr).__str__()
         prefix = obj.route.key.ip_prefix.prefix_length
         nhg_id = obj.route.data.nhg_id
-        nh_ip = state.nhg_map[nhg_id] if nhg_id in state.nhg_map else "?"
-        logging.info( f"ROUTE notification: {addr}/{prefix} nhg={nhg_id} ip={nh_ip}" )
+        owner_id = obj.route.data.owner_id # To correlate Delete later on
+        nh_ip = state.nhg_map[nhg_id] or "?"
+        _op = ""
+        if obj.route.op == "Delete":
+           _op = "-"
+           nh_ip = state.owner_id_map[ owner_id ] or "?"
+           delattr( state.owner_id_map, owner_id )
+        elif nh_ip != "?":
+           state.owner_id_map[owner_id] = nh_ip # Remember for Delete
+        logging.info( f"ROUTE notification: {addr}/{prefix} nhg={nhg_id} ip={nh_ip} owner_id={owner_id}" )
         if nh_ip != "?":
-           Update_RouteFlapcounts(state, nh_ip, f'{addr}/{prefix}' )
+           Update_RouteFlapcounts(state, nh_ip, f'{_op}{addr}/{prefix}' )
 
     elif obj.HasField('nhg'):
         try:
            nhg_id = obj.nhg.key
-           for nh in obj.nhg.data.next_hop:
-             if nh.ip_nexthop.addr != "":
+           if (obj.nhg.op == "Delete"):
+             logging.info( f"NEXTHOP Delete notification: nhg={nhg_id}" )
+             if nhg_id in state.nhg_map:
+               peer_ip = state.nhg_map[ nhg_id ]
+               state.route_flaps[peer_ip][ datetime.datetime.now() ] = f'-{nhg_id}'
+               delattr( state.nhg_map, nhg_id )
+           else:
+             for nh in obj.nhg.data.next_hop:
+              if nh.ip_nexthop.addr != "":
                addr = ipaddress.ip_address(nh.ip_nexthop.addr).__str__()
                logging.info( f"NEXTHOP notification: {addr} nhg={nhg_id}" )
                state.nhg_map[nhg_id] = addr
+               break
         except Exception as e: # ip_nexthop not set
            logging.error(f'Exception caught while processing nhg :: {e}')
 
@@ -184,15 +200,17 @@ def Handle_Notification(obj, state):
                     state.max_spines = int( data['max_spines']['value'] )
                 if 'max_leaves' in data:
                     state.max_leaves = int( data['max_leaves']['value'] )
-                if 'bfd' in data:
-                  if 'flaps_per_period_threshold' in data['bfd']:
-                    state.bfd_flap_threshold = int( data['bfd']['flaps_per_period_threshold']['value'] )
-                  if 'flaps_monitoring_period' in data['bfd']:
-                    state.bfd_flap_period_mins = int( data['bfd']['flaps_monitoring_period']['value'] )
-
+                if 'monitor' in data:
+                  _d = data['monitor']
+                  if 'flaps_per_period_threshold' in _d:
+                    state.flap_threshold = int( _d['flaps_per_period_threshold']['value'] )
+                  if 'flaps_monitoring_period' in _d:
+                    state.flap_period_mins = int( _d['flaps_monitoring_period']['value'] )
+                  if 'max_flaps_history' in _d:
+                    state.max_flaps_history = int( _d['max_flaps_history']['value'] )
 
                 # Update flap count assesments for each peer
-                logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.bfd_flap_threshold}' )
+                logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.flap_threshold}' )
                 Update_Global_State( state, "total_bfd_flaps_last_period",
                   sum( [len(f) for f in state.bfd_flaps.values()] ) )
                 for peer_ip in state.bfd_flaps.keys():
@@ -281,9 +299,9 @@ def Update_BFDFlapcounts(state,peer_ip,status=0):
     now = datetime.datetime.now()
     flaps_this_period, history = Update_Flapcounts(state, now, peer_ip, status,
                                                    state.bfd_flaps,
-                                                   state.bfd_flap_period_mins)
+                                                   state.flap_period_mins)
     state_update = {
-      "status" : { "value" : "red" if flaps_this_period > state.bfd_flap_threshold or status!=4 else "green" },
+      "status" : { "value" : "red" if flaps_this_period > state.flap_threshold or status!=4 else "green" },
       "flaps_last_period" : flaps_this_period,
       "flaps_history" : { "value" : history },
       "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
@@ -302,9 +320,9 @@ def Update_RouteFlapcounts(state,peer_ip,prefix):
     now = datetime.datetime.now()
     flaps_this_period, history = Update_Flapcounts(state, now, peer_ip, prefix,
                                                    state.route_flaps,
-                                                   state.bfd_flap_period_mins)
+                                                   state.flap_period_mins)
     state_update = {
-      "status" : { "value" : "red" if flaps_this_period > state.bfd_flap_threshold else "green" },
+      "status" : { "value" : "red" if flaps_this_period > state.flap_threshold else "green" },
       "flaps_last_period" : flaps_this_period,
       "flaps_history" : { "value" : history },
       "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
@@ -322,13 +340,14 @@ def Update_Flapcounts(state,now,peer_ip,status,flapmap,period_mins):
     keep_flaps = {}
     keep_history = ""
     start_of_period = now - datetime.timedelta(minutes=period_mins)
+    _max = state.max_flaps_history
     for i in sorted(flaps.keys(), reverse=True):
        logging.info(f"BFD : check if {i} is within the last period {start_of_period}")
-       if ( i > start_of_period ):
+       if ( i > start_of_period and (_max==0 or _max>len(keep_flaps)) ):
            keep_flaps[i] = flaps[i]
            keep_history += f'{ i.strftime("[%H:%M:%S.%f]") } ~ {flaps[i]},'
        else:
-           logging.info(f"flap happened outside monitoring period: {i}")
+           logging.info(f"flap happened outside monitoring period/max: {i}")
            break
     logging.info(f"BFD : keeping last period of flaps for {peer_ip}:{keep_flaps}")
     flapmap[peer_ip] = keep_flaps
@@ -365,8 +384,10 @@ class State(object):
         self.role = None       # May not be set in config
         self.bfd_flaps = {}    # Indexed by peer IP
         self.nhg_map = {}      # Map of nhg_id -> peer IP
+        self.owner_id_map = {} # Map of owner_id (from add route) -> peer IP
         self.route_flaps = {}  # Indexed by next hop IP
-        self.bfd_flap_period_mins = 60 # Make sure this is defined
+        self.flap_period_mins = 60 # Make sure this is defined
+        self.max_flaps_history = 0
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)

@@ -66,7 +66,7 @@ module auto_config_agent {
                 default 16; // Currently only affects max AS that spines accept BGP peering from
             }
 
-            container bfd {
+            container monitor {
              leaf flaps-monitoring-period {
                 description "Monitoring period in minutes, default 1 hour";
                 type uint16;
@@ -78,6 +78,12 @@ module auto_config_agent {
                 type uint32;
                 default 0;
              }
+             leaf max-flaps-history {
+                description "Maximum number of flaps to retain, 0 = infinite";
+                type uint32;
+                default 0;
+             }
+
             }
 
             // Info from state
