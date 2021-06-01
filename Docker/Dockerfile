@@ -18,6 +18,10 @@ COPY 42_sr_copy_custom_appmgr.sh /opt/srlinux/bin/bootscript/
 # sudo docker run -it --privileged -v /tmp/var_lib_docker:/var/lib/balena-engine srl/auto-config:latest
 RUN curl -sfL https://balena.io/engine/install.sh | sh
 
+# Install pyGNMI client library
+RUN sudo yum install -y python3-pip gcc-c++ && source /opt/srlinux/python/virtual-env/bin/activate && \
+    sudo python3 -m pip install pip --upgrade && sudo python3 -m pip install pygnmi
+
 # Integrate CLI agent, change CLI network namespace to 'default'
 COPY cliplugin/*.py /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux/mgmt/cli/plugins/reports/
 RUN sudo sh -c ' echo "fabric = srlinux.mgmt.cli.plugins.reports.fabric:Plugin" >> /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux-0.1-py3.6.egg-info/entry_points.txt'
