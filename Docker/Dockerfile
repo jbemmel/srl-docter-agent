@@ -1,5 +1,6 @@
 ARG SR_LINUX_RELEASE
-FROM srl/custombase:$SR_LINUX_RELEASE
+FROM srl/auto-config:$SR_LINUX_RELEASE
+# FROM srl/custombase:$SR_LINUX_RELEASE
 # FROM ghcr.io/nokia/srlinux:$SR_LINUX_RELEASE
 # FROM registry.srlinux.dev/pub/srlinux:$SR_LINUX_RELEASE
 
@@ -22,7 +23,7 @@ RUN sudo sh -c ' echo "fabric = srlinux.mgmt.cli.plugins.reports.fabric:Plugin" 
 #    sudo yum install -y epel-release && \
 #    sudo yum install -y dublin-traceroute
 
-RUN sudo mkdir -p /etc/opt/srlinux/appmgr/ /opt/srlinux/agents/frr-agent
+RUN sudo mkdir -p /etc/opt/srlinux/appmgr/ /opt/srlinux/agents/
 COPY --chown=srlinux:srlinux ./docter-agent.yml /etc/opt/srlinux/appmgr
 COPY ./src /opt/srlinux/agents/
 

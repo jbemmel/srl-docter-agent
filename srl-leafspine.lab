@@ -8,9 +8,9 @@ topology:
       image: srl/docter-agent:latest
 
   nodes:
-    leaf1:  { kind: srl }
-    leaf2:  { kind: srl }
-    spine1: { kind: srl }
+    spine1: { kind: srl, startup-config: auto-spine.cfg.json }
+    leaf1:  { kind: srl, startup-config: auto-leaf.cfg.json }
+    leaf2:  { kind: srl, startup-config: auto-leaf.cfg.json }
 
   links:
     - endpoints: ["leaf1:e1-1","spine1:e1-1"]

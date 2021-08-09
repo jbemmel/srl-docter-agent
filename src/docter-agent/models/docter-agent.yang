@@ -29,43 +29,6 @@ module docter-agent {
             description "Top level enclosing container for auto config agent sample app
                          config and operational state data";
 
-            leaf role {
-                description "Role of this node in the fabric (layer in the network)";
-                type enumeration {
-                 enum leaf;
-                 enum spine;
-                 // TODO enum superspine;
-                }
-            }
-            leaf base-as {
-                description "Baseline 2-byte or 4-byte Autonomous System to auto-assign";
-                // type srl_nokia-comm:as-number;
-                type uint32;
-                default 65000; // Spines get this, each leaf gets base+rank
-            }
-            leaf peerlinks-prefix {
-                description "IPv4 prefix range to use for auto-assigned peering links /31";
-                // type srl_nokia-comm:ipv4-prefix;
-                type string;
-                default "192.168.0.0/24"; // enough for 128 /31 links
-            }
-            leaf loopbacks-prefix {
-                description "IPv4 prefix range to use for auto-assigned loopback IPs /32";
-                // type srl_nokia-comm:ipv4-prefix;
-                type string;
-                default "1.1.0.0/23"; // spines get 1.1.0.x, leaves 1.1.1.x
-            }
-            leaf max-spines {
-                description "Maximum number of spines, controls IP link addressing; must match across fabric";
-                type uint8;
-                default 4; // Higher values require a larger peerlinks-prefix space
-            }
-            leaf max-leaves {
-                description "Maximum number of leafs, controls AS allocation; must match across fabric";
-                type uint16;
-                default 16; // Currently only affects max AS that spines accept BGP peering from
-            }
-
             container monitor {
              leaf flaps-monitoring-period {
                 description "Monitoring period in minutes, default 1 hour";
