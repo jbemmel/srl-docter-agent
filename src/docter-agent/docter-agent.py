@@ -34,7 +34,7 @@ from logging.handlers import RotatingFileHandler
 ############################################################
 ## Agent will start with this name
 ############################################################
-agent_name='auto_config_agent'
+agent_name='docter_agent'
 
 ############################################################
 ## Open a GRPC channel to connect to sdk_mgr on the dut
@@ -181,7 +181,7 @@ def Handle_Notification(obj, state):
             logging.info(f"Got config for agent, now will handle it :: \n{obj.config}\
                             Operation :: {obj.config.op}\nData :: {obj.config.data.json}")
             if obj.config.op == 2:
-                logging.info(f"Delete auto-config-agent cli scenario")
+                logging.info(f"Delete docter-agent cli scenario")
                 # if file_name != None:
                 #    Update_Result(file_name, action='delete')
                 response=stub.AgentUnRegister(request=sdk_service_pb2.AgentRegistrationRequest(), metadata=metadata)
@@ -397,7 +397,7 @@ class State(object):
         return str(self.__class__) + ": " + str(self.__dict__)
 
 ##################################################################################################
-## This is the main proc where all processing for auto_config_agent starts.
+## This is the main proc where all processing for docter_agent starts.
 ## Agent registration, notification registration, Subscrition to notifications.
 ## Waits on the subscribed Notifications and once any config is received, handles that config
 ## If there are critical errors, Unregisters the fib_agent gracefully.
@@ -478,7 +478,7 @@ def Exit_Gracefully(signum, frame):
 
 ##################################################################################################
 ## Main from where the Agent starts
-## Log file is written to: /var/log/srlinux/stdout/<dutName>_fibagent.log
+## Log file is written to: /var/log/srlinux/stdout/<agent_name>.log
 ## Signals handled for graceful exit: SIGTERM
 ##################################################################################################
 if __name__ == '__main__':
@@ -487,14 +487,13 @@ if __name__ == '__main__':
     signal.signal(signal.SIGTERM, Exit_Gracefully)
     if not os.path.exists(stdout_dir):
         os.makedirs(stdout_dir, exist_ok=True)
-    log_filename = '{}/auto_config_agent.log'.format(stdout_dir)
-    logging.basicConfig(filename=log_filename, filemode='a',\
-                        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',\
-                        datefmt='%H:%M:%S', level=logging.INFO)
-    handler = RotatingFileHandler(log_filename, maxBytes=3000000,backupCount=5)
-    logging.getLogger().addHandler(handler)
+    log_filename = f'{stdout_dir}/{agent_name}.log'
+    logging.basicConfig(
+      handlers=[RotatingFileHandler(log_filename, maxBytes=3000000,backupCount=5)],
+      format='%(asctime)s,%(msecs)03d %(name)s %(levelname)s %(message)s',
+      datefmt='%H:%M:%S', level=logging.INFO)
     logging.info("START TIME :: {}".format(datetime.datetime.now()))
     if Run():
-        logging.info('Agent unregistered and agent routes withdrawed from dut')
+        logging.info('Docter agent unregistered')
     else:
         logging.info('Should not happen')

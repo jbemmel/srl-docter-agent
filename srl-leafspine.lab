@@ -12,7 +12,23 @@ topology:
     leaf1:  { kind: srl, startup-config: auto-leaf.cfg.json }
     leaf2:  { kind: srl, startup-config: auto-leaf.cfg.json }
 
+    grafana: # Added, connect via mgmt network
+      kind: linux
+      image: grafana/grafana
+      mgmt_ipv4: 172.20.20.10 # Pick a fixed IP
+      mgmt_ipv6: 2001:172:20:20::10
+
+    telegraf: # Added, connect via mgmt network
+      kind: linux
+      image: telegraf
+      mgmt_ipv4: 172.20.20.11 # Pick a fixed IP
+      mgmt_ipv6: 2001:172:20:20::11
+    influxdb: # Added, connect via mgmt network
+      kind: linux
+      image: influxdb
+      mgmt_ipv4: 172.20.20.12 # Pick a fixed IP
+      mgmt_ipv6: 2001:172:20:20::12
+
   links:
     - endpoints: ["leaf1:e1-1","spine1:e1-1"]
     - endpoints: ["leaf2:e1-1","spine1:e1-2"]
-
