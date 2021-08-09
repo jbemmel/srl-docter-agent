@@ -1,0 +1,16 @@
+# See example_config.yml for an explanation of all the accepted fields
+docter_agent:
+   path: /opt/srlinux/agents/docter-agent/
+   launch-command: /opt/srlinux/agents/docter-agent/scripts/docter-agent.sh
+   search-command: python3 /opt/srlinux/agents/docter-agent/docter-agent.py
+   wait-for-config: Yes
+   failure-threshold: 100
+   failure-action: wait=forever
+   author: 'Demo agent'
+   version-command: ' cat build_version'
+   yang-modules:
+       names:
+           - "docter-agent"
+       source-directories:
+           - "/opt/srlinux/agents/docter-agent/models/"
+           - "/opt/srlinux/models/srl_nokia/models/common/"

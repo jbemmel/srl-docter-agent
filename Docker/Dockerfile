@@ -1,26 +1,16 @@
 ARG SR_LINUX_RELEASE
-FROM registry.srlinux.dev/pub/srlinux:$SR_LINUX_RELEASE
-
-# CLI does not have permissions to enter namespaces
-# RUN sudo sh -c '. /opt/srlinux/python/virtual-env/bin/activate && pip3 install nsenter'
-RUN sudo curl -sL https://github.com/karimra/gnmic/releases/download/v0.13.0/gnmic_0.13.0_Linux_x86_64.rpm -o /tmp/gnmic.rpm && sudo yum localinstall -y /tmp/gnmic.rpm
+FROM srl/custombase:$SR_LINUX_RELEASE
+# FROM ghcr.io/nokia/srlinux:$SR_LINUX_RELEASE
+# FROM registry.srlinux.dev/pub/srlinux:$SR_LINUX_RELEASE
 
 # Add Paris traceroute
-COPY --from=paris-traceroute /usr/local/bin/paris-* /usr/local/bin/
-COPY --from=paris-traceroute /usr/local/lib/* /usr/local/lib/
-
-COPY 42_sr_copy_custom_appmgr.sh /opt/srlinux/bin/bootscript/
-
-# RUN sudo mkdir -p /etc/opt/srlinux/appmgr/ && sudo cp /home/appmgr/* /etc/opt/srlinux/appmgr/
+# COPY --from=paris-traceroute /usr/local/bin/paris-* /usr/local/bin/
+# COPY --from=paris-traceroute /usr/local/lib/* /usr/local/lib/
 
 # Install balena, a modern Docker application to run containers within SRL
 # Requires cSRL to be started using
 # sudo docker run -it --privileged -v /tmp/var_lib_docker:/var/lib/balena-engine srl/auto-config:latest
-RUN curl -sfL https://balena.io/engine/install.sh | sh
-
-# Install pyGNMI client library
-RUN sudo yum install -y python3-pip gcc-c++ && source /opt/srlinux/python/virtual-env/bin/activate && \
-    sudo python3 -m pip install pip --upgrade && sudo python3 -m pip install pygnmi
+# RUN curl -sfL https://balena.io/engine/install.sh | sh
 
 # Integrate CLI agent, change CLI network namespace to 'default'
 COPY cliplugin/*.py /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux/mgmt/cli/plugins/reports/
@@ -32,9 +22,12 @@ RUN sudo sh -c ' echo "fabric = srlinux.mgmt.cli.plugins.reports.fabric:Plugin" 
 #    sudo yum install -y epel-release && \
 #    sudo yum install -y dublin-traceroute
 
-# --chown=srlinux:srlinux
-# COPY ./appmgr/ /etc/opt/srlinux/appmgr/ # doesn't stick
-COPY ./appmgr/ /home/appmgr
+RUN sudo mkdir -p /etc/opt/srlinux/appmgr/ /opt/srlinux/agents/frr-agent
+COPY --chown=srlinux:srlinux ./docter-agent.yml /etc/opt/srlinux/appmgr
+COPY ./src /opt/srlinux/agents/
+
+# run pylint to catch any obvious errors
+RUN PYTHONPATH=$AGENT_PYTHONPATH pylint --load-plugins=pylint_protobuf -E /opt/srlinux/agents/docter-agent
 
 # Using a build arg to set the release tag, set a default for running docker build manually
 ARG SRL_AUTO_CONFIG_RELEASE="[custom build]"

@@ -1,11 +1,11 @@
-module auto_config_agent {
+module docter-agent {
 
     yang-version "1";
 
     // namespace
-    namespace "urn:srl_test/auto-config-agent";
+    namespace "urn:srl_test/docter-agent";
 
-    prefix "auto_config_agent";
+    prefix "docter_agent";
 
     // import srl_nokia-common {
     //    prefix srl_nokia-comm;
@@ -21,10 +21,10 @@ module auto_config_agent {
         reference "TBD";
     }
 
-    grouping auto-config-agent-top {
-        description "Top level grouping for auto config agent sample app";
+    grouping docter-agent-top {
+        description "Top level grouping for docter agent sample app";
 
-        container auto-config-agent {
+        container docter-agent {
             presence "presence container";
             description "Top level enclosing container for auto config agent sample app
                          config and operational state data";
@@ -144,5 +144,5 @@ module auto_config_agent {
     }
 
     // data definition statements
-    uses auto-config-agent-top;
+    uses docter-agent-top;
 }
