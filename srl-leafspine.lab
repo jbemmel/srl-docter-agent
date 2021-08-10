@@ -14,8 +14,8 @@ topology:
 
     grafana: # Added, connect via mgmt network
       kind: linux
-      # publish:
-      #  - tcp/3000     # tcp port 3000 will be exposed via mysocket.io
+      publish:
+       - tcp/3000     # tcp port 3000 will be exposed via mysocket.io
       image: grafana/grafana
       mgmt_ipv4: 172.20.20.10 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::10
