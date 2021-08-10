@@ -30,6 +30,12 @@ topology:
       image: influxdb
       mgmt_ipv4: 172.20.20.12 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::12
+      
+    mysocketio:
+      kind: mysocketio
+      image: ghcr.io/hellt/mysocketctl:0.4.0
+      binds:
+        - .mysocketio_token:/root/.mysocketio_token # bind mount API token
 
   links:
     - endpoints: ["leaf1:e1-1","spine1:e1-1"]
