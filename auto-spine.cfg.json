@@ -1,7 +1,9 @@
 {
   "auto_config_agent:auto-config-agent": {
     "role": "spine",
-    "use-ospfv3": true
+    "use-evpn": true,
+    "use-ospfv3": true,
+    "base-as": 65000
   },
   "srl_nokia-acl:acl": {
     "cpm-filter": {
