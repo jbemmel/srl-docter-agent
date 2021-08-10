@@ -1,0 +1,48 @@
+name: bgp-srl-docter-lab
+
+topology:
+  kinds:
+    srl:
+      # Need IXR D2 or D3 for EVPN/VXLAN support
+      type: ixrd2 # See https://www.nokia.com/networks/products/7250-interconnect-router/
+      image: srl/docter-agent:latest
+
+  nodes:
+    spine1: { kind: srl, startup-config: auto-spine.cfg.json }
+    leaf1:  { kind: srl, startup-config: auto-leaf.cfg.json }
+    leaf2:  { kind: srl, startup-config: auto-leaf.cfg.json }
+
+    h1: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
+    h2: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
+
+    #grafana: # Added, connect via mgmt network
+    #  kind: linux
+    #  #publish:
+      # - tcp/3000     # tcp port 3000 will be exposed via mysocket.io
+    #  image: grafana/grafana
+    #  mgmt_ipv4: 172.20.20.10 # Pick a fixed IP
+    #  mgmt_ipv6: 2001:172:20:20::10
+
+    #telegraf: # Added, connect via mgmt network
+    #  kind: linux
+    #  image: telegraf
+    #  mgmt_ipv4: 172.20.20.11 # Pick a fixed IP
+    #  mgmt_ipv6: 2001:172:20:20::11
+    #influxdb: # Added, connect via mgmt network
+    #  kind: linux
+    #  image: influxdb
+    #  mgmt_ipv4: 172.20.20.12 # Pick a fixed IP
+    #  mgmt_ipv6: 2001:172:20:20::12
+
+    #mysocketio:
+    #  kind: mysocketio
+    #  image: ghcr.io/hellt/mysocketctl:0.4.0
+    #  binds:
+    #    - .mysocketio_token:/root/.mysocketio_token # bind mount API token
+
+  links:
+    - endpoints: ["leaf1:e1-1","spine1:e1-1"]
+    - endpoints: ["leaf2:e1-1","spine1:e1-2"]
+
+    - endpoints: ["leaf1:e1-2","h1:e1-1"]
+    - endpoints: ["leaf2:e1-2","h2:e1-1"]
