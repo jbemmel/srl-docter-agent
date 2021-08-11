@@ -17,6 +17,8 @@ topology:
       publish:
        - tcp/3000     # tcp port 3000 will be exposed via mysocket.io
       image: grafana/grafana
+      binds:
+        - configs/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
       mgmt_ipv4: 172.20.20.10 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::10
 
