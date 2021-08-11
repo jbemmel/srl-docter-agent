@@ -8,9 +8,14 @@ topology:
       image: srl/docter-agent:latest
 
   nodes:
+  
+  ###### DC FABRIC ######
+  
     spine1: { kind: srl, startup-config: auto-spine.cfg.json }
     leaf1:  { kind: srl, startup-config: auto-leaf.cfg.json }
     leaf2:  { kind: srl, startup-config: auto-leaf.cfg.json }
+    
+  ###### TELEMETRY STACK ######
 
     grafana: # Added, connect via mgmt network
       kind: linux
