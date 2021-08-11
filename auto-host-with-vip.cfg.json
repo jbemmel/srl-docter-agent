@@ -1,7 +1,8 @@
 {
   "auto_config_agent:auto-config-agent": {
     "role": "endpoint",
-    "base-as": 65000
+    "base-as": 65000,
+    "host-as": 65123
   },
   "srl_nokia-acl:acl": {
     "cpm-filter": {

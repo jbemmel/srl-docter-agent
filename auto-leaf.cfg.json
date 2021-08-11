@@ -4,6 +4,7 @@
     "use-ospfv3": true,
     "use-evpn": true,
     "base-as": 65000,
+    "host-as": 65123,
     "auto-lags": false
   },
   "srl_nokia-acl:acl": {
@@ -1157,6 +1158,9 @@
           "name": "local"
         }
       ]
+    },
+    "srl_nokia-system-name:name": {
+      "domain-name": "leaf.net"
     },
     "srl_nokia-gnmi-server:gnmi-server": {
       "admin-state": "enable",
