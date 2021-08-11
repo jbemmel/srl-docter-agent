@@ -18,7 +18,7 @@ topology:
        - tcp/3000     # tcp port 3000 will be exposed via mysocket.io
       image: grafana/grafana
       env:
-        GF_INSTALL_PLUGINS: agenty-flowcharting-panel
+        GF_INSTALL_PLUGINS: agenty-flowcharting-panel, agenty-flowcharting-panel
       binds:
         - configs/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
         - configs/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
