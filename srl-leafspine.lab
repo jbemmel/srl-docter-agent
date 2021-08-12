@@ -41,7 +41,7 @@ topology:
       
     influxdb: # Added, connect via mgmt network
       kind: linux
-      image: influxdb
+      image: influxdb:1.8
       mgmt_ipv4: 172.20.20.12 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::12
       
