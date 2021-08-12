@@ -6,14 +6,14 @@ topology:
       # Need IXR D2 or D3 for EVPN/VXLAN support
       type: ixrd2 # See https://www.nokia.com/networks/products/7250-interconnect-router/
       image: srl/docter-agent:latest
-      agents: [ ../srl-self-organizing/appmgr/auto-config-agent.yml ]
+      agents: [ ../srl-self-organizing/auto-config-agent.yml ]
 
   nodes:
     spine1: { kind: srl, startup-config: auto-spine.cfg.json }
     leaf1:  { kind: srl, startup-config: auto-leaf.cfg.json, 
-              agents: [ ../srl-self-organizing/appmgr/auto-config-agent.yml, docter-agent.yml ] }
+              agents: [ ../srl-self-organizing/auto-config-agent.yml, docter-agent.yml ] }
     leaf2:  { kind: srl, startup-config: auto-leaf.cfg.json, 
-              agents: [ ../srl-self-organizing/appmgr/auto-config-agent.yml, docter-agent.yml ] }
+              agents: [ ../srl-self-organizing/auto-config-agent.yml, docter-agent.yml ] }
 
     h1: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
     h2: { kind: srl, startup-config: auto-host-with-vip.cfg.json }

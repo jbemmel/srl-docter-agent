@@ -296,7 +296,7 @@ def Handle_Notification(obj, state):
 ##
 # Update agent state flapcounts for BFD
 ##
-def Update_BFDFlapcounts(state,peer_ip,status=0):
+def Update_BFDFlapcounts(state,peer_ip,status=4):
     if peer_ip not in state.bfd_flaps:
        logging.info(f"BFD : initializing flap state for {peer_ip} status={status}")
        state.bfd_flaps[peer_ip] = {}
