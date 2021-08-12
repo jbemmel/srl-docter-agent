@@ -216,7 +216,7 @@ def Handle_Notification(obj, state):
                 # Update flap count assesments for each peer
                 logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.flap_threshold}' )
                 Update_Global_State( state, "total_bfd_flaps_last_period",
-                  sum( [max(len(f)-1,0) for f in state.bfd_flaps.values())] ) )
+                  sum( [max(len(f)-1,0) for f in state.bfd_flaps.values() ] ) )
                 for peer_ip in state.bfd_flaps.keys():
                     Update_BFDFlapcounts( state, peer_ip )
 
