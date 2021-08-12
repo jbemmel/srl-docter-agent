@@ -5,3 +5,4 @@ datasources:
   - name: InfluxDB
     type: influxdb
     url: http://172.20.20.12:8086
+    database: telegraf
