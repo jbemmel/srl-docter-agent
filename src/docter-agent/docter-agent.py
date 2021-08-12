@@ -216,7 +216,7 @@ def Handle_Notification(obj, state):
                 # Update flap count assesments for each peer
                 logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.flap_threshold}' )
                 Update_Global_State( state, "total_bfd_flaps_last_period",
-                  sum( [len(f) for f in state.bfd_flaps.values()] ) )
+                  sum( [max(len(f)-1,0) for f in state.bfd_flaps.values())] ) )
                 for peer_ip in state.bfd_flaps.keys():
                     Update_BFDFlapcounts( state, peer_ip )
 
@@ -298,7 +298,7 @@ def Handle_Notification(obj, state):
 ##
 def Update_BFDFlapcounts(state,peer_ip,status=0):
     if peer_ip not in state.bfd_flaps:
-       logging.info(f"BFD : initializing flap state for {peer_ip}")
+       logging.info(f"BFD : initializing flap state for {peer_ip} status={status}")
        state.bfd_flaps[peer_ip] = {}
     now = datetime.datetime.now()
     flaps_this_period, history = Update_Flapcounts(state, now, peer_ip, status,
@@ -312,7 +312,7 @@ def Update_BFDFlapcounts(state,peer_ip,status=0):
     }
     Update_Peer_State( peer_ip, 'bfd', state_update )
     Update_Global_State( state, "total_bfd_flaps_last_period", # Works??
-      sum( [len(f) for f in state.bfd_flaps.values()] ) )
+      sum( [ max(len(f)-1,0) for f in state.bfd_flaps.values()] ) )
 
 ##
 # Update agent state flapcounts for Route entry
