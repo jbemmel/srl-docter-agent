@@ -355,17 +355,8 @@ def Update_Flapcounts(state,now,peer_ip,status,flapmap,period_mins):
            break
     logging.info(f"BFD : keeping last period of flaps for {peer_ip}:{keep_flaps}")
     flapmap[peer_ip] = keep_flaps
-    return len( keep_flaps ), keep_history
-
-##################################################################################################
-## This functions get the app_id from idb for a given app_name
-##################################################################################################
-def get_app_id(app_name):
-    logging.info(f'Metadata {metadata} ')
-    appId_req = sdk_service_pb2.AppIdRequest(name=app_name)
-    app_id_response=stub.GetAppId(request=appId_req, metadata=metadata)
-    logging.info(f'app_id_response {app_id_response.status} {app_id_response.id} ')
-    return app_id_response.id
+    # Dont count single transition to 'up' as a flap
+    return len( keep_flaps ) - 1, keep_history
 
 ###########################
 # JvB: Invokes gnmic client to update interface configuration, via bash script
@@ -391,6 +382,7 @@ class State(object):
         self.owner_id_map = {} # Map of owner_id (from add route) -> peer IP
         self.route_flaps = {}  # Indexed by next hop IP
         self.flap_period_mins = 60 # Make sure this is defined
+        self.flap_threshold = 0
         self.max_flaps_history = 0
 
     def __str__(self):
@@ -408,12 +400,6 @@ def Run():
     # optional agent_liveliness=<seconds> to have system kill unresponsive agents
     response = stub.AgentRegister(request=sdk_service_pb2.AgentRegistrationRequest(), metadata=metadata)
     logging.info(f"Registration response : {response.status}")
-
-    app_id = get_app_id(agent_name)
-    if not app_id:
-        logging.error(f'idb does not have the appId for {agent_name} : {app_id}')
-    else:
-        logging.info(f'Got appId {app_id} for {agent_name}')
 
     request=sdk_service_pb2.NotificationRegisterRequest(op=sdk_service_pb2.NotificationRegisterRequest.Create)
     create_subscription_response = stub.NotificationRegister(request=request, metadata=metadata)
@@ -467,7 +453,7 @@ def Run():
 ## When called, will unregister Agent and gracefully exit
 ############################################################
 def Exit_Gracefully(signum, frame):
-    logging.info("Caught signal :: {}\n will unregister fib_agent".format(signum))
+    logging.info("Caught signal :: {}\n will unregister docter agent".format(signum))
     try:
         response=stub.AgentUnRegister(request=sdk_service_pb2.AgentRegistrationRequest(), metadata=metadata)
         logging.error('try: Unregister response:: {}'.format(response))
