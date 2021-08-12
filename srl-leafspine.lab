@@ -34,7 +34,8 @@ topology:
     telegraf: # Added, connect via mgmt network
       kind: linux
       image: telegraf
-      binds: configs/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      binds: 
+        - configs/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       mgmt_ipv4: 172.20.20.11 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::11
       
