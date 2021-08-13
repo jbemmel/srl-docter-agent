@@ -7,9 +7,9 @@ module docter-agent {
 
     prefix "docter_agent";
 
-    // import srl_nokia-common {
-    //    prefix srl_nokia-comm;
-    // }
+    import srl_nokia-common {
+      prefix srl_nokia-comm;
+    }
 
     // Note that this module needs to be in the path for source-directories
     import srl_nokia-extensions {
@@ -26,6 +26,8 @@ module docter-agent {
 
         container docter-agent {
             presence "presence container";
+            srl_nokia-ext:stream-mode on_change;
+
             description "Top level enclosing container for auto config agent sample app
                          config and operational state data";
 
@@ -46,16 +48,21 @@ module docter-agent {
                 type uint32;
                 default 0;
              }
-
             }
 
             // Info from state
             leaf total-bfd-flaps-last-period {
-                type uint64;
+                srl_nokia-ext:delivery-node-override true;
+                srl_nokia-ext:stream-mode on_change;
+                type srl_nokia-comm:zero-based-counter64;
+
                 config false;
             }
             leaf total-route-flaps-last-period {
-                type uint64;
+                srl_nokia-ext:delivery-node-override true;
+                srl_nokia-ext:stream-mode on_change;
+                type srl_nokia-comm:zero-based-counter64;
+
                 config false;
             }
             list peer {
@@ -67,7 +74,7 @@ module docter-agent {
                 }
                 container bfd {
                  srl_nokia-ext:delivery-node-override true;
-                 srl_nokia-ext:stream-mode sample=5;
+                 srl_nokia-ext:stream-mode on_change;
                  presence "State BFD operational parameters";
 
                  leaf status {
@@ -75,31 +82,35 @@ module docter-agent {
                   default "red";
                  }
                  leaf flaps-last-period {
-                  type uint32;
+                  srl_nokia-ext:delivery-node-override true;
+                  srl_nokia-ext:stream-mode on_change;
+                  type srl_nokia-comm:zero-based-counter64;
                  }
                  leaf flaps-history {
                   type string;
                  }
                  leaf last-flap-timestamp {
-                   type string;
+                   type srl_nokia-comm:date-and-time-delta;
                  }
                 }
                 container routes {
                  srl_nokia-ext:delivery-node-override true;
-                 srl_nokia-ext:stream-mode sample=5;
+                 srl_nokia-ext:stream-mode on_change;
                  presence "State Routes operational parameters";
 
                  leaf status {
                   type string;
                  }
                  leaf flaps-last-period {
-                  type uint64;
+                  srl_nokia-ext:delivery-node-override true;
+                  srl_nokia-ext:stream-mode on_change;
+                  type srl_nokia-comm:zero-based-counter64;
                  }
                  leaf flaps-history {
                   type string;
                  }
                  leaf last-flap-timestamp {
-                   type string;
+                   type srl_nokia-comm:date-and-time-delta;
                  }
               }
             }

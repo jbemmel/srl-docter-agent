@@ -308,7 +308,7 @@ def Update_BFDFlapcounts(state,peer_ip,status=4):
       "status" : { "value" : "red" if flaps_this_period > state.flap_threshold or status!=4 else "green" },
       "flaps_last_period" : flaps_this_period,
       "flaps_history" : { "value" : history },
-      "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
+      "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%dT%H:%M:%SZ") }
     }
     Update_Peer_State( peer_ip, 'bfd', state_update )
     Update_Global_State( state, "total_bfd_flaps_last_period", # Works??
@@ -329,7 +329,7 @@ def Update_RouteFlapcounts(state,peer_ip,prefix):
       "status" : { "value" : "red" if flaps_this_period > state.flap_threshold else "green" },
       "flaps_last_period" : flaps_this_period,
       "flaps_history" : { "value" : history },
-      "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%d %H:%M:%S") }
+      "last_flap_timestamp" : { "value" : now.strftime("%Y-%m-%dT%H:%M:%SZ") }
     }
     Update_Peer_State( peer_ip, 'routes', state_update )
     # Update_Global_State( state )
