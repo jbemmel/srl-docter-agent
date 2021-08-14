@@ -26,7 +26,7 @@ the agent to report on high CPU utilization beyond a threshold, but only when pr
 event: sample( /platform/control[card=A]/cpu/all/total/average-1, 3 ) > 80
 when:
 - /network-instance[name=overlay]/route-table/ipv4-unicast/statistics/total-routes > 10
-- /platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource/overlay-ecmp-members/used-percent
+- /platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource/overlay-ecmp-members/used-percent > 80
 report:
 - /network-instance[name=overlay]/route-table/ipv4-unicast/statistics/total-routes
 - /platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource/overlay-ecmp-members/used-percent
