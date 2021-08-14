@@ -50,6 +50,23 @@ module docter-agent {
              }
             }
 
+            container intensive-care {
+              list observe {
+                key name;
+                leaf name { type string; mandatory "true"; }
+                leaf-list conditions {
+                  description "Set of conditions that must all be true for reporting";
+                  type string; // TODO pattern gnmi_path [ | sample(n,interval) ] <operator> <value>
+                  min-elements 1;
+                }
+                leaf-list report {
+                  description "gNMI path of value to report when conditions are met";
+                  type string; // TODO pattern [label:] gnmi_path
+                  min-elements 1;
+                }
+              }
+            }
+
             // Info from state
             leaf total-bfd-flaps-last-period {
                 srl_nokia-ext:delivery-node-override true;

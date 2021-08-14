@@ -7,6 +7,22 @@
     "host-as": 65123,
     "auto-lags": false
   },
+  "docter-agent:docter-agent": {
+    "intensive-care": {
+      "observe": [
+        {
+          "name": "bgp-flaps-due-to-mac-table-overflow",
+          "conditions": [
+            "/network-instance[name=default]/protocols/bgp/neighbor[peer-ipaddress=1.1.0.1]/session-state != 'established'"
+          ],
+          "report": [
+            "/network-instance[name=lag2]/bridge-table/statistics/total-entries",
+            "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/xdp/resource/mac-addresses/used-percent"
+          ]
+        }
+      ]
+    }
+  },
   "srl_nokia-acl:acl": {
     "cpm-filter": {
       "ipv4-filter": {
