@@ -44,4 +44,4 @@ report:
 # SRL Docter Agent: A scalable approach
 Ordinary link flap or BGP session down events are a solved problem: They can easily be monitored today.
 But when it comes to out-of-the-ordinary elusive behavior, correlation of system state and events over time,
-a local agent with programmable processing logic could save the day
+a local agent with programmable processing logic can provide you with the timely data points you need to draw the right conclusions
