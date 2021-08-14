@@ -64,6 +64,20 @@ module docter-agent {
                   type string; // TODO pattern [label:] gnmi_path
                   min-elements 1;
                 }
+
+                container statistics {
+                  config false;
+                  leaf last-observed {
+                   type srl_nokia-comm:date-and-time-delta;
+                  }
+                  leaf count {
+                   type srl_nokia-comm:zero-based-counter64;
+                   default 0;
+                  }
+                  leaf-list report-history {
+                   type string; // time: value(s) reported
+                  }
+                }
               }
             }
 
