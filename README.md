@@ -41,7 +41,7 @@ report:
 - /network-instance[name=default]/protocols/bgp/neighbor[peer-ipaddress=*]/session-state
 ```
 
-# SRL Docter Agent: A scalable approach
+# SRL Docter Agent: A scalable decentralized approach
 Ordinary link flap or BGP session down events are a solved problem: They can easily be monitored today.
-But when it comes to out-of-the-ordinary elusive behavior, correlation of system state and events over time,
-a local agent with programmable processing logic can provide you with the timely data points you need to draw the right conclusions
+But when it comes to one-off out-of-the-ordinary elusive behavior, correlation of system state and events over time,
+a local agent with programmable monitoring logic can provide the timely data points you need to draw the right conclusions
