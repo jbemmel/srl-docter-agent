@@ -19,7 +19,7 @@ report:
 
 # Example 2: Sporadic conjunction of events
 
-Investigating a correlation between the number of routes announced by a customer and high CPU utilization, we configure
+Investigating a possible correlation between the number of routes announced by a customer and high CPU utilization, we configure
 the agent to report on high CPU utilization beyond a threshold, but only when preceeded by a certain increase in route count:
 
 ```
