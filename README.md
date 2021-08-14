@@ -8,13 +8,27 @@ With the SRL Docter agent, engineers can put specific nodes under intensive care
 
 Assume a scenario where a customer complains about their BGP session flapping, and engineering suspects it may be due to
 MAC table exhausture in the service (as the customer seems to be doing something funky with virtual MACs and VRRP).
-We can place a monitoring probe for BGP down events, reporting on the MAC table status at that moment:
+We can instantiate a monitoring probe for BGP session status change events, reporting on the MAC table status and global system resources at that moment:
 
 ```
-event: /network-instance[name=default]/protocols/bgp/neighbor[peer-ipaddress=1.1.0.1]/session-state != "established"
-report:
-- /network-instance[name=lag2]/bridge-table/statistics/total-entries
-- /platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/xdp/resource/mac-addresses/used-percent
+"docter-agent:docter-agent": {
+   "intensive-care": {
+      "observe": [
+        {
+          "name": "bgp-flaps-due-to-mac-table-overflow",
+          "conditions": [
+            {
+              "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-ipaddress=1.1.0.1]/session-state"
+            }
+          ],
+          "report": [
+            "/network-instance[name=lag2]/bridge-table/statistics/total-entries",
+            "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/xdp/resource/mac-addresses/used-percent"
+          ]
+        }
+      ]
+    }
+  }
 ```
 
 # Example 2: Sporadic conjunction of events
