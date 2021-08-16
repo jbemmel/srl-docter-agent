@@ -230,50 +230,17 @@ def Handle_Notification(obj, state):
         peer_sys_name = obj.lldp_neighbor.data.system_name
 
         if my_port != 'mgmt0' and to_port != 'mgmt0' and hasattr(state,'peerlinks'):
-          my_port_id = re.split("/",re.split("-",my_port)[1])[1]
-          m = re.match("^ethernet-(\d+)/(\d+)$", to_port)
-          if m:
-            to_port_id = m.groups()[1]
-          else:
-            to_port_id = my_port_id  # FRR Linux host or other element not sending port name
 
-          # For spine-spine connections, build iBGP
-          if (state.role == 'ROLE_spine') and 'spine' not in peer_sys_name:
-            _r = 0
-            link_index = state.max_spines * (int(to_port_id) - 1) + int(my_port_id) - 1
-          else:
-            _r = 1
-            link_index = state.max_spines * (int(my_port_id) - 1) + int(to_port_id) - 1
-
-          router_id_changed = False
-          if m and not hasattr(state,"router_id"): # Only for valid to_port, if not set
-            state.router_id = f"1.1.{ 0 if state.role == 'ROLE_spine' else 1 }.{to_port_id}"
-            router_id_changed = True
-
-          # Configure IP on interface and BGP for leaves
-          link_name = f"link{link_index}"
+          # Start listening for BFD
+          link_name = f"bfd-{my_port}"
           if not hasattr(state,link_name):
-             _ip = str( list(state.peerlinks[link_index].hosts())[_r] )
-             _peer = str( list(state.peerlinks[link_index].hosts())[1-_r] )
-             script_update_interface(
-                 'spine' if state.role == 'ROLE_spine' else 'leaf',
-                 my_port,
-                 _ip + '/31',
-                 obj.lldp_neighbor.data.system_description if m else 'host',
-                 _peer if _r==1 else '*',
-                 state.base_as + (int(to_port_id) if state.role != 'ROLE_spine' else 0),
-                 state.router_id if router_id_changed else "",
-                 state.base_as if (state.role == 'ROLE_leaf') else state.base_as + 1,
-                 state.base_as if (state.role == 'ROLE_leaf') else state.base_as + state.max_leaves,
-                 state.peerlinks_prefix
-             )
-             setattr( state, link_name, _ip )
+             setattr( state, link_name, True )
              state_update = {
                "status" : { "value" : "Awaiting BFD from: " + obj.lldp_neighbor.data.system_description },
                "flaps_last_period" : 0,
                "flaps_history" : { "value" : "none yet" }
              }
-             Update_Peer_State( _peer, 'bfd', state_update )
+             Update_Peer_State( peer_sys_name, 'bfd', state_update )
 
     elif obj.HasField('bfd_session'):
         logging.info(f"process BFD notification : {obj}")
@@ -357,22 +324,6 @@ def Update_Flapcounts(state,now,peer_ip,status,flapmap,period_mins):
     flapmap[peer_ip] = keep_flaps
     # Dont count single transition to 'up' as a flap
     return len( keep_flaps ) - 1, keep_history
-
-###########################
-# JvB: Invokes gnmic client to update interface configuration, via bash script
-###########################
-def script_update_interface(role,name,ip,peer,peer_ip,_as,router_id,peer_as_min,peer_as_max,peer_links):
-    logging.info(f'Calling update script: role={role} name={name} ip={ip} peer_ip={peer_ip} peer={peer} as={_as} ' +
-                 f'router_id={router_id} peer_links={peer_links}' )
-    try:
-       script_proc = subprocess.Popen(['/etc/opt/srlinux/appmgr/gnmic-configure-interface.sh',
-                                       role,name,ip,peer,peer_ip,str(_as),router_id,
-                                       str(peer_as_min),str(peer_as_max),peer_links],
-                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-       stdoutput, stderroutput = script_proc.communicate()
-       logging.info(f'script_update_interface result: {stdoutput} err={stderroutput}')
-    except Exception as e:
-       logging.error(f'Exception caught in script_update_interface :: {e}')
 
 class State(object):
     def __init__(self):
