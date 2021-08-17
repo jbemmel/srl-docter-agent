@@ -45,6 +45,13 @@ topology:
       mgmt_ipv4: 172.20.20.12 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::12
       
+    gnmic:
+      kind: linux
+      image: ghcr.io/karimra/gnmic:0.7.0
+      binds:
+        - configs/gnmic/gnmic-config.yml:/gnmic-config.yml:ro
+      cmd: --config /gnmic-config.yml --log subscribe
+      
     mysocketio:
       kind: mysocketio
       image: ghcr.io/hellt/mysocketctl:0.4.0
