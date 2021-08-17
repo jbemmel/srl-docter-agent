@@ -29,6 +29,8 @@ import telemetry_service_pb2_grpc
 # See opt/rh/rh-python36/root/usr/lib/python3.6/site-packages/sdk_protos/bfd_service_pb2.py
 import bfd_service_pb2
 
+from pygnmi.client import gNMIclient, telemetryParser
+
 from logging.handlers import RotatingFileHandler
 
 ############################################################
@@ -45,10 +47,10 @@ channel = grpc.insecure_channel('127.0.0.1:50053')
 metadata = [('agent_name', agent_name)]
 stub = sdk_service_pb2_grpc.SdkMgrServiceStub(channel)
 
-def SendKeepAlive():
-    request = sdk_service_pb2.KeepAliveRequest()
-    result = stub.KeepAlive(request=request, metadata=metadata)
-    print( f'Status of KeepAlive response :: {result.status}' )
+# Global gNMI channel, used by multiple threads
+#gnmi_options = [('username', 'admin'), ('password', 'admin')]
+#gnmi_channel = grpc.insecure_channel(
+#   'unix:///opt/srlinux/var/run/sr_gnmi_server', options = gnmi_options )
 
 ############################################################
 ## Subscribe to required event
@@ -63,7 +65,7 @@ def Subscribe(stream_id, option):
         request = sdk_service_pb2.NotificationRegisterRequest(op=op, stream_id=stream_id, lldp_neighbor=entry)
     elif option == 'cfg':
         entry = config_service_pb2.ConfigSubscriptionRequest()
-        entry.key.js_path = '.' + agent_name
+        # entry.key.js_path = '.' + agent_name
         request = sdk_service_pb2.NotificationRegisterRequest(op=op, stream_id=stream_id, config=entry)
     elif option == 'bfd':
         entry = bfd_service_pb2.BfdSessionSubscriptionRequest()
@@ -166,7 +168,7 @@ def Handle_Notification(obj, state):
                delattr( state.nhg_map, nhg_id )
            else:
              for nh in obj.nhg.data.next_hop:
-              if nh.ip_nexthop.addr != "":
+              if nh.ip_nexthop.addr != b'': # type byte
                addr = ipaddress.ip_address(nh.ip_nexthop.addr).__str__()
                logging.info( f"NEXTHOP notification: {addr} nhg={nhg_id}" )
                Update_RouteFlapcounts(state, addr, f'+nhg{nhg_id}')
@@ -175,7 +177,7 @@ def Handle_Notification(obj, state):
         except Exception as e: # ip_nexthop not set
            logging.error(f'Exception caught while processing nhg :: {e}')
 
-    elif obj.HasField('config') and obj.config.key.js_path != ".commit.end":
+    elif obj.HasField('config'):
         logging.info(f"GOT CONFIG :: {obj.config.key.js_path}")
         if agent_name in obj.config.key.js_path:
             logging.info(f"Got config for agent, now will handle it :: \n{obj.config}\
@@ -190,20 +192,7 @@ def Handle_Notification(obj, state):
             else:
                 json_acceptable_string = obj.config.data.json.replace("'", "\"")
                 data = json.loads(json_acceptable_string)
-                if 'role' in data:
-                    state.role = data['role']
-                    logging.info(f"Got role :: {state.role}")
-                if 'peerlinks_prefix' in data:
-                    state.peerlinks_prefix = data['peerlinks_prefix']['value']
-                    state.peerlinks = list(ipaddress.ip_network(data['peerlinks_prefix']['value']).subnets(new_prefix=31))
-                if 'loopbacks_prefix' in data:
-                    state.loopbacks = list(ipaddress.ip_network(data['loopbacks_prefix']['value']).subnets(new_prefix=32))
-                if 'base_as' in data:
-                    state.base_as = int( data['base_as']['value'] )
-                if 'max_spines' in data:
-                    state.max_spines = int( data['max_spines']['value'] )
-                if 'max_leaves' in data:
-                    state.max_leaves = int( data['max_leaves']['value'] )
+
                 if 'monitor' in data:
                   _d = data['monitor']
                   if 'flaps_per_period_threshold' in _d:
@@ -213,16 +202,33 @@ def Handle_Notification(obj, state):
                   if 'max_flaps_history' in _d:
                     state.max_flaps_history = int( _d['max_flaps_history']['value'] )
 
-                # Update flap count assesments for each peer
-                logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.flap_threshold}' )
-                Update_Global_State( state, "total_bfd_flaps_last_period",
-                  sum( [max(len(f)-1,0) for f in state.bfd_flaps.values() ] ) )
-                for peer_ip in state.bfd_flaps.keys():
-                    Update_BFDFlapcounts( state, peer_ip )
+                  # Update flap count assesments for each peer
+                  logging.info( f'Updating BFD flapcounts after new hourly threshold: {state.flap_threshold}' )
+                  Update_Global_State( state, "total_bfd_flaps_last_period",
+                    sum( [max(len(f)-1,0) for f in state.bfd_flaps.values() ] ) )
+                  for peer_ip in state.bfd_flaps.keys():
+                      Update_BFDFlapcounts( state, peer_ip )
 
-                return not state.role is None
+                if obj.config.key.js_path == ".docter_agent.intensive_care.observe":
+                    name = obj.config.key.keys[0]
+                    reports = [ i['value'] for i in data['observe']['report'] ]
+                    if name in state.observations:
+                       state.observations[ name ][ 'reports' ] = reports
+                    else:
+                       state.observations[ name ] = { 'reports' : reports }
+                elif obj.config.key.js_path == ".docter_agent.intensive_care.observe.conditions":
+                    name = obj.config.key.keys[0]
+                    path = obj.config.key.keys[1]  # XXX only supports single path per observation for now
+                    if name in state.observations:
+                       state.observations[ name ][ 'path' ] = path
+                    else:
+                       state.observations[ name ] = { 'path' : path }
 
-    elif obj.HasField('lldp_neighbor') and not state.role is None:
+                return True # subscribe to LLDP
+        elif obj.config.key.js_path == ".commit.end":
+           MonitoringThread( state.observations ).start()
+
+    elif obj.HasField('lldp_neighbor'): # and not state.role is None:
         # Update the config based on LLDP info, if needed
         logging.info(f"process LLDP notification : {obj}")
         my_port = obj.lldp_neighbor.key.interface_name  # ethernet-1/x
@@ -325,9 +331,73 @@ def Update_Flapcounts(state,now,peer_ip,status,flapmap,period_mins):
     # Dont count single transition to 'up' as a flap
     return len( keep_flaps ) - 1, keep_history
 
+#
+# Runs as a separate thread
+#
+from threading import Thread
+class MonitoringThread(Thread):
+   def __init__(self, observations):
+       Thread.__init__(self)
+       self.observations = observations
+
+       # Check that gNMI is connected now
+       # grpc.channel_ready_future(gnmi_channel).result(timeout=5)
+
+   def run(self):
+
+      # Create per-thread gNMI stub, using a global channel
+      # gnmi_stub = gNMIStub( gnmi_channel )
+
+      logging.info( f"MonitoringThread: {self.observations}")
+
+      subscribe = {
+        'subscription': [
+            {
+                'path': o.path,
+                'mode': 'on_change',
+            } for o in self.observations.values()
+        ],
+        'use_aliases': False,
+        'mode': 'stream',
+        'encoding': 'json'
+      }
+
+      # Build lookup map
+      lookup = {}
+      for name,atts in self.observations.items():
+          lookup[ atts.path ] = { 'name': name, **atts }
+
+      # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
+      with gNMIclient(target=('unix:///opt/srlinux/var/run/sr_gnmi_server',57400),
+                            username="admin",password="admin",
+                            insecure=True, debug=False) as c:
+        telemetry_stream = c.subscribe(subscribe=subscribe)
+        for m in telemetry_stream:
+         try:
+          if m.HasField('update'): # both update and delete events
+              # Filter out only toplevel events
+              parsed = telemetryParser(m)
+              logging.info(f"gNMI change event :: {parsed}")
+              update = parsed['update']
+              if update['update']:
+                  logging.info( f"Update: {update['update']}")
+                  for u in update['update']:
+                      key = '/' + u['path'] # pygnmi strips '/'
+                      if key in lookup:
+                         o = lookup[ key ]
+                         data = c.get(path=o['reports'], encoding='json_ietf')
+                         logging.info( f"Reports:{data} val={u['val']}" )
+                         # TODO update Telemetry
+
+         except Exception as e:
+          traceback_str = ''.join(traceback.format_tb(e.__traceback__))
+          logging.error(f'Exception caught in gNMI :: {e} m={m} stack:{traceback_str}')
+
+      logging.info("Leaving gNMI subscribe loop")
+
 class State(object):
     def __init__(self):
-        self.role = None       # May not be set in config
+        # self.role = None       # May not be set in config
         self.bfd_flaps = {}    # Indexed by peer IP
         self.nhg_map = {}      # Map of nhg_id -> peer IP
         self.owner_id_map = {} # Map of owner_id (from add route) -> peer IP
@@ -335,6 +405,8 @@ class State(object):
         self.flap_period_mins = 60 # Make sure this is defined
         self.flap_threshold = 0
         self.max_flaps_history = 0
+
+        self.observations = {} # Map of [name] -> { paths: [], reports: [] }
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
