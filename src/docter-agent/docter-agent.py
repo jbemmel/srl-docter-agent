@@ -226,7 +226,8 @@ def Handle_Notification(obj, state):
 
                 return True # subscribe to LLDP
         elif obj.config.key.js_path == ".commit.end":
-           MonitoringThread( state.observations ).start()
+           if state.observations != {}:
+              MonitoringThread( state.observations ).start()
 
     elif obj.HasField('lldp_neighbor'): # and not state.role is None:
         # Update the config based on LLDP info, if needed
@@ -353,9 +354,9 @@ class MonitoringThread(Thread):
       subscribe = {
         'subscription': [
             {
-                'path': o.path,
+                'path': value.path,
                 'mode': 'on_change',
-            } for o in self.observations.values()
+            } for key,value in self.observations.entries()
         ],
         'use_aliases': False,
         'mode': 'stream',
@@ -366,6 +367,7 @@ class MonitoringThread(Thread):
       lookup = {}
       for name,atts in self.observations.items():
           lookup[ atts.path ] = { 'name': name, **atts }
+      logging.info( f"Built lookup map: {lookup}" )
 
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
       with gNMIclient(target=('unix:///opt/srlinux/var/run/sr_gnmi_server',57400),
@@ -442,18 +444,15 @@ def Run():
             logging.info(f"Count :: {count}  NOTIFICATION:: \n{r.notification}")
             count += 1
             for obj in r.notification:
-                if obj.HasField('config') and obj.config.key.js_path == ".commit.end":
-                    logging.info('TO DO -commit.end config')
-                else:
-                    if Handle_Notification(obj, state) and not lldp_subscribed:
-                       Subscribe(stream_id, 'lldp')
-                       Subscribe(stream_id, 'route')
-                       lldp_subscribed = True
+                if Handle_Notification(obj, state) and not lldp_subscribed:
+                   Subscribe(stream_id, 'lldp')
+                   Subscribe(stream_id, 'route')
+                   lldp_subscribed = True
 
-                    # Program router_id only when changed
-                    # if state.router_id != old_router_id:
-                    #   gnmic(path='/network-instance[name=default]/protocols/bgp/router-id',value=state.router_id)
-                    logging.info(f'Updated state: {state}')
+                # Program router_id only when changed
+                # if state.router_id != old_router_id:
+                #   gnmic(path='/network-instance[name=default]/protocols/bgp/router-id',value=state.router_id)
+                logging.info(f'Updated state: {state}')
 
     except grpc._channel._Rendezvous as err:
         logging.info(f'GOING TO EXIT NOW: {err}')
