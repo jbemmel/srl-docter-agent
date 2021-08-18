@@ -140,7 +140,7 @@ def Update_Observation(name, updates):
 
     for path,value in updates:
       js_path2 = js_path + f'.report{{.timestamp=="{now}"}}.values{{.path=="{path}"}}'
-      response = Add_Telemetry( js_path=js_path2, js_data=json.dumps(value) )
+      response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'value':value}) )
       logging.info(f"Telemetry_Update_Response2 :: {response}")
 
 def Update_Global_State(state, var, val):
