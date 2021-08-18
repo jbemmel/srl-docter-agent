@@ -420,7 +420,8 @@ class MonitoringThread(Thread):
                          data = c.get(path=o['reports'], encoding='json_ietf')
                          logging.info( f"Reports:{data} val={u['val']}" )
                          # update Telemetry, iterate
-                         updates = []
+                         # Add condition path as implicit reported value
+                         updates = [ (key,u['val']) ]
                          i = 0
                          for n in data['notification']:
                             if 'update' in n: # Update is empty when path is invalid
