@@ -127,11 +127,15 @@ def Update_Peer_State(peer_ip, section, update_data):
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
+observations_count = 0
+
 def Update_Observation(name, trigger, updates):
+    global observations_count
+    observations_count = observations_count + 1
     now = datetime.datetime.now()
     update_data = {
       'last_observed' : { "value" : now.strftime("%Y-%m-%dT%H:%M:%SZ") },
-      'count': 1234,
+      'count': observations_count,
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
     js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
