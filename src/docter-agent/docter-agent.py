@@ -139,7 +139,7 @@ def Update_Observation(name, trigger, updates):
     logging.info(f"Telemetry_Update_Response :: {response}")
 
     for path,value in updates:
-      js_path2 = js_path + f'.report{{.timestamp=="{now} {trigger}"}}.path{{.path=="{path}"}}'
+      js_path2 = js_path + f'.report{{.event=="{now} {trigger}"}}.path{{.path=="{path}"}}'
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'value':value}) )
       logging.info(f"Telemetry_Update_Response2 :: {response}")
 

@@ -105,14 +105,12 @@ module docter-agent {
                    default 0;
                   }
                   list report {
-                   key timestamp;
-                   leaf timestamp {
-                    type srl_nokia-comm:date-and-time-delta;
-                   }
+                   key event;
+                   leaf event { type string; }
                    list path {
-                    key path;
-                    leaf path { type string; }
-                    leaf value { type string; }
+                     key path;
+                     leaf path { type string; }
+                     leaf value { type string; }
                    }
                   }
                 }
