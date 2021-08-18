@@ -108,6 +108,9 @@ module docter-agent {
                    key event;
                    // ordered-by user;
                    leaf event { type string; } // timestamp : value
+                   leaf timestamp {
+                     type srl_nokia-comm:date-and-time-delta;
+                   }
                    list path {
                      key path;
                      leaf path { type string; }

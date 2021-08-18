@@ -133,8 +133,9 @@ def Update_Observation(name, trigger, updates):
     global observations_count
     observations_count = observations_count + 1
     now = datetime.datetime.now()
+    now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
-      'last_observed' : { "value" : now.strftime("%Y-%m-%dT%H:%M:%SZ") },
+      'last_observed' : { "value" : now_ts },
       'count': observations_count,
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
@@ -143,8 +144,11 @@ def Update_Observation(name, trigger, updates):
     logging.info(f"Telemetry_Update_Response :: {response}")
 
     now_ms = now.strftime("%Y-%m-%d %H:%M:%S.%f")
+    event_path = js_path + f'.report{{.event=="{now_ms} {trigger}"}}'
+    response = Add_Telemetry( js_path=event_path+'.timestamp', js_data=json.dumps({'value':now_ts}) )
+
     for path,value in updates:
-      js_path2 = js_path + f'.report{{.event=="{now_ms} {trigger}"}}.path{{.path=="{path}"}}'
+      js_path2 = event_path + f'.path{{.path=="{path}"}}'
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'value':value}) )
       logging.info(f"Telemetry_Update_Response2 :: {response}")
 
