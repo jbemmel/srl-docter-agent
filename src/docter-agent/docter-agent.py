@@ -371,12 +371,13 @@ class MonitoringThread(Thread):
         'subscription': [
             {
                 'path': value['path'],
-                'mode': 'on_change' if value['conditions']['sample']['value'] == '0' else 'sample',
-                'sample_interval':  int(value['conditions']['sample']['value']) * 1000000000 # in ns
+                'mode': 'on_change'
+                # 'mode': 'on_change' if value['conditions']['sample']['value'] == '0' else 'sample',
+                # 'sample_interval':  int(value['conditions']['sample']['value']) * 1000000000 # in ns
             } for key,value in self.observations.items()
         ],
         'use_aliases': False,
-        'updates_only': True, # Optional
+        # 'updates_only': True, # Optional
         'mode': 'stream',
         'encoding': 'json'
       }
