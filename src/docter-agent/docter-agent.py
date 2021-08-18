@@ -413,7 +413,7 @@ class MonitoringThread(Thread):
                             if 'update' in n: # Some updates are empty (bug?)
                               for u2 in n['update']:
                                  updates.append( (u2['path'],u2['val']) )
-                         index = key.rindex('/')
+                         index = key.rindex('/') + 1
                          Update_Observation( o['name'], f"{key[index:]}={u['val']}", updates )
 
     except Exception as e:
