@@ -11,6 +11,7 @@ encoding: json_ietf
 
 targets:
   clab-srl-docter-lab-spine1:
+  clab-srl-docter-lab-spine2:
   clab-srl-docter-lab-leaf1:
   clab-srl-docter-lab-leaf2:
 
