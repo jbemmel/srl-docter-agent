@@ -106,8 +106,8 @@ module docter-agent {
                   }
                   list report {
                    key event;
-                   ordered-by user;
-                   leaf event { type string; }
+                   // ordered-by user;
+                   leaf event { type string; } // timestamp : value
                    list path {
                      key path;
                      leaf path { type string; }

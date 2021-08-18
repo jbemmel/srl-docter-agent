@@ -410,10 +410,15 @@ class MonitoringThread(Thread):
                          logging.info( f"Reports:{data} val={u['val']}" )
                          # update Telemetry, iterate
                          updates = []
+                         i = 0
                          for n in data['notification']:
-                            if 'update' in n: # Some updates are empty (bug?)
+                            if 'update' in n: # Update is empty when path is invalid
                               for u2 in n['update']:
                                  updates.append( (u2['path'],u2['val']) )
+                            else:
+                              # Assumes updates are in same order
+                              updates.append( (o['reports'][i], 'GET failed') )
+                            i = i + 1
                          index = key.rindex('/') + 1
                          Update_Observation( o['name'], f"{key[index:]}={u['val']}", updates )
 
