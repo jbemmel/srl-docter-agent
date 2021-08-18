@@ -131,6 +131,7 @@ def Update_Observation(name, trigger, updates):
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
       'last_observed' : { "value" : now },
+      'trigger' : { "value" : trigger },
       'count': 1234,
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
@@ -140,7 +141,7 @@ def Update_Observation(name, trigger, updates):
     logging.info(f"Telemetry_Update_Response :: {response}")
 
     for path,value in updates:
-      js_path2 = js_path + f'.report{{.timestamp=="{now}"}}.values{{.path=="{path}"}}'
+      js_path2 = js_path + f'.report{{.timestamp=="{now}"}}.path{{.path=="{path}"}}'
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'value':value}) )
       logging.info(f"Telemetry_Update_Response2 :: {response}")
 
@@ -230,16 +231,16 @@ def Handle_Notification(obj, state):
                     name = obj.config.key.keys[0]
                     reports = [ i['value'] for i in data['observe']['report'] ]
                     if name in state.observations:
-                       state.observations[ name ][ 'reports' ] = reports
+                       state.observations[ name ].update( { 'reports': reports, **data } )
                     else:
-                       state.observations[ name ] = { 'reports' : reports }
+                       state.observations[ name ] = { 'reports' : reports, **data }
                 elif obj.config.key.js_path == ".docter_agent.intensive_care.observe.conditions":
                     name = obj.config.key.keys[0]
                     path = obj.config.key.keys[1]  # XXX only supports single path per observation for now
                     if name in state.observations:
-                       state.observations[ name ][ 'path' ] = path
+                       state.observations[ name ].update( { 'path': path, **data } )
                     else:
-                       state.observations[ name ] = { 'path' : path }
+                       state.observations[ name ] = { 'path' : path, **data }
 
                 return True # subscribe to LLDP
         elif obj.config.key.js_path == ".commit.end":
@@ -410,7 +411,7 @@ class MonitoringThread(Thread):
                                      for n in data['notification']
                                      for u2 in n['update']
                                    ]
-                         Update_Observation( o['name'], u['val'], updates )
+                         Update_Observation( o['name'], f"{key}={u['val']}", updates )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))

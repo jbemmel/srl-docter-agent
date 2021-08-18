@@ -65,7 +65,7 @@ module docter-agent {
                     mandatory "true";
                   }
                   leaf filter {
-                    description "Optional filter expression, for example '!= established'";
+                    description "Optional filter expression, for example != 'established'";
                     type string;
                   }
                   leaf sample-period {
@@ -109,7 +109,8 @@ module docter-agent {
                    leaf timestamp {
                     type srl_nokia-comm:date-and-time-delta;
                    }
-                   list values {
+                   leaf trigger { type string; }
+                   list path {
                     key path;
                     leaf path { type string; }
                     leaf value { type string; }
