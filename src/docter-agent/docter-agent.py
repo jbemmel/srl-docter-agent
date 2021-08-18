@@ -413,7 +413,8 @@ class MonitoringThread(Thread):
                             if 'update' in n: # Some updates are empty (bug?)
                               for u2 in n['update']:
                                  updates.append( (u2['path'],u2['val']) )
-                         Update_Observation( o['name'], f"{key}={u['val']}", updates )
+                         index = key.rindex('/')
+                         Update_Observation( o['name'], f"{key[index:]}={u['val']}", updates )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
