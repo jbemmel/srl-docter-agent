@@ -396,9 +396,23 @@ class MonitoringThread(Thread):
 
       # Build lookup map
       lookup = {}
+      regexes = []
       for name,atts in self.observations.items():
-          lookup[ atts['path'] ] = { 'name': name, **atts }
-      logging.info( f"Built lookup map: {lookup}" )
+          path = atts['path']
+          obj = { 'name': name, **atts }
+          if '*' in path:
+             # Turn path into a Python regex
+             regex = path.replace('*','.*').replace('[','\[').replace(']','\]')
+             regexes.append( (re.compile(regex),obj) )
+          else:
+             lookup[ path ] = obj
+      logging.info( f"Built lookup map: {lookup} regexes={regexes}" )
+
+      def find_regex( path ):
+        for r,o in regexes:
+          if r.match( path ):
+            return o
+        return None
 
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
       with gNMIclient(target=('unix:///opt/srlinux/var/run/sr_gnmi_server',57400),
@@ -417,22 +431,28 @@ class MonitoringThread(Thread):
                       key = '/' + u['path'] # pygnmi strips '/'
                       if key in lookup:
                          o = lookup[ key ]
-                         data = c.get(path=o['reports'], encoding='json_ietf')
-                         logging.info( f"Reports:{data} val={u['val']}" )
-                         # update Telemetry, iterate
-                         # Add condition path as implicit reported value
-                         updates = [ (key,u['val']) ]
-                         i = 0
-                         for n in data['notification']:
-                            if 'update' in n: # Update is empty when path is invalid
-                              for u2 in n['update']:
-                                 updates.append( (u2['path'],u2['val']) )
-                            else:
-                              # Assumes updates are in same order
-                              updates.append( (o['reports'][i], 'GET failed') )
-                            i = i + 1
-                         index = key.rindex('/') + 1
-                         Update_Observation( o['name'], f"{key[index:]}={u['val']}", updates )
+                      elif regexes!=[]:
+                         o = find_regex( key )
+                         if o is None:
+                            continue
+                      else:
+                         continue
+                      data = c.get(path=o['reports'], encoding='json_ietf')
+                      logging.info( f"Reports:{data} val={u['val']}" )
+                      # update Telemetry, iterate
+                      # Add condition path as implicit reported value
+                      updates = [ (key,u['val']) ]
+                      i = 0
+                      for n in data['notification']:
+                         if 'update' in n: # Update is empty when path is invalid
+                           for u2 in n['update']:
+                              updates.append( (u2['path'],u2['val']) )
+                         else:
+                           # Assumes updates are in same order
+                           updates.append( (o['reports'][i], 'GET failed') )
+                         i = i + 1
+                      index = key.rindex('/') + 1
+                      Update_Observation( o['name'], f"{key[index:]}={u['val']}", updates )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
