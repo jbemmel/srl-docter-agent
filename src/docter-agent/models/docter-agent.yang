@@ -92,7 +92,11 @@ module docter-agent {
                 }
 
                 container statistics {
+                  srl_nokia-ext:delivery-node-override true;
+                  srl_nokia-ext:stream-mode on_change;
+
                   config false;
+
                   leaf last-observed {
                    type srl_nokia-comm:date-and-time-delta;
                   }
@@ -100,8 +104,16 @@ module docter-agent {
                    type srl_nokia-comm:zero-based-counter64;
                    default 0;
                   }
-                  leaf-list report-history {
-                   type string; // time: value(s) reported
+                  list report {
+                   key timestamp;
+                   leaf timestamp {
+                    type srl_nokia-comm:date-and-time-delta;
+                   }
+                   list values {
+                    key path;
+                    leaf path { type string; }
+                    leaf value { type string; }
+                   }
                   }
                 }
               }

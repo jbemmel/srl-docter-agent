@@ -127,6 +127,22 @@ def Update_Peer_State(peer_ip, section, update_data):
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
+def Update_Observation(name, updates):
+    now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+    update_data = {
+      'last_observed' : { "value" : now },
+      'count': 1234,
+      # 'report_history': [ report ] # This replaces the whole list, instead of appending
+    }
+    js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
+    logging.info(f"Telemetry_Update_Response :: {response}")
+
+    for path,value in updates:
+      js_path2 = js_path + f'.report{{.timestamp=="{now}"}}.values{{.path=="{path}"}}'
+      response = Add_Telemetry( js_path=js_path2, js_data=json.dumps(value) )
+      logging.info(f"Telemetry_Update_Response2 :: {response}")
+
 def Update_Global_State(state, var, val):
     js_path = '.' + agent_name + '.' + var
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(val) )
@@ -356,7 +372,7 @@ class MonitoringThread(Thread):
             {
                 'path': value['path'],
                 'mode': 'on_change',
-            } for key,value in self.observations.entries()
+            } for key,value in self.observations.items()
         ],
         'use_aliases': False,
         'mode': 'stream',
@@ -388,7 +404,12 @@ class MonitoringThread(Thread):
                          o = lookup[ key ]
                          data = c.get(path=o['reports'], encoding='json_ietf')
                          logging.info( f"Reports:{data} val={u['val']}" )
-                         # TODO update Telemetry
+                         # update Telemetry, iterate
+                         updates = [ (u2['path'],u2['val'])
+                                     for n in data['notification']
+                                     for u2 in n['update']
+                                   ]
+                         Update_Observation( o['name'], updates )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
