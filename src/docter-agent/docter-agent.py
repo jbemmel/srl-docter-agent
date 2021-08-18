@@ -408,7 +408,7 @@ class MonitoringThread(Thread):
              regexes.append( (re.compile(regex),obj) )
           else:
              lookup[ path ] = obj
-      logging.info( f"Built lookup map: {lookup} regexes={regexes}" )
+      logging.info( f"Built lookup map: {lookup} regexes={regexes} for sub={subscribe}" )
 
       def find_regex( path ):
         for r,o in regexes:
@@ -439,20 +439,23 @@ class MonitoringThread(Thread):
                             continue
                       else:
                          continue
-                      data = c.get(path=o['reports'], encoding='json_ietf')
-                      logging.info( f"Reports:{data} val={u['val']}" )
-                      # update Telemetry, iterate
+
                       # Add condition path as implicit reported value
                       updates = [ (key,u['val']) ]
-                      i = 0
-                      for n in data['notification']:
-                         if 'update' in n: # Update is empty when path is invalid
-                           for u2 in n['update']:
-                              updates.append( (u2['path'],u2['val']) )
-                         else:
-                           # Assumes updates are in same order
-                           updates.append( (o['reports'][i], 'GET failed') )
-                         i = i + 1
+                      reports = o['reports']
+                      if reports != []:
+                        data = c.get(path=reports, encoding='json_ietf')
+                        logging.info( f"Reports:{data} val={u['val']}" )
+                        # update Telemetry, iterate
+                        i = 0
+                        for n in data['notification']:
+                           if 'update' in n: # Update is empty when path is invalid
+                             for u2 in n['update']:
+                                updates.append( (u2['path'],u2['val']) )
+                           else:
+                             # Assumes updates are in same order
+                             updates.append( (reports[i], 'GET failed') )
+                           i = i + 1
                       index = key.rindex('/') + 1
                       Update_Observation( o['name'], f"{key[index:]}={u['val']}", updates )
 
