@@ -87,8 +87,8 @@ module docter-agent {
                 }
                 leaf-list report {
                   description "gNMI path of value to report when conditions are met";
-                  type string; // TODO pattern [label:] gnmi_path
-                  min-elements 1;
+                  type string;    // TODO pattern [label:] gnmi_path
+                  min-elements 0; // Implicit report for condition path
                 }
 
                 container statistics {
