@@ -127,10 +127,11 @@ def Update_Peer_State(peer_ip, section, update_data):
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
-def Update_Observation(name, updates):
+def Update_Observation(name, trigger, updates):
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
       'last_observed' : { "value" : now },
+      'trigger' : { "value" : trigger },
       'count': 1234,
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
@@ -409,7 +410,7 @@ class MonitoringThread(Thread):
                                      for n in data['notification']
                                      for u2 in n['update']
                                    ]
-                         Update_Observation( o['name'], updates )
+                         Update_Observation( o['name'], u['val'], updates )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
