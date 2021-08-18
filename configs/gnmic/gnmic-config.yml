@@ -10,11 +10,11 @@ skip-verify: true
 encoding: json_ietf
 
 targets:
-  clab-st-leaf1:
-  clab-st-leaf2:
-  clab-st-leaf3:
-  clab-st-spine1:
-  clab-st-spine2:
+  clab-srl-docter-lab-spine1:
+  clab-srl-docter-lab-spine2:
+  clab-srl-docter-lab-leaf1:
+  clab-srl-docter-lab-leaf2:
+  clab-srl-docter-lab-leaf3:  
 
 subscriptions:
   srl_if_stats:
@@ -65,6 +65,12 @@ subscriptions:
     mode: stream
     stream-mode: sample
     sample-interval: 5s
+    
+  srl_docter-agent:
+    paths:
+      - /docter-agent
+    mode: stream
+    stream-mode: on_change  
 
 outputs:
   prom:

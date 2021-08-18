@@ -6,15 +6,40 @@ topology:
       # Need IXR D2 or D3 for EVPN/VXLAN support
       type: ixrd2 # See https://www.nokia.com/networks/products/7250-interconnect-router/
       image: srl/docter-agent:latest
+      agents: [ ../srl-self-organizing/auto-config-agent.yml, docter-agent.yml ]
+    linux:
+      image: ghcr.io/hellt/network-multitool
 
   nodes:
   
   ###### DC FABRIC ######
   
     spine1: { kind: srl, startup-config: auto-spine.cfg.json }
+    spine2: { kind: srl, startup-config: auto-spine.cfg.json }
     leaf1:  { kind: srl, startup-config: auto-leaf.cfg.json }
     leaf2:  { kind: srl, startup-config: auto-leaf.cfg.json }
-    
+    leaf3:  { kind: srl, startup-config: auto-leaf.cfg.json }
+  
+  ### CLIENTS ###
+    client1:
+      kind: linux
+      binds:
+        - configs/client1:/config
+      mgmt_ipv4: 172.20.20.31 # Pick a fixed IP
+      mgmt_ipv6: 2001:172:20:20::31       
+    client2:
+      kind: linux
+      binds:
+        - configs/client2:/config
+      mgmt_ipv4: 172.20.20.32 # Pick a fixed IP
+      mgmt_ipv6: 2001:172:20:20::32           
+    client3:
+      kind: linux
+      binds:
+        - configs/client3:/config
+      mgmt_ipv4: 172.20.20.33 # Pick a fixed IP
+      mgmt_ipv6: 2001:172:20:20::33   
+      
   ###### TELEMETRY STACK ######
 
     grafana: # Added, connect via mgmt network
@@ -47,10 +72,19 @@ topology:
       
     gnmic:
       kind: linux
-      image: ghcr.io/karimra/gnmic:0.7.0
+      image: ghcr.io/karimra/gnmic:0.18.0
       binds:
         - configs/gnmic/gnmic-config.yml:/gnmic-config.yml:ro
       cmd: --config /gnmic-config.yml --log subscribe
+      
+    prometheus:
+      kind: linux
+      image: prom/prometheus:v2.23.0
+      binds:
+        - configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      cmd: --config.file=/etc/prometheus/prometheus.yml
+      ports:
+        - 9090:9090
       
     mysocketio:
       kind: mysocketio
@@ -59,5 +93,12 @@ topology:
         - .mysocketio_token:/root/.mysocketio_token # bind mount API token
 
   links:
-    - endpoints: ["leaf1:e1-1","spine1:e1-1"]
-    - endpoints: ["leaf2:e1-1","spine1:e1-2"]
+    - endpoints: ["spine1:e1-1", "leaf1:e1-1"]
+    - endpoints: ["spine1:e1-2", "leaf2:e1-1"]
+    - endpoints: ["spine1:e1-3", "leaf3:e1-1"]
+    - endpoints: ["spine2:e1-1", "leaf1:e1-2"]
+    - endpoints: ["spine2:e1-2", "leaf2:e1-2"]
+    - endpoints: ["spine2:e1-3", "leaf3:e1-2"]
+    - endpoints: ["leaf1:e1-36", "client1:eth1"]
+    - endpoints: ["leaf2:e1-36", "client2:eth1"]
+    - endpoints: ["leaf3:e1-36", "client3:eth1"]

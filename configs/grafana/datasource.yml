@@ -4,5 +4,9 @@ apiVersion: 1
 datasources:
   - name: InfluxDB
     type: influxdb
-    url: http://172.20.20.12:8086
+    url: http://clab-srl-docter-lab-influxdb:8086
     database: telegraf
+    
+  - name: Prometheus
+    type: prometheus
+    url: http://clab-srl-docter-lab-prometheus:9090
