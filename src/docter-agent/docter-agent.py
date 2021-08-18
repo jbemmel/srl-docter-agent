@@ -95,10 +95,10 @@ def Subscribe_Notifications(stream_id):
     # Subscribe to config changes, first
     Subscribe(stream_id, 'cfg')
 
-    Subscribe(stream_id, 'bfd')  # Test
+    # Subscribe(stream_id, 'bfd')
 
     # To map route notifications to BGP peers
-    Subscribe(stream_id, 'nexthop_group')
+    # Subscribe(stream_id, 'nexthop_group')
 
     ##Subscribe to LLDP Neighbor Notifications -> moved
     ## Subscribe(stream_id, 'lldp')
@@ -444,8 +444,8 @@ def Run():
             count += 1
             for obj in r.notification:
                 if Handle_Notification(obj, state) and not lldp_subscribed:
-                   Subscribe(stream_id, 'lldp')
-                   Subscribe(stream_id, 'route')
+                   # Subscribe(stream_id, 'lldp')
+                   # Subscribe(stream_id, 'route')
                    lldp_subscribed = True
 
                 # Program router_id only when changed
