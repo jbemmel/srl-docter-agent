@@ -18,12 +18,12 @@ We can instantiate a monitoring probe for BGP session status change events, repo
           "name": "bgp-flaps-due-to-mac-table-overflow",
           "conditions": [
             {
-              "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-ipaddress=1.1.0.1]/session-state"
+              "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=1.1.0.1]/session-state"
             }
           ],
           "report": [
             "/network-instance[name=lag2]/bridge-table/statistics/total-entries",
-            "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/xdp/resource/mac-addresses/used-percent"
+            "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/xdp/resource[name=mac-addresses]/used-entries"
           ]
         }
       ]
