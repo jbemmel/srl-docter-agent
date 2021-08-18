@@ -128,9 +128,9 @@ def Update_Peer_State(peer_ip, section, update_data):
     logging.info(f"Telemetry_Update_Response :: {response}")
 
 def Update_Observation(name, trigger, updates):
-    now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+    now = datetime.datetime.now()
     update_data = {
-      'last_observed' : { "value" : now },
+      'last_observed' : { "value" : now.strftime("%Y-%m-%dT%H:%M:%SZ") },
       'count': 1234,
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
@@ -138,8 +138,9 @@ def Update_Observation(name, trigger, updates):
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
+    now_ms = now.strftime("%Y-%m-%d %H:%M:%S.%f")
     for path,value in updates:
-      js_path2 = js_path + f'.report{{.event=="{now} {trigger}"}}.path{{.path=="{path}"}}'
+      js_path2 = js_path + f'.report{{.event=="{now_ms} {trigger}"}}.path{{.path=="{path}"}}'
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'value':value}) )
       logging.info(f"Telemetry_Update_Response2 :: {response}")
 
