@@ -20,29 +20,29 @@ topology:
     leaf2:  { kind: srl, startup-config: auto-leaf.cfg.json }
     leaf3:  { kind: srl, startup-config: auto-leaf.cfg.json }
  
-    client1: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
-    client2: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
-    client3: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
+#    client1: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
+#    client2: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
+#    client3: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
  
 ### CLIENTS ###
-#    client1:
-#      kind: linux
-#      binds:
-#        - configs/client1:/config
-#      mgmt_ipv4: 172.20.20.31 # Pick a fixed IP
-#      mgmt_ipv6: 2001:172:20:20::31       
-#    client2:
-#      kind: linux
-#      binds:
-#        - configs/client2:/config
-#      mgmt_ipv4: 172.20.20.32 # Pick a fixed IP
-#      mgmt_ipv6: 2001:172:20:20::32           
-#    client3:
-#      kind: linux
-#      binds:
-#        - configs/client3:/config
-#      mgmt_ipv4: 172.20.20.33 # Pick a fixed IP
-#      mgmt_ipv6: 2001:172:20:20::33   
+    client1:
+      kind: linux
+      binds:
+        - configs/client1:/config
+      mgmt_ipv4: 172.20.20.31 # Pick a fixed IP
+      mgmt_ipv6: 2001:172:20:20::31       
+    client2:
+      kind: linux
+      binds:
+        - configs/client2:/config
+      mgmt_ipv4: 172.20.20.32 # Pick a fixed IP
+      mgmt_ipv6: 2001:172:20:20::32           
+    client3:
+      kind: linux
+      binds:
+        - configs/client3:/config
+      mgmt_ipv4: 172.20.20.33 # Pick a fixed IP
+      mgmt_ipv6: 2001:172:20:20::33   
       
   ###### TELEMETRY STACK ######
 
