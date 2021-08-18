@@ -238,8 +238,10 @@ def Handle_Notification(obj, state):
                       Update_BFDFlapcounts( state, peer_ip )
 
                 if obj.config.key.js_path == ".docter_agent.intensive_care.observe":
+
                     name = obj.config.key.keys[0]
-                    reports = [ i['value'] for i in data['observe']['report'] ]
+                    # Can be empty
+                    reports = ([ i['value'] for i in data['observe']['report'] ] if 'observe' in data else [])
                     if name in state.observations:
                        state.observations[ name ].update( { 'reports': reports, **data } )
                     else:
