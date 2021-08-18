@@ -407,7 +407,7 @@ class MonitoringThread(Thread):
                          # update Telemetry, iterate
                          updates = [ (u2['path'],u2['val'])
                                      for n in data['notification']
-                                     for u2 in n['update']
+                                     for u2 in (n['update'] if 'update' in n else [])
                                    ]
                          Update_Observation( o['name'], f"{key}={u['val']}", updates )
 
