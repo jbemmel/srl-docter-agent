@@ -22,7 +22,7 @@ We can instantiate a monitoring probe for BGP session status change events, repo
             }
           ],
           "report": [
-            "/network-instance[name=lag2]/bridge-table/statistics/total-entries",
+            "/network-instance[name=lag3]/bridge-table/statistics/total-entries",
             "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/xdp/resource[name=mac-addresses]/used-entries"
           ]
         }
