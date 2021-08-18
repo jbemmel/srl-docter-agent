@@ -109,7 +109,6 @@ module docter-agent {
                    leaf timestamp {
                     type srl_nokia-comm:date-and-time-delta;
                    }
-                   leaf trigger { type string; }
                    list values {
                     key path;
                     leaf path { type string; }
