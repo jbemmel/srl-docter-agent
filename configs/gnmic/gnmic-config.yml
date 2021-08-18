@@ -14,6 +14,7 @@ targets:
   clab-srl-docter-lab-spine2:
   clab-srl-docter-lab-leaf1:
   clab-srl-docter-lab-leaf2:
+  clab-srl-docter-lab-leaf3:  
 
 subscriptions:
   srl_if_stats:
@@ -64,6 +65,12 @@ subscriptions:
     mode: stream
     stream-mode: sample
     sample-interval: 5s
+    
+  srl_docter-agent:
+    paths:
+      - /docter-agent
+    mode: stream
+    stream-mode: on_change  
 
 outputs:
   prom:
