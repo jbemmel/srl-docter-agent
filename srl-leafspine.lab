@@ -52,6 +52,15 @@ topology:
         - configs/gnmic/gnmic-config.yml:/gnmic-config.yml:ro
       cmd: --config /gnmic-config.yml --log subscribe
       
+    prometheus:
+      kind: linux
+      image: prom/prometheus:v2.23.0
+      binds:
+        - configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      cmd: --config.file=/etc/prometheus/prometheus.yml
+      ports:
+        - 9090:9090
+      
     mysocketio:
       kind: mysocketio
       image: ghcr.io/hellt/mysocketctl:0.4.0
