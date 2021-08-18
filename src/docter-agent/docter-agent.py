@@ -348,13 +348,13 @@ class MonitoringThread(Thread):
 
       # Create per-thread gNMI stub, using a global channel
       # gnmi_stub = gNMIStub( gnmi_channel )
-
+    try:
       logging.info( f"MonitoringThread: {self.observations}")
 
       subscribe = {
         'subscription': [
             {
-                'path': value.path,
+                'path': value['path'],
                 'mode': 'on_change',
             } for key,value in self.observations.entries()
         ],
@@ -366,7 +366,7 @@ class MonitoringThread(Thread):
       # Build lookup map
       lookup = {}
       for name,atts in self.observations.items():
-          lookup[ atts.path ] = { 'name': name, **atts }
+          lookup[ atts['path'] ] = { 'name': name, **atts }
       logging.info( f"Built lookup map: {lookup}" )
 
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
@@ -375,7 +375,6 @@ class MonitoringThread(Thread):
                             insecure=True, debug=False) as c:
         telemetry_stream = c.subscribe(subscribe=subscribe)
         for m in telemetry_stream:
-         try:
           if m.HasField('update'): # both update and delete events
               # Filter out only toplevel events
               parsed = telemetryParser(m)
@@ -391,11 +390,11 @@ class MonitoringThread(Thread):
                          logging.info( f"Reports:{data} val={u['val']}" )
                          # TODO update Telemetry
 
-         except Exception as e:
-          traceback_str = ''.join(traceback.format_tb(e.__traceback__))
-          logging.error(f'Exception caught in gNMI :: {e} m={m} stack:{traceback_str}')
+    except Exception as e:
+       traceback_str = ''.join(traceback.format_tb(e.__traceback__))
+       logging.error(f'Exception caught in gNMI :: {e} m={m} stack:{traceback_str}')
 
-      logging.info("Leaving gNMI subscribe loop")
+    logging.info("Leaving gNMI subscribe loop")
 
 class State(object):
     def __init__(self):
