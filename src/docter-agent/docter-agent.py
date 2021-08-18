@@ -407,10 +407,11 @@ class MonitoringThread(Thread):
                          data = c.get(path=o['reports'], encoding='json_ietf')
                          logging.info( f"Reports:{data} val={u['val']}" )
                          # update Telemetry, iterate
-                         updates = [ (u2['path'],u2['val'])
-                                     for n in data['notification']
-                                     for u2 in (n['update'] if 'update' in n else [])
-                                   ]
+                         updates = []
+                         for n in data['notification']:
+                            if 'update' in n: # Some updates are empty (bug?)
+                              for u2 in n['update']:
+                                 updates.append( (u2['path'],u2['val']) )
                          Update_Observation( o['name'], f"{key}={u['val']}", updates )
 
     except Exception as e:
