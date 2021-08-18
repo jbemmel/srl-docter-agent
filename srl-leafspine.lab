@@ -47,7 +47,7 @@ topology:
       
     gnmic:
       kind: linux
-      image: ghcr.io/karimra/gnmic:0.7.0
+      image: ghcr.io/karimra/gnmic:0.18.0
       binds:
         - configs/gnmic/gnmic-config.yml:/gnmic-config.yml:ro
       cmd: --config /gnmic-config.yml --log subscribe
