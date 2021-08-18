@@ -131,17 +131,15 @@ def Update_Observation(name, trigger, updates):
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
       'last_observed' : { "value" : now },
-      'trigger' : { "value" : trigger },
       'count': 1234,
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
-    name += f' = {trigger}' # TODO can be multiple path values
     js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
     for path,value in updates:
-      js_path2 = js_path + f'.report{{.timestamp=="{now}"}}.path{{.path=="{path}"}}'
+      js_path2 = js_path + f'.report{{.timestamp=="{now} {trigger}"}}.path{{.path=="{path}"}}'
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'value':value}) )
       logging.info(f"Telemetry_Update_Response2 :: {response}")
 
