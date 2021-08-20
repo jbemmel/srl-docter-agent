@@ -151,7 +151,7 @@ def Update_Observation(name, trigger, updates):
     event_path = js_path + f'.report{{.event=="{now_ms} {trigger}"}}'
     update_data = {
       'timestamp': { 'value': now_ts },
-      'values': { 'value' : ",".join( [f'{path}={value}' for path,value in updates ] ) ) }
+      'values': { 'value' : ",".join( [f'{path}={value}' for path,value in updates ] ) }
     }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
