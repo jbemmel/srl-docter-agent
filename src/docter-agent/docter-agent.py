@@ -140,8 +140,8 @@ def Update_Observation(name, trigger, updates):
       'count': reports_count,
 
       # test
-      'count2': 2*reports_count,
-      'count3': 3*reports_count,
+      # 'count2': 2*reports_count,
+      # 'count3': 3*reports_count,
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
     # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
@@ -150,8 +150,8 @@ def Update_Observation(name, trigger, updates):
     logging.info(f"Telemetry_Update_Response :: {response}")
 
     # gNMI test
-    t_path = '.' + agent_name + '.intensive_care.statistics.test{.testname=="test1"}'
-    response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : 'X' }}) )
+    # t_path = '.' + agent_name + '.intensive_care.statistics.test{.testname=="test1"}'
+    # response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : 'X' }}) )
     #t_path = '.' + agent_name + '.intensive_care.statistics.vtest2{.testname=="test2"}'
     #response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : 'Y' }}) )
     #t_path = '.' + agent_name + f'.intensive_care.statistics.vtest2{{.testname=="{name}"}}'
@@ -167,10 +167,10 @@ def Update_Observation(name, trigger, updates):
     }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
-    t_path = '.' + agent_name + '.intensive_care.statistics.vtest2{.testname=="test2"}'
-    response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : 'Y' }}) )
-    t_path = '.' + agent_name + f'.intensive_care.statistics.vtest2{{.testname=="{name}"}}'
-    response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : trigger }}) )
+    #t_path = '.' + agent_name + '.intensive_care.statistics.vtest2{.testname=="test2"}'
+    #response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : 'Y' }}) )
+    #t_path = '.' + agent_name + f'.intensive_care.statistics.vtest2{{.testname=="{name}"}}'
+    #response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : trigger }}) )
 
 
     #for path,value in updates:

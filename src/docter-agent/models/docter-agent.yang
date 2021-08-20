@@ -104,21 +104,6 @@ module docter-agent {
                   type srl_nokia-comm:zero-based-counter64;
                   default 0;
                 }
-                leaf count2 {
-                  type srl_nokia-comm:zero-based-counter64;
-                  // default 0;
-                }
-                leaf count3 {
-                  type srl_nokia-comm:zero-based-counter64;
-                  default 0;
-                }
-
-                list test {  // calling this 'dtest' works
-                  srl_nokia-ext:delivery-node-override true;
-                  key testname;
-                  leaf testname { type string; }
-                  leaf testvalue { type string; }
-                }
 
                 list report {
                  key event;
@@ -134,13 +119,6 @@ module docter-agent {
                  //   leaf path { type string; }
                  //   leaf value { type string; }
                  // }
-                }
-
-                list vtest2 {
-                  srl_nokia-ext:delivery-node-override true;
-                  key testname;
-                  leaf testname { type string; }
-                  leaf testvalue { type string; }
                 }
               }
             } // end intensive-care
