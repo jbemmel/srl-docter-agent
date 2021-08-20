@@ -71,6 +71,13 @@ subscriptions:
       - /docter-agent
     mode: stream
     stream-mode: on_change  
+    
+  srl_docter-agent:
+    paths:
+      - /docter-agent
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s 
 
 outputs:
   prom:
