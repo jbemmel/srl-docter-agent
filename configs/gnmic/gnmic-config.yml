@@ -66,9 +66,9 @@ subscriptions:
     stream-mode: sample
     sample-interval: 5s
     
-  srl_docter-agent:
+  srl_docter_agent_reports:
     paths:
-      - /docter-agent/intensive-care/statistics/
+      - /docter-agent/intensive-care/statistics/report[event=*]
     mode: stream
     stream-mode: on_change  
     
