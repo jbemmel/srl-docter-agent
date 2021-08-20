@@ -127,26 +127,33 @@ def Update_Peer_State(peer_ip, section, update_data):
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
-observations_count = {} # Per named entity
+reports_count = 0 # Total
 
 def Update_Observation(name, trigger, updates):
-    global observations_count
-    if name in observations_count:
-        observations_count[name] = observations_count[name] + 1
-    else:
-        observations_count[name] = 1
+    global reports_count
+    reports_count = reports_count + 1
 
     now = datetime.datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
       'last_observed' : { "value" : now_ts },
-      'count': observations_count[name],
+      'count': reports_count,
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
     # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
     js_path = '.' + agent_name + '.intensive_care.statistics'
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
+
+
+    # gNMI test
+    t_path = '.' + agent_name + '.intensive_care.statistics.test{.testname=="test1"}'
+    response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : 'X' }}) )
+    t_path = '.' + agent_name + '.intensive_care.statistics.test{.testname=="test2"}'
+    response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : 'Y' }}) )
+    t_path = '.' + agent_name + f'.intensive_care.statistics.test{{.testname=="{name}"}}'
+    response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : trigger }}) )
+    # end test
 
     now_ms = now.strftime("%Y-%m-%d %H:%M:%S.%f")
     event_path = js_path + f'.report{{.event=="{now_ms} {name}"}}'
