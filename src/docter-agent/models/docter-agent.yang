@@ -104,6 +104,14 @@ module docter-agent {
                   type srl_nokia-comm:zero-based-counter64;
                   default 0;
                 }
+                leaf count2 {
+                  type srl_nokia-comm:zero-based-counter64;
+                  // default 0;
+                }
+                leaf count3 {
+                  type srl_nokia-comm:zero-based-counter64;
+                  default 0;
+                }
 
                 list test {  // calling this 'dtest' works
                   srl_nokia-ext:delivery-node-override true;

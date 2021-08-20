@@ -138,6 +138,10 @@ def Update_Observation(name, trigger, updates):
     update_data = {
       'last_observed' : { "value" : now_ts },
       'count': reports_count,
+
+      # test
+      'count2': 2*reports_count,
+      'count3': 3*reports_count,
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
     # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
