@@ -68,16 +68,17 @@ subscriptions:
     
   srl_docter-agent:
     paths:
-      - /docter-agent
+      - /docter-agent/intensive-care/statistics/
     mode: stream
     stream-mode: on_change  
     
-  srl_docter-agent:
-    paths:
-      - /docter-agent
-    mode: stream
-    stream-mode: sample
-    sample-interval: 5s 
+#  srl_docter-agent:
+#    paths:
+#      - /docter-agent
+#    mode: stream
+#    stream-mode: sample
+#    sample-interval: 5s 
+      
 
 outputs:
   prom:
