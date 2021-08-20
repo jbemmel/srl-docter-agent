@@ -105,7 +105,8 @@ module docter-agent {
                   default 0;
                 }
 
-                list test {
+                list test {  // calling this 'dtest' works
+                  srl_nokia-ext:delivery-node-override true;
                   key testname;
                   leaf testname { type string; }
                   leaf testvalue { type string; }
@@ -125,6 +126,13 @@ module docter-agent {
                  //   leaf path { type string; }
                  //   leaf value { type string; }
                  // }
+                }
+
+                list vtest2 {
+                  srl_nokia-ext:delivery-node-override true;
+                  key testname;
+                  leaf testname { type string; }
+                  leaf testvalue { type string; }
                 }
               }
             } // end intensive-care
