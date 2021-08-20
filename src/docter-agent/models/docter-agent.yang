@@ -111,11 +111,12 @@ module docter-agent {
                    leaf timestamp {
                      type srl_nokia-comm:date-and-time-delta;
                    }
-                   list path {
-                     key path;
-                     leaf path { type string; }
-                     leaf value { type string; }
-                   }
+                   leaf values { type string; } // list of name=value
+                   // list path {
+                   //    key path;
+                   //   leaf path { type string; }
+                   //   leaf value { type string; }
+                   // }
                   }
                 }
               }
