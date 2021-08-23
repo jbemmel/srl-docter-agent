@@ -79,6 +79,13 @@ subscriptions:
     mode: stream
     stream-mode: sample
     sample-interval: 5s 
+
+  srl_docter-agent2:
+    paths:
+      - /docter-agent/grafana-test
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s 
       
 
 outputs:

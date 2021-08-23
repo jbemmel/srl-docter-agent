@@ -48,8 +48,8 @@ topology:
 
     grafana: # Added, connect via mgmt network
       kind: linux
-      publish:
-       - tcp/3000     # tcp port 3000 will be exposed via mysocket.io
+#      publish:
+#       - tcp/3000     # tcp port 3000 will be exposed via mysocket.io
       image: grafana/grafana:7.3.7
       env:
         GF_INSTALL_PLUGINS: agenty-flowcharting-panel,agenty-flowcharting-panel
@@ -59,6 +59,8 @@ topology:
         - configs/grafana/dashboards:/var/lib/grafana/dashboards
       mgmt_ipv4: 172.20.20.10 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::10
+      ports:
+        - 3000:3000      
 
     telegraf: # Added, connect via mgmt network
       kind: linux
@@ -92,11 +94,11 @@ topology:
       ports:
         - 9090:9090
       
-    mysocketio:
-      kind: mysocketio
-      image: ghcr.io/hellt/mysocketctl:0.4.0
-      binds:
-        - .mysocketio_token:/root/.mysocketio_token # bind mount API token
+#    mysocketio:
+#      kind: mysocketio
+#      image: ghcr.io/hellt/mysocketctl:0.4.0
+#      binds:
+#        - .mysocketio_token:/root/.mysocketio_token # bind mount API token
 
   links:
     - endpoints: ["spine1:e1-1", "leaf1:e1-1"]
