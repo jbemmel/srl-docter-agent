@@ -199,12 +199,11 @@ def Update_Observation(name, trigger, updates):
     #event_path = js_path + f'.report{{.event=="{now_ms} {name}"}}'
     now_ms = now.strftime("%Y-%m-%d_%H:%M:%S.%f")
     # event_path = js_path + f'.report{{.event=="t{now_ms}"}}'
-    event_path = '.' + agent_name + f'.grafana_test.mylist{{.name=="t{now_ms}"}}'
+    event_path = '.' + agent_name + f'.reports.events{{.event=="{now_ms} {name}"}}'
     update_data = {
-      # 'timestamp': { 'value': now_ts },
-      # 'trigger': { 'value': trigger },
-      'value': { 'value': trigger },
-      # 'values': [ f'{path}={value}' for path,value in updates ]
+      'timestamp': { 'value': now_ts },
+      'trigger': { 'value': trigger },
+      'values': [ f'{path}={value}' for path,value in updates ]
     }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 

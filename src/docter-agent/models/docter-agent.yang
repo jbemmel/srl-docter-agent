@@ -32,7 +32,7 @@ module docter-agent {
                          config and operational state data";
 
             // Test reporting
-            container grafana-test {
+            container reports {
               srl_nokia-ext:delivery-node-override true;
               config false;
               leaf-list leaflist {
@@ -45,18 +45,12 @@ module docter-agent {
                 type uint32;
               }
 
-              list mylist {
-                key name;
-                leaf name  { type string; }
-                leaf value { type string; }
-                leaf count {
-                  type srl_nokia-comm:zero-based-counter64;
-                  default 0;
-                }
-
-                leaf-list nested {
-                  type string;
-                }
+              list events {
+                key event;
+                leaf event  { type string; }
+                leaf timestamp { type string; }
+                leaf trigger { type string; }
+                leaf-list values { type string; }
               }
 
               leaf count {
