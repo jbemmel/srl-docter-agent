@@ -133,15 +133,18 @@ def Grafana_Test():
     update_data = {
       'leaflist' : [ "value1", "value2" ],
       'timestamp' : { "value" : now_ts },
-      'mylist' : [
-        { 'name' : { 'value': 'name1' }, 'value' : { 'value' : 'v1' } },
-        { 'name' : { 'value': 'name2' }, 'value' : { 'value' : 'v2' } },
-      ]
+      #'mylist' : [
+      # { 'name' : { 'value': 'name1' }, 'value' : { 'value' : 'v1' } },
+      # { 'name' : { 'value': 'name2' }, 'value' : { 'value' : 'v2' } },
+      # ]
     }
     # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
     js_path = '.' + agent_name + '.grafana_test'
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
+
+    response = Add_Telemetry( js_path=js_path+".mylist{name=='name1'}", js_data=json.dumps({'value':'v1'}) )
+    response = Add_Telemetry( js_path=js_path+".mylist{name=='name2'}", js_data=json.dumps({'value':'v2'}) )
 
 reports_count = 0 # Total
 filter_count = 0
