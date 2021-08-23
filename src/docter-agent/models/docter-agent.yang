@@ -31,18 +31,26 @@ module docter-agent {
             description "Top level enclosing container for auto config agent sample app
                          config and operational state data";
 
-            // Test reporting
+            // gNMI reporting to collectors
             container reports {
               srl_nokia-ext:delivery-node-override true;
+              srl_nokia-ext:stream-mode on_change;
               config false;
-              leaf-list leaflist {
-                type srl_nokia-comm:zero-based-counter64;
-              }
-              leaf timestamp {
+
+              leaf last-updated {
                 type srl_nokia-comm:date-and-time-delta;
               }
-              leaf timestamp-int {
-                type uint32;
+
+              leaf count {
+                description "Number of events reported";
+                type srl_nokia-comm:zero-based-counter64;
+                default 0;
+              }
+
+              leaf filtered {
+                description "Number of events suppressed by filter expression";
+                type srl_nokia-comm:zero-based-counter64;
+                default 0;
               }
 
               list events {
@@ -51,11 +59,6 @@ module docter-agent {
                 leaf timestamp { type string; }
                 leaf trigger { type string; }
                 leaf-list values { type string; }
-              }
-
-              leaf count {
-                type srl_nokia-comm:zero-based-counter64;
-                default 0;
               }
             }
 
@@ -122,6 +125,7 @@ module docter-agent {
               } // end list observe
               } // end intensive-care
 
+              // No longer used, broken for some unclear reason
               container statistics {
                 srl_nokia-ext:delivery-node-override true;
                 srl_nokia-ext:stream-mode on_change;

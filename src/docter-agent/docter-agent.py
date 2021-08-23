@@ -158,11 +158,11 @@ def Update_Filtered():
     now = datetime.datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
-      'last_observed' : { "value" : now_ts },
+      'last_updated' : { "value" : now_ts },
       'filtered': filter_count,
     }
     # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
-    js_path = '.' + agent_name + '.statistics'
+    js_path = '.' + agent_name + '.reports'
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
@@ -173,7 +173,7 @@ def Update_Observation(name, trigger, updates):
     now = datetime.datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
-      'last_observed' : { "value" : now_ts },
+      'last_updated' : { "value" : now_ts },
       'count': reports_count,
 
       # test
@@ -182,7 +182,7 @@ def Update_Observation(name, trigger, updates):
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
     # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
-    js_path = '.' + agent_name + '.statistics' # .intensive_care.statistics
+    js_path = '.' + agent_name + '.reports' # .intensive_care.statistics
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
@@ -578,7 +578,7 @@ def Run():
     stream_request = sdk_service_pb2.NotificationStreamRequest(stream_id=stream_id)
     stream_response = sub_stub.NotificationStream(stream_request, metadata=metadata)
 
-    Grafana_Test()
+    # Grafana_Test()
 
     state = State()
     count = 1
