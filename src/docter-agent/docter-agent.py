@@ -200,7 +200,7 @@ def Update_Observation(name, trigger, updates):
     now_ms = now.strftime("%Y-%m-%d_%H:%M:%S.%f")
     event_path = js_path + f'.report{{.event=="t{now_ms}"}}'
     update_data = {
-      'timestamp': { 'value': now_ts },
+      # 'timestamp': { 'value': now_ts },
       'trigger': { 'value': trigger },
       # 'values': [ f'{path}={value}' for path,value in updates ]
     }

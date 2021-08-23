@@ -151,7 +151,7 @@ module docter-agent {
                  leaf event { type string; }   // timestamp : name
                  leaf trigger { type string; } // condition = value
                  leaf timestamp {
-                   type srl_nokia-comm:date-and-time-delta;
+                    type srl_nokia-comm:date-and-time-delta;
                  }
                  leaf-list values { type string; } // list of name=value
                  // list path {
