@@ -33,6 +33,7 @@ module docter-agent {
 
             // Test reporting
             container grafana-test {
+              srl_nokia-ext:delivery-node-override true;
               leaf-list leaflist {
                 type string;
               }
