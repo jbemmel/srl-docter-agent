@@ -195,8 +195,10 @@ def Update_Observation(name, trigger, updates):
     #response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : trigger }}) )
     # end test
 
-    now_ms = now.strftime("%Y-%m-%d %H:%M:%S.%f")
-    event_path = js_path + f'.report{{.event=="{now_ms} {name}"}}'
+    #now_ms = now.strftime("%Y-%m-%d %H:%M:%S.%f")
+    #event_path = js_path + f'.report{{.event=="{now_ms} {name}"}}'
+    now_ms = now.strftime("%Y-%m-%d_%H:%M:%S.%f")
+    event_path = js_path + f'.report{{.event=="{now_ms}"}}'
     update_data = {
       'timestamp': { 'value': now_ts },
       'trigger': { 'value': trigger },
