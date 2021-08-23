@@ -152,6 +152,7 @@ reports_count = 0 # Total
 filter_count = 0
 
 def Update_Filtered():
+    global reports_count
     global filter_count
     filter_count = filter_count + 1
 
@@ -159,6 +160,7 @@ def Update_Filtered():
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
       'last_updated' : { "value" : now_ts },
+      'count': reports_count,
       'filtered': filter_count,
     }
     # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
@@ -167,6 +169,7 @@ def Update_Filtered():
     logging.info(f"Telemetry_Update_Response :: {response}")
 
 def Update_Observation(name, trigger, updates):
+    global filter_count
     global reports_count
     reports_count = reports_count + 1
 
@@ -175,7 +178,7 @@ def Update_Observation(name, trigger, updates):
     update_data = {
       'last_updated' : { "value" : now_ts },
       'count': reports_count,
-
+      'filtered': filter_count,
       # test
       # 'count2': 2*reports_count,
       # 'count3': 3*reports_count,
