@@ -131,8 +131,10 @@ def Grafana_Test():
     now = datetime.datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
-      'leaflist' : [ "value1", "value2" ],
+      'leaflist' : [ 123, 456 ],
       'timestamp' : { "value" : now_ts },
+      'timestamp_int' : int(now),
+      'count' : 69
       #'mylist' : [
       # { 'name' : { 'value': 'name1' }, 'value' : { 'value' : 'v1' } },
       # { 'name' : { 'value': 'name2' }, 'value' : { 'value' : 'v2' } },
@@ -143,8 +145,8 @@ def Grafana_Test():
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
-    response = Add_Telemetry( js_path=js_path+'.mylist{.name=="name1"}', js_data=json.dumps({'value':'v1'}) )
-    response = Add_Telemetry( js_path=js_path+'.mylist{.name=="name2"}', js_data=json.dumps({'value':'v2'}) )
+    response = Add_Telemetry( js_path=js_path+'.mylist{.name=="name1"}', js_data=json.dumps({'value':'v1','count':2}) )
+    response = Add_Telemetry( js_path=js_path+'.mylist{.name=="name2"}', js_data=json.dumps({'value':'v2','count':3}) )
 
 reports_count = 0 # Total
 filter_count = 0

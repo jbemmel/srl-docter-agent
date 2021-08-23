@@ -36,16 +36,28 @@ module docter-agent {
               srl_nokia-ext:delivery-node-override true;
               config false;
               leaf-list leaflist {
-                type string;
+                type srl_nokia-comm:zero-based-counter64;
               }
               leaf timestamp {
                 type srl_nokia-comm:date-and-time-delta;
+              }
+              leaf timestamp-int {
+                type uint32;
               }
 
               list mylist {
                 key name;
                 leaf name  { type string; }
                 leaf value { type string; }
+                leaf count {
+                  type srl_nokia-comm:zero-based-counter64;
+                  default 0;
+                }
+              }
+
+              leaf count {
+                type srl_nokia-comm:zero-based-counter64;
+                default 0;
               }
             }
 
