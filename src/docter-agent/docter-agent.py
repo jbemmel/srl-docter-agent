@@ -202,7 +202,7 @@ def Update_Observation(name, trigger, updates):
     update_data = {
       'timestamp': { 'value': now_ts },
       'trigger': { 'value': trigger },
-      'values': [ f'{path}={value}' for path,value in updates ]
+      # 'values': [ f'{path}={value}' for path,value in updates ]
     }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
