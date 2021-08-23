@@ -162,7 +162,7 @@ def Update_Filtered():
       'filtered': filter_count,
     }
     # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
-    js_path = '.' + agent_name + '.intensive_care.statistics'
+    js_path = '.' + agent_name + '.statistics'
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
@@ -182,7 +182,7 @@ def Update_Observation(name, trigger, updates):
       # 'report_history': [ report ] # This replaces the whole list, instead of appending
     }
     # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
-    js_path = '.' + agent_name + '.intensive_care.statistics'
+    js_path = '.' + agent_name + '.statistics' # .intensive_care.statistics
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 

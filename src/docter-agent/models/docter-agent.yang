@@ -126,6 +126,7 @@ module docter-agent {
                 }
 
               } // end list observe
+              } // end intensive-care
 
               container statistics {
                 srl_nokia-ext:delivery-node-override true;
@@ -160,7 +161,7 @@ module docter-agent {
                  // }
                 }
               }
-            } // end intensive-care
+            // } // end intensive-care
 
             // Info from state
             leaf total-bfd-flaps-last-period {
