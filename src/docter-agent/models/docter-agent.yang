@@ -53,6 +53,10 @@ module docter-agent {
                   type srl_nokia-comm:zero-based-counter64;
                   default 0;
                 }
+
+                leaf-list nested {
+                  type string;
+                }
               }
 
               leaf count {
