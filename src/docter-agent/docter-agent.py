@@ -146,7 +146,7 @@ def Grafana_Test():
     logging.info(f"Telemetry_Update_Response :: {response}")
 
     response = Add_Telemetry( js_path=js_path+'.mylist{.name=="name1"}', js_data=json.dumps({'value':'v1','count':2}) )
-    response = Add_Telemetry( js_path=js_path+'.mylist{.name=="name2"}', js_data=json.dumps({'value':'v2','count':3}) )
+    response = Add_Telemetry( js_path=js_path+'.mylist{.name=="2021-08-23_18:43:54.633636"}', js_data=json.dumps({'value':'v2','count':3}) )
 
 reports_count = 0 # Total
 filter_count = 0
