@@ -127,7 +127,39 @@ def Update_Peer_State(peer_ip, section, update_data):
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
+def Grafana_Test():
+    now = datetime.datetime.now()
+    now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    update_data = {
+      'leaflist' : [ "value1", "value2" ],
+      'timestamp' : { "value" : now_ts },
+      'mylist' : [
+        { 'name' : { 'value': 'name1' }, 'value' : { 'value' : 'v1' } },
+        { 'name' : { 'value': 'name2' }, 'value' : { 'value' : 'v2' } },
+      ]
+    }
+    # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
+    js_path = '.' + agent_name + '.grafana_test'
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
+    logging.info(f"Telemetry_Update_Response :: {response}")
+
 reports_count = 0 # Total
+filter_count = 0
+
+def Update_Filtered():
+    global filter_count
+    filter_count = filter_count + 1
+
+    now = datetime.datetime.now()
+    now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    update_data = {
+      'last_observed' : { "value" : now_ts },
+      'filtered': filter_count,
+    }
+    # js_path = '.' + agent_name + '.intensive_care.observe{.name=="' + name + '"}.statistics'
+    js_path = '.' + agent_name + '.intensive_care.statistics'
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
+    logging.info(f"Telemetry_Update_Response :: {response}")
 
 def Update_Observation(name, trigger, updates):
     global reports_count
@@ -241,7 +273,8 @@ def Handle_Notification(obj, state):
                 logging.info( f'Handle_Config: Unregister response:: {response}' )
                 state = State() # Reset state, works?
             else:
-                json_acceptable_string = obj.config.data.json.replace("'", "\"")
+                # Don't replace ' in filter expressions
+                json_acceptable_string = obj.config.data.json # .replace("'", "\"")
                 data = json.loads(json_acceptable_string)
 
                 if 'monitor' in data:
@@ -463,6 +496,16 @@ class MonitoringThread(Thread):
                       else:
                          continue
 
+                      logging.info( f"Evaluate any filters: {o}" )
+                      if 'conditions' in o and 'filter' in o['conditions']:
+                          filter = o['conditions']['filter']['value']
+                          _globals = { "ipaddress" : ipaddress }
+                          _locals  = { "_" : u['val'] }
+                          if not eval( filter, _globals, _locals ):
+                              logging.info( f"Filter {filter} with value _='{u['val']}' = False, skipping..." )
+                              Update_Filtered()
+                              continue;
+
                       # Add condition path as implicit reported value
                       updates = [ (key,u['val']) ]
                       reports = o['reports']
@@ -526,6 +569,8 @@ def Run():
 
     stream_request = sdk_service_pb2.NotificationStreamRequest(stream_id=stream_id)
     stream_response = sub_stub.NotificationStream(stream_request, metadata=metadata)
+
+    Grafana_Test()
 
     state = State()
     count = 1

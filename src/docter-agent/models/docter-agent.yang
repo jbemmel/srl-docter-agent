@@ -31,6 +31,22 @@ module docter-agent {
             description "Top level enclosing container for auto config agent sample app
                          config and operational state data";
 
+            // Test reporting
+            container grafana-test {
+              leaf-list leaflist {
+                type string;
+              }
+              leaf timestamp {
+                type srl_nokia-comm:date-and-time-delta;
+              }
+
+              list mylist {
+                key name;
+                leaf name  { type string; }
+                leaf value { type string; }
+              }
+            }
+
             container monitor {
              leaf flaps-monitoring-period {
                 description "Monitoring period in minutes, default 1 hour";
@@ -101,6 +117,11 @@ module docter-agent {
                   type srl_nokia-comm:date-and-time-delta;
                 }
                 leaf count {
+                  type srl_nokia-comm:zero-based-counter64;
+                  default 0;
+                }
+                leaf filtered {
+                  description "Number of events suppressed by filter expression";
                   type srl_nokia-comm:zero-based-counter64;
                   default 0;
                 }
