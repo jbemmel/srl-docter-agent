@@ -133,7 +133,7 @@ def Grafana_Test():
     update_data = {
       'leaflist' : [ 123, 456 ],
       'timestamp' : { "value" : now_ts },
-      'timestamp_int' : int(now),
+      'timestamp_int' : now.timestamp(),
       'count' : 69
       #'mylist' : [
       # { 'name' : { 'value': 'name1' }, 'value' : { 'value' : 'v1' } },
