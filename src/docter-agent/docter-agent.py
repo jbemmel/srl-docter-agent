@@ -204,6 +204,7 @@ def Update_Observation(name, trigger, updates):
     # event_path = js_path + f'.report{{.event=="t{now_ms}"}}'
     event_path = '.' + agent_name + f'.reports.events{{.event=="{now_ms} {name}"}}'
     update_data = {
+      'name': { 'value': name },
       'timestamp': { 'value': now_ts },
       'trigger': { 'value': trigger },
       'values': [ f'{path}={value}' for path,value in updates ]

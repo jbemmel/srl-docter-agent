@@ -56,6 +56,9 @@ module docter-agent {
               list events {
                 key event;
                 leaf event  { type string; }
+                leaf name {
+                  type string; // technically a leafref to obervations/name
+                }
                 leaf timestamp { type string; }
                 leaf trigger { type string; }
                 leaf-list values { type string; }
