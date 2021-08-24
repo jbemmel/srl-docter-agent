@@ -22,7 +22,26 @@
               "filter": "_ == 'established'"
             }
           ]
+        },
+        {
+      "name": "route-propagation",
+      "report": [
+        "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries"
+      ],
+      "conditions": [
+        {
+          "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/rib-in-out/rib-out-post/routes[prefix=10.10.10.10/32]"
         }
+      ]
+    },
+    {
+      "name": "ASIC resources",
+      "conditions": [
+        {
+          "gnmi-path": "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource"
+        }
+      ]
+    }
       ]
     }
   },
@@ -1184,7 +1203,7 @@
     "srl_nokia-gnmi-server:gnmi-server": {
       "admin-state": "enable",
       "timeout": 7200,
-      "rate-limit": 60,
+      "rate-limit": 65535,
       "session-limit": 20,
       "network-instance": [
         {
