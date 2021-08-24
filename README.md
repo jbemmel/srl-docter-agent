@@ -55,6 +55,12 @@ report:
 - /network-instance[name=default]/protocols/bgp/neighbor[peer-ipaddress=*]/session-state
 ```
 
+## Other use cases
+* Figure out when MACs are learnt from remote VTEPs in a mac-vrf: 
+  path /network-instance[name=some-mac-vrf]/bridge-table/mac-table/mac/destination
+  filter 'vxlan' in _
+* ASIC resources: /platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries
+
 # SRL Docter Agent: A scalable decentralized approach
 Ordinary link flap or BGP session down events are a solved problem: They can easily be monitored today.
 But when it comes to one-off out-of-the-ordinary elusive behavior, correlation of system state and events over time,
