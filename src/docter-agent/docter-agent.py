@@ -13,6 +13,7 @@ import json
 import signal
 import traceback
 import subprocess
+from threading import Timer
 
 import sdk_service_pb2
 import sdk_service_pb2_grpc
@@ -168,7 +169,7 @@ def Update_Filtered():
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
-def Update_Observation(name, trigger, sample_interval, updates):
+def Update_Observation(name, trigger, sample_interval, updates, history):
     global filter_count
     global reports_count
     reports_count = reports_count + 1
@@ -208,7 +209,8 @@ def Update_Observation(name, trigger, sample_interval, updates):
       'timestamp': { 'value': now_ts },
       'sample_period': { 'value': sample_interval },
       'trigger': { 'value': trigger },
-      'values': [ f'{path}={value}' for path,value in updates ]
+      'values': [ f'{path}={value}' for path,value in updates ],
+      'history': { 'value': str(history) },
     }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
@@ -485,7 +487,7 @@ class MonitoringThread(Thread):
       for name,atts in self.observations.items():
           path = atts['path']     # normalized in pygnmi patch
           update_match = atts['conditions']['update_path_match']['value']
-          obj = { 'name': name, **atts }
+          obj = { 'name': name, 'data': {}, **atts }
           if '*' in path or update_match!="":
              # Turn path into a Python regex
              regex = (update_match if update_match!=""
@@ -500,6 +502,15 @@ class MonitoringThread(Thread):
           if r.match( path ):
             return o
         return None
+
+      def update_history( ts_ns, o, key, val = None ):
+          window = ts_ns - 60 * 1000000000 # 60 seconds ago
+          history = o['data'][ key ] if key in o['data'] else []
+          history = [ (ts,val) for ts,val in history if ts<window ]
+          if val is not None:
+              history.append( (ts_ns,val) )
+          o['data'][ key ] = history
+          return history
 
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
       with gNMIclient(target=('unix:///opt/srlinux/var/run/sr_gnmi_server',57400),
@@ -542,6 +553,19 @@ class MonitoringThread(Thread):
                               Update_Filtered()
                               continue;
 
+                      # For sampled state, reset the interval timer
+                      sample_period = o['conditions']['sample_period']['value']
+                      if sample_period != "0":
+                          if 'timer' in o:
+                              o['timer'].cancel()
+                          def missing_sample():
+                             logging.info( f"Missing sample: {key}" )
+                             index = key.rindex('/') + 1
+                             ts_ns = int( update['timestamp'] ) + 1000000000 * int(sample_period)
+                             history = update_history( ts_ns, o, key )
+                             Update_Observation( o['name'], f"{key[index:]}=missing sample={sample_period}", int(sample_period), [(key,None)], history )
+                          o['timer'] = Timer( int(sample_period) + 1, missing_sample )
+
                       # Add condition path as implicit reported value
                       updates = [ (key,u['val']) ]
                       reports = o['reports']
@@ -558,9 +582,12 @@ class MonitoringThread(Thread):
                              # Assumes updates are in same order
                              updates.append( (reports[i], 'GET failed') )
                            i = i + 1
+
+                      # Update historical data, indexed by key. Remove old entries
+                      history = update_history( int( update['timestamp'] ), o, key, val=u['val'] )
                       index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
-                      Update_Observation( o['name'], f"{key[index:]}={u['val']} sample={sample}", int(sample), updates )
+                      Update_Observation( o['name'], f"{key[index:]}={u['val']} sample={sample}", int(sample), updates, history )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
