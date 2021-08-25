@@ -484,7 +484,7 @@ class MonitoringThread(Thread):
       regexes = []
       for name,atts in self.observations.items():
           path = atts['path']     # normalized in pygnmi patch
-          suffix = atts['suffix']
+          suffix = atts['conditions']['suffix']
           obj = { 'name': name, **atts }
           if '*' in path or suffix!="":
              # Turn path into a Python regex
@@ -564,6 +564,8 @@ class MonitoringThread(Thread):
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
        logging.error(f'Exception caught in gNMI :: {e} m={m} stack:{traceback_str}')
+    except:
+       logging.error(f"Unexpected error: {sys.exc_info()[0]}")
 
     logging.info("Leaving gNMI subscribe loop")
 
