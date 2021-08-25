@@ -31,7 +31,7 @@
       "conditions": [
         {
           "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/rib-in-out/rib-in-post/routes[prefix=10.10.10.10/32]",
-	  "suffix": ".*",
+	  "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/rib-in-out/rib-in-post/routes\\[neighbor=.*\\]\\[prefix=10.10.10.10/32\\]/.*",
 	  "sample-period": 10
         }
       ]
@@ -705,10 +705,9 @@
           },
 	  {
             "sequence-id": 95,
-            "description": "Accept and log any other incoming ICMPv6 messages",
+            "description": "Accept any other incoming ICMPv6 messages",
             "action": {
               "accept": {
-               "log": true
               }
             },
             "match": {

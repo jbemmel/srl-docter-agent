@@ -484,12 +484,13 @@ class MonitoringThread(Thread):
       regexes = []
       for name,atts in self.observations.items():
           path = atts['path']     # normalized in pygnmi patch
-          suffix = atts['conditions']['suffix']
+          update_match = atts['conditions']['update_path_match']['value']
           obj = { 'name': name, **atts }
-          if '*' in path or suffix!="":
+          if '*' in path or update_match!="":
              # Turn path into a Python regex
-             regex = path.replace('*','.*').replace('[','\[').replace(']','\]')
-             regexes.append( (re.compile(regex+suffix),obj) )
+             regex = (update_match if update_match!=""
+                else path.replace('*','.*').replace('[','\[').replace(']','\]'))
+             regexes.append( (re.compile(regex),obj) )
           else:
              lookup[ path ] = obj
       logging.info( f"Built lookup map: {lookup} regexes={regexes} for sub={subscribe}" )
@@ -525,10 +526,10 @@ class MonitoringThread(Thread):
                       elif regexes!=[]:
                          o = find_regex( key )
                          if o is None:
-                            logging.info( f"No matching regex found - skipping: {u['val']}" )
+                            logging.info( f"No matching regex found - skipping: {key}={u['val']}" )
                             continue
                       else:
-                         logging.info( f"No matching key found and no regexes - skipping: {u['val']}" )
+                         logging.info( f"No matching key found and no regexes - skipping: {key}={u['val']}" )
                          continue
 
                       logging.info( f"Evaluate any filters: {o}" )

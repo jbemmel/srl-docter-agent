@@ -99,8 +99,8 @@ module docter-agent {
                     type string;
                     mandatory "true";
                   }
-                  leaf suffix {
-                    description "Regular expression to match path suffix, default empty (exact path match)";
+                  leaf update-path-match {
+                    description "Regular expression to match updates, default empty (exact path match)";
                     type string;
                     default "";
                   }
