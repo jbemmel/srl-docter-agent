@@ -499,6 +499,11 @@ class MonitoringThread(Thread):
               if update['update']:
                   logging.info( f"Update: {update['update']}")
                   for u in update['update']:
+
+                      # Ignore any updates without 'val'
+                      if 'val' not in u:
+                          continue;
+
                       key = '/' + u['path'] # pygnmi strips '/'
                       if key in lookup:
                          o = lookup[ key ]
