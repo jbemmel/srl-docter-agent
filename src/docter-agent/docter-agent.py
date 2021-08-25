@@ -177,7 +177,6 @@ def Update_Observation(name, trigger, sample_interval, updates):
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
       'last_updated' : { "value" : now_ts },
-      'sample_period': sample_interval,
       'count': reports_count,
       'filtered': filter_count,
       # test
@@ -207,6 +206,7 @@ def Update_Observation(name, trigger, sample_interval, updates):
     update_data = {
       'name': { 'value': name },
       'timestamp': { 'value': now_ts },
+      'sample_period': { 'value': sample_interval },
       'trigger': { 'value': trigger },
       'values': [ f'{path}={value}' for path,value in updates ]
     }
@@ -431,6 +431,20 @@ def Update_Flapcounts(state,now,peer_ip,status,flapmap,period_mins):
     # Dont count single transition to 'up' as a flap
     return len( keep_flaps ) - 1, keep_history
 
+# 2021-8-24 Yang paths in gNMI UPDATE events can have inconsistent ordering of keys, in the same update (!):
+# 'network-instance[name=overlay]/bgp-rib/ipv4-unicast/rib-in-out/rib-in-post/routes[neighbor=192.168.127.3][prefix=10.10.10.10/32]/last-modified'
+# 'network-instance[name=overlay]/bgp-rib/ipv4-unicast/rib-in-out/rib-in-post/routes[prefix=10.10.10.10/32][neighbor=192.168.127.3]/tie-break-reason
+#
+path_key_regex = re.compile( '^(.*)\[([0-9a-zA-Z.-]+=[^]]+)\]\[([0-9a-zA-Z.-]+=[^]]+)\](.*)$' )
+def normalize_path(path):
+    double_index = path_key_regex.match( path )
+    if double_index:
+        g = double_index.groups()
+        print( g )
+        if g[1] > g[2]:
+           return f"{g[0]}[{g[2]}][{g[1]}]{g[3]}"
+    return path # unmodified
+
 #
 # Runs as a separate thread
 #
@@ -470,7 +484,7 @@ class MonitoringThread(Thread):
       lookup = {}
       regexes = []
       for name,atts in self.observations.items():
-          path = atts['path']
+          path = normalize_path( atts['path'] )
           obj = { 'name': name, **atts }
           if '*' in path:
              # Turn path into a Python regex
@@ -505,16 +519,16 @@ class MonitoringThread(Thread):
                       if 'val' not in u:
                           continue;
 
-                      key = '/' + u['path'] # pygnmi strips '/'
+                      key = '/' + normalize_path(u['path']) # pygnmi strips '/'
                       if key in lookup:
                          o = lookup[ key ]
                       elif regexes!=[]:
                          o = find_regex( key )
                          if o is None:
-                            logging.info( "No matching regex found - skipping" )
+                            logging.info( f"No matching regex found - skipping: {u['val']}" )
                             continue
                       else:
-                         logging.info( "No matching key found and no regexes - skipping" )
+                         logging.info( f"No matching key found and no regexes - skipping: {u['val']}" )
                          continue
 
                       logging.info( f"Evaluate any filters: {o}" )

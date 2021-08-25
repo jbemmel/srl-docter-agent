@@ -41,10 +41,6 @@ module docter-agent {
                 type srl_nokia-comm:date-and-time-delta;
               }
 
-              leaf sample-period {
-                type uint16;
-              }
-
               leaf count {
                 description "Number of events reported";
                 type srl_nokia-comm:zero-based-counter64;
@@ -64,6 +60,7 @@ module docter-agent {
                   type string; // technically a leafref to obervations/name
                 }
                 leaf timestamp { type string; }
+                leaf sample-period { type uint16; }
                 leaf trigger { type string; }
                 leaf-list values { type string; }
               }
