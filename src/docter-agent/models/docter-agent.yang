@@ -21,6 +21,13 @@ module docter-agent {
         reference "TBD";
     }
 
+    typedef sla_type {
+         type decimal64 {
+             fraction-digits 3;
+             range "0 .. 99.999 | 100";
+         }
+    }
+
     grouping docter-agent-top {
         description "Top level grouping for docter agent sample app";
 
@@ -64,14 +71,18 @@ module docter-agent {
                 leaf trigger { type string; }
                 leaf-list values { type string; }
 
-                container history {
+                list history {
                    description "History of trigger condition values";
-                   key timestamp;
-                   leaf timestamp {
+                   key t;
+                   leaf t {
                      description "gNMI timestamp received in update, in ns";
                      type uint64;
                    }
-                   leaf value { type string; }
+                   leaf v { type string; }
+                }
+                leaf availability {
+                  description "For sampled state variables, percentage of time that the value was present";
+                  type sla_type;
                 }
               }
             }

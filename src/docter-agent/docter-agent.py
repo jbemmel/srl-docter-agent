@@ -169,6 +169,29 @@ def Update_Filtered():
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
+#
+# Given a time series history of [(ts:value)], calculate "<MISSING>" intervals
+# as % of total ( ts[-1] - ts[0] ns )
+#
+def Calculate_SLA(history):
+    if len(history)==0:
+        return 0
+
+    ts_start, v_start = history[0]
+    ts_end, v_end = history[-1]
+    ts_cur = ts_start
+    missing_ns = 0
+    in_missing = False
+    for ts,val in history:
+        if val=="<MISSING>":
+            missing_ns += (ts - ts_cur)
+            in_missing = True
+        elif in_missing:
+            missing_ns += (ts - ts_cur)
+            in_missing = False
+        ts_cur = ts
+    return 100.0 * (1.0 - (missing_ns / (ts_end - ts_start)))
+
 def Update_Observation(name, trigger, sample_interval, updates, history):
     global filter_count
     global reports_count
@@ -203,20 +226,21 @@ def Update_Observation(name, trigger, sample_interval, updates, history):
     #event_path = js_path + f'.report{{.event=="{now_ms} {name}"}}'
     now_ms = now.strftime("%Y-%m-%d_%H:%M:%S.%f")
     # event_path = js_path + f'.report{{.event=="t{now_ms}"}}'
-    event_path = '.' + agent_name + f'.reports.events{{.event=="{now_ms} {name}"}}'
+    event_path = js_path + f'.events{{.event=="{now_ms} {name}"}}'
     update_data = {
       'name': { 'value': name },
       'timestamp': { 'value': now_ts },
       'sample_period': { 'value': sample_interval },
       'trigger': { 'value': trigger },
       'values': [ f'{path}={value}' for path,value in updates ],
+      'availability': { 'value': Calculate_SLA(history) },
     }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
     # XXX very inefficient, could use a bulk method
     for ts,value in history:
-      js_path2 = event_path + f'.history{{.timestamp=="{ts}"}}'
-      response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'value':value}) )
+      js_path2 = event_path + f'.history{{.t=="{ts}"}}'
+      response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':value} }) )
       # logging.info(f"Telemetry_Update_Response history :: {response}")
 
 def Update_Global_State(state, var, val):
@@ -559,7 +583,7 @@ class MonitoringThread(Thread):
                              logging.info( f"Missing sample: {_key}" )
                              index = _key.rindex('/') + 1
                              ts_ns = _ts + 1000000000 * int(_sample_period)
-                             history = update_history( ts_ns, _o, _key )
+                             history = update_history( ts_ns, _o, _key, val="<MISSING>" )
                              Update_Observation( _o['name'], f"{_key[index:]}=missing sample={sample_period}", int(_sample_period), [(_key,None)], history )
 
                           timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
