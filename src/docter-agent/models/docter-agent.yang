@@ -99,6 +99,11 @@ module docter-agent {
                     type string;
                     mandatory "true";
                   }
+                  leaf suffix {
+                    description "Regular expression to match path suffix, default empty (exact path match)"
+                    type string;
+                    default "";
+                  }
                   leaf filter {
                     description "Optional filter expression, for example != 'established'";
                     type string;

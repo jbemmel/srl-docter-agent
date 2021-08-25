@@ -435,15 +435,14 @@ def Update_Flapcounts(state,now,peer_ip,status,flapmap,period_mins):
 # 'network-instance[name=overlay]/bgp-rib/ipv4-unicast/rib-in-out/rib-in-post/routes[neighbor=192.168.127.3][prefix=10.10.10.10/32]/last-modified'
 # 'network-instance[name=overlay]/bgp-rib/ipv4-unicast/rib-in-out/rib-in-post/routes[prefix=10.10.10.10/32][neighbor=192.168.127.3]/tie-break-reason
 #
-path_key_regex = re.compile( '^(.*)\[([0-9a-zA-Z.-]+=[^]]+)\]\[([0-9a-zA-Z.-]+=[^]]+)\](.*)$' )
-def normalize_path(path):
-    double_index = path_key_regex.match( path )
-    if double_index:
-        g = double_index.groups()
-        print( g )
-        if g[1] > g[2]:
-           return f"{g[0]}[{g[2]}][{g[1]}]{g[3]}"
-    return path # unmodified
+#path_key_regex = re.compile( '^(.*)\[([0-9a-zA-Z.-]+=[^]]+)\]\[([0-9a-zA-Z.-]+=[^]]+)\](.*)$' )
+#def normalize_path(path):
+#    double_index = path_key_regex.match( path )
+#    if double_index:
+#        g = double_index.groups()
+#        if g[1] > g[2]:
+#           return f"{g[0]}[{g[2]}][{g[1]}]{g[3]}"
+#    return path # unmodified
 
 #
 # Runs as a separate thread
@@ -484,12 +483,13 @@ class MonitoringThread(Thread):
       lookup = {}
       regexes = []
       for name,atts in self.observations.items():
-          path = normalize_path( atts['path'] )
+          path = atts['path']     # normalized in pygnmi patch
+          suffix = atts['suffix']
           obj = { 'name': name, **atts }
-          if '*' in path:
+          if '*' in path or suffix!="":
              # Turn path into a Python regex
              regex = path.replace('*','.*').replace('[','\[').replace(']','\]')
-             regexes.append( (re.compile(regex),obj) )
+             regexes.append( (re.compile(regex+suffix),obj) )
           else:
              lookup[ path ] = obj
       logging.info( f"Built lookup map: {lookup} regexes={regexes} for sub={subscribe}" )
@@ -519,7 +519,7 @@ class MonitoringThread(Thread):
                       if 'val' not in u:
                           continue;
 
-                      key = '/' + normalize_path(u['path']) # pygnmi strips '/'
+                      key = '/' + u['path'] # pygnmi strips '/'
                       if key in lookup:
                          o = lookup[ key ]
                       elif regexes!=[]:

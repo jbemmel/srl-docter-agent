@@ -30,7 +30,8 @@
       ],
       "conditions": [
         {
-          "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/rib-in-out/rib-in-post/routes[neighbor=*][prefix=10.10.10.10/32]/*",
+          "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/rib-in-out/rib-in-post/routes[prefix=10.10.10.10/32]",
+	  "suffix": ".*",
 	  "sample-period": 10
         }
       ]
