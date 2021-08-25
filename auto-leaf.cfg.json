@@ -39,7 +39,7 @@
       "name": "ASIC resources",
       "conditions": [
         {
-          "gnmi-path": "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource"
+          "gnmi-path": "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]"
         }
       ]
     }
