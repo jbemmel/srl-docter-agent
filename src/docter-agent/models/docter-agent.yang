@@ -63,6 +63,10 @@ module docter-agent {
                 leaf sample-period { type uint16; }
                 leaf trigger { type string; }
                 leaf-list values { type string; }
+
+                leaf history {
+                   type string; // list of timestamp(ns)=value
+                }
               }
             }
 
@@ -132,46 +136,8 @@ module docter-agent {
                 }
 
               } // end list observe
-              } // end intensive-care
+            } // end intensive-care
 
-              // No longer used, broken for some unclear reason
-              container statistics {
-                srl_nokia-ext:delivery-node-override true;
-                srl_nokia-ext:stream-mode on_change;
-                config false;
-                leaf last-observed {
-                  type srl_nokia-comm:date-and-time-delta;
-                }
-                leaf count {
-                  type srl_nokia-comm:zero-based-counter64;
-                  default 0;
-                }
-                leaf filtered {
-                  description "Number of events suppressed by filter expression";
-                  type srl_nokia-comm:zero-based-counter64;
-                  default 0;
-                }
-
-                list report {
-                 key event;
-                 // ordered-by user;
-                 leaf event { type string; }   // timestamp : name
-                 leaf trigger { type string; } // condition = value
-                 leaf timestamp {
-                    type srl_nokia-comm:date-and-time-delta;
-                 }
-                 leaf-list values { type string; } // list of name=value
-                 leaf history {
-                    type string; // list of timestamp(ns)=value
-                 }
-                 // list path {
-                 //    key path;
-                 //   leaf path { type string; }
-                 //   leaf value { type string; }
-                 // }
-                }
-              }
-            // } // end intensive-care
 
             // Info from state
             leaf total-bfd-flaps-last-period {

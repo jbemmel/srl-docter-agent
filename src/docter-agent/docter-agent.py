@@ -564,7 +564,9 @@ class MonitoringThread(Thread):
                              ts_ns = int( update['timestamp'] ) + 1000000000 * int(sample_period)
                              history = update_history( ts_ns, o, key )
                              Update_Observation( o['name'], f"{key[index:]}=missing sample={sample_period}", int(sample_period), [(key,None)], history )
-                          o['timer'] = Timer( int(sample_period) + 1, missing_sample )
+
+                          timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample )
+                          timer.start()
 
                       # Add condition path as implicit reported value
                       updates = [ (key,u['val']) ]
