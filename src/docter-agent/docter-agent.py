@@ -168,7 +168,7 @@ def Update_Filtered():
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
-def Update_Observation(name, trigger, updates):
+def Update_Observation(name, trigger, sample_interval, updates):
     global filter_count
     global reports_count
     reports_count = reports_count + 1
@@ -177,6 +177,7 @@ def Update_Observation(name, trigger, updates):
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
       'last_updated' : { "value" : now_ts },
+      'sample_period': sample_interval,
       'count': reports_count,
       'filtered': filter_count,
       # test
@@ -543,7 +544,8 @@ class MonitoringThread(Thread):
                              updates.append( (reports[i], 'GET failed') )
                            i = i + 1
                       index = key.rindex('/') + 1
-                      Update_Observation( o['name'], f"{key[index:]}={u['val']}", updates )
+                      sample = o['conditions']['sample_period']['value']
+                      Update_Observation( o['name'], f"{key[index:]}={u['val']} sample={sample}", int(sample), updates )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))

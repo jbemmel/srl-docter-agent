@@ -41,6 +41,10 @@ module docter-agent {
                 type srl_nokia-comm:date-and-time-delta;
               }
 
+              leaf sample-period {
+                type uint16;
+              }
+
               leaf count {
                 description "Number of events reported";
                 type srl_nokia-comm:zero-based-counter64;
