@@ -703,6 +703,19 @@
               }
             }
           },
+	  {
+            "sequence-id": 95,
+            "description": "Accept and log any other incoming ICMPv6 messages",
+            "action": {
+              "accept": {
+               "log": true
+              }
+            },
+            "match": {
+              "next-header": "icmp6"
+            }
+          },
+
           {
             "sequence-id": 100,
             "description": "Accept incoming SSH when the other host initiates the TCP connection",
