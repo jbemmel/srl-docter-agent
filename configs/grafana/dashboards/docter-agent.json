@@ -1,0 +1,264 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 2,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 156
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time Stamp"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 163
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Event"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 261
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 233
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Full Path"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 608
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "State change"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 189
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Node"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 170
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "groupBy": [],
+          "measurement": "SRL_all",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT source AS \"Node\",  \"/docter_agent:docter_agent/reports/events_timestamp\" AS \"Time Stamp\", \"/docter_agent:docter_agent/reports/events_name\" AS \"Event\", \"/docter_agent:docter_agent/reports/events_trigger\" AS \"State change\", \"/docter_agent:docter_agent/reports/events_values_0\" AS \"Full Path\", \"/docter_agent:docter_agent/reports/events_values_1\" AS \"Full Path\", \"/docter_agent:docter_agent/reports/events_values_2\" AS \"Full Path\" FROM \"SRL_all\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_timestamp"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Time Stamp"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_name"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Event"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_trigger"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "State change"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_values_0"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Full Path"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_values_1"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Full Path"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_values_2"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Full Path"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Docter Agent Events",
+      "type": "table"
+    }
+  ],
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Docter Agent Dashboard",
+  "uid": "-hH6we7nk",
+  "version": 2
+}
