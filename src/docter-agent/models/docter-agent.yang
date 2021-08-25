@@ -100,7 +100,7 @@ module docter-agent {
                     mandatory "true";
                   }
                   leaf suffix {
-                    description "Regular expression to match path suffix, default empty (exact path match)"
+                    description "Regular expression to match path suffix, default empty (exact path match)";
                     type string;
                     default "";
                   }
