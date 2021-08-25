@@ -175,10 +175,16 @@ def Update_Filtered():
 #
 def Calculate_SLA(history):
     if len(history)==0:
-        return 0
+        return 0.0
+    elif len(history)==1:
+        return 100.0
 
     ts_start, v_start = history[0]
     ts_end, v_end = history[-1]
+
+    if ts_start == ts_end:
+        return 100.0
+
     ts_cur = ts_start
     missing_ns = 0
     in_missing = False
@@ -233,7 +239,7 @@ def Update_Observation(name, trigger, sample_interval, updates, history):
       'sample_period': { 'value': sample_interval },
       'trigger': { 'value': trigger },
       'values': [ f'{path}={value}' for path,value in updates ],
-      'availability': { 'value': Calculate_SLA(history) },
+      'availability': { 'value': str(Calculate_SLA(history)) },
     }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
