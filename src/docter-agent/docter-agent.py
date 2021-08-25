@@ -526,10 +526,10 @@ class MonitoringThread(Thread):
                       elif regexes!=[]:
                          o = find_regex( key )
                          if o is None:
-                            logging.info( f"No matching regex found - skipping: {key}={u['val']}" )
+                            logging.info( f"No matching regex found - skipping: '{key}' = {u['val']}" )
                             continue
                       else:
-                         logging.info( f"No matching key found and no regexes - skipping: {key}={u['val']}" )
+                         logging.info( f"No matching key found and no regexes - skipping: '{key}' = {u['val']}" )
                          continue
 
                       logging.info( f"Evaluate any filters: {o}" )
