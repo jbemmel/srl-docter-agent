@@ -453,9 +453,9 @@ class MonitoringThread(Thread):
         'subscription': [
             {
                 'path': value['path'],
-                'mode': 'on_change'
-                # 'mode': 'on_change' if value['conditions']['sample']['value'] == '0' else 'sample',
-                # 'sample_interval':  int(value['conditions']['sample']['value']) * 1000000000 # in ns
+                # 'mode': 'on_change'
+                'mode': 'on_change' if value['conditions']['sample_period']['value'] == '0' else 'sample',
+                'sample_interval':  int(value['conditions']['sample_period']['value']) * 1000000000 # in ns
             } for key,value in self.observations.items()
         ],
         'use_aliases': False,
@@ -463,6 +463,7 @@ class MonitoringThread(Thread):
         'mode': 'stream',
         'encoding': 'json'
       }
+      logging.info( f"MonitoringThread subscription: {subscribe}")
 
       # Build lookup map
       lookup = {}
