@@ -210,20 +210,14 @@ def Update_Observation(name, trigger, sample_interval, updates, history):
       'sample_period': { 'value': sample_interval },
       'trigger': { 'value': trigger },
       'values': [ f'{path}={value}' for path,value in updates ],
-      'history': { 'value': str(history) },
     }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
-    #t_path = '.' + agent_name + '.intensive_care.statistics.vtest2{.testname=="test2"}'
-    #response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : 'Y' }}) )
-    #t_path = '.' + agent_name + f'.intensive_care.statistics.vtest2{{.testname=="{name}"}}'
-    #response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : trigger }}) )
-
-
-    #for path,value in updates:
-    #  js_path2 = event_path + f'.path{{.path=="{path}"}}'
-    #  response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'value':value}) )
-    #  logging.info(f"Telemetry_Update_Response2 :: {response}")
+    # XXX very inefficient, could use a bulk method
+    for ts,value in history:
+      js_path2 = event_path + f'.history{{.timestamp=="{ts}"}}'
+      response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'value':value}) )
+      # logging.info(f"Telemetry_Update_Response history :: {response}")
 
 def Update_Global_State(state, var, val):
     js_path = '.' + agent_name + '.' + var
@@ -504,11 +498,14 @@ class MonitoringThread(Thread):
         return None
 
       def update_history( ts_ns, o, key, val = None ):
-          window = ts_ns - 60 * 1000000000 # 60 seconds ago
           history = o['data'][ key ] if key in o['data'] else []
-          history = [ (ts,val) for ts,val in history if ts<window ]
+          if 'history_window' in o['conditions']:
+             window = ts_ns - int(o['conditions']['history_window']['value']) * 1000000000 # X seconds ago
+             history = [ (ts,val) for ts,val in history if ts>=window ]
+          if 'history_items' in o['conditions']:
+             history = history[ -(int(o['conditions']['history_items']['value'])): ]
           if val is not None:
-              history.append( (ts_ns,val) )
+             history.append( (ts_ns,val) )
           o['data'][ key ] = history
           return history
 
@@ -558,14 +555,14 @@ class MonitoringThread(Thread):
                       if sample_period != "0":
                           if 'timer' in o:
                               o['timer'].cancel()
-                          def missing_sample():
-                             logging.info( f"Missing sample: {key}" )
-                             index = key.rindex('/') + 1
-                             ts_ns = int( update['timestamp'] ) + 1000000000 * int(sample_period)
-                             history = update_history( ts_ns, o, key )
-                             Update_Observation( o['name'], f"{key[index:]}=missing sample={sample_period}", int(sample_period), [(key,None)], history )
+                          def missing_sample( _o, _key, _sample_period, _ts ):
+                             logging.info( f"Missing sample: {_key}" )
+                             index = _key.rindex('/') + 1
+                             ts_ns = _ts + 1000000000 * int(_sample_period)
+                             history = update_history( ts_ns, _o, _key )
+                             Update_Observation( _o['name'], f"{_key[index:]}=missing sample={sample_period}", int(_sample_period), [(_key,None)], history )
 
-                          timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample )
+                          timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
                           timer.start()
 
                       # Add condition path as implicit reported value

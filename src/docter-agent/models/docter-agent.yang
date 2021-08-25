@@ -64,8 +64,14 @@ module docter-agent {
                 leaf trigger { type string; }
                 leaf-list values { type string; }
 
-                leaf history {
-                   type string; // list of timestamp(ns)=value
+                container history {
+                   description "History of trigger condition values";
+                   key timestamp;
+                   leaf timestamp {
+                     description "gNMI timestamp received in update, in ns";
+                     type uint64;
+                   }
+                   leaf value { type string; }
                 }
               }
             }
@@ -116,6 +122,14 @@ module docter-agent {
                     description "Monitoring interval in seconds, default 0=on change";
                     type uint16;
                     default 0;
+                  }
+                  leaf history-window {
+                    description "Time limit on history items to keep, in seconds";
+                    type uint16;
+                  }
+                  leaf history-items {
+                    description "Limit on the number of history items to keep in history";
+                    type uint16;
                   }
                   leaf aggregate {
                     description "Optional aggregate function to apply to values";
