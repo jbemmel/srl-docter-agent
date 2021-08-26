@@ -176,13 +176,13 @@ def Threshold_Color( val, thresholds ):
         return "red" if val != thresholds[0] else "green"
     elif len(thresholds)==2:
         return ("red"    if int(val) < int(thresholds[0]) else
-                "yellow" if int(val) < int(thresholds[1]) else
-                "green")
+               ("yellow" if int(val) < int(thresholds[1]) else
+                "green"))
     else: # 3 or more
         return ("red"    if int(val) < int(thresholds[0]) else
-                "orange" if int(val) < int(thresholds[1]) else
-                "yellow" if int(val) < int(thresholds[2]) else
-                "green")
+               ("orange" if int(val) < int(thresholds[1]) else
+               ("yellow" if int(val) < int(thresholds[2]) else
+                "green")))
 #
 # Given a time series history of [(ts:value)], calculate "<MISSING>" intervals
 # as % of total ( ts[-1] - ts[0] ns )
@@ -259,15 +259,6 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
       'trigger': { 'value': trigger },
       'values': [ f'{path}={value}' for path,value in updates ],
     }
-    if sample_interval != 0:
-        update_data['availability'] = { 'value': Calculate_SLA(history) }
-    if 'history_window' in o['conditions']:
-        # XXX could simply copy all parameters
-        update_data['history_window'] = o['conditions']['history_window']
-
-    if thresholds != []:
-        # TODO calculate min/max/avg as requested
-        update_data['status'] = { 'value' : Threshold_Color( updates[0][1], thresholds ) }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
     # XXX very inefficient, could use a bulk method
@@ -281,6 +272,22 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
 
     js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
     response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val} }) )
+
+    if sample_interval != 0:
+        sla = Calculate_SLA(history)
+        data = {
+          'availability': { 'value': sla }
+        }
+        if thresholds != []:
+           # TODO calculate min/max/avg as requested
+           if thresholds[0]=="availability":
+               val = int(sla)
+               thresholds = thresholds[1:]
+           else:
+               val = updates[0][1]
+           data['status'] = { 'value' : Threshold_Color( val, thresholds ) }
+        js_path += f'.availability{{.name=="{name}"}}'
+        response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
 
       # logging.info(f"Telemetry_Update_Response history :: {response}")
 
@@ -564,19 +571,29 @@ class MonitoringThread(Thread):
 
       def update_history( ts_ns, o, key, updates ):
           history = o['data'][ key ] if key in o['data'] else {}
+
+          if 'history_window' in o['conditions']:
+            window = ts_ns - int(o['conditions']['history_window']['value']) * 1000000000 # X seconds ago
+          else:
+            window = 0
+
+          if 'history_items' in o['conditions']:
+            max_items = int(o['conditions']['history_items']['value'])
+          else:
+            max_items = 0
+
           for path, val in updates:
              subitem = history[path] if path in history else []
-             if 'history_window' in o['conditions']:
-                window = ts_ns - int(o['conditions']['history_window']['value']) * 1000000000 # X seconds ago
+             if window>0:
                 subitem = [ (ts,val) for ts,val in subitem if ts>=window ]
-             if 'history_items' in o['conditions']:
-                subitem = subitem[ -(int(o['conditions']['history_items']['value'])): ]
+             if max_items>0:
+                subitem = subitem[ -max_items: ]
              subitem.append( (ts_ns,val) )
              history[ path ] = subitem
           o['data'][ key ] = history
 
           # Return top path history
-          logging.info( f'update_history: after {history} -> returning {updates[0][0]}' )
+          logging.info( f'update_history max={max_items} window={window} -> returning {updates[0][0]}' )
           return history[ updates[0][0] ]
 
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):

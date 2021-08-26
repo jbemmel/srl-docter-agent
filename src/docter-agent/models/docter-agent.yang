@@ -71,27 +71,39 @@ module docter-agent {
                 leaf sample-period { type uint16; }
                 leaf trigger { type string; }
                 leaf-list values { type string; }
+              }
 
-                leaf history-window {
-                  description "Time window used to calculate availability, in seconds";
-                  type uint16;
-                }
+              list availability {
+                 key name;
 
-                leaf availability {
-                  description "For sampled state variables, percentage of time that the value was present";
-                  // type sla_type;
-                  type string; // decimal, e.g. 99.999
-                }
-                leaf status {
-                  description "Color set based on defined threshold(s)";
-                  type string;
-                }
+                 leaf name {
+                   type leafref {
+                    path "../../../intensive-care/observe/name";
+                    require-instance "true";
+                   }
+                 }
+
+                 leaf availability {
+                   description "For sampled state variables, percentage of time that the value was present";
+                   // type sla_type;
+                   type string; // decimal, e.g. 99.999
+                 }
+                 leaf status {
+                   description "Color set based on defined threshold(s)";
+                   type string;
+                 }
               }
 
               list history {
                  description "History of trigger condition values";
                  key name;
-                 leaf name { type string; } // reference to observations/name
+
+                 leaf name {
+                   type leafref {
+                    path "../../../intensive-care/observe/name";
+                    require-instance "true";
+                   }
+                 }
 
                  // subitem under subscription path
                  list path {
@@ -105,25 +117,6 @@ module docter-agent {
                   }
                  }
               }
-            }
-
-            container monitor {
-             leaf flaps-monitoring-period {
-                description "Monitoring period in minutes, default 1 hour";
-                type uint16;
-                default 60;
-             }
-
-             leaf flaps-per-period-threshold {
-                description "Number of BFD flaps per period still considered acceptable";
-                type uint32;
-                default 0;
-             }
-             leaf max-flaps-history {
-                description "Maximum number of flaps to retain, 0 = infinite";
-                type uint32;
-                default 0;
-             }
             }
 
             container intensive-care {
@@ -184,7 +177,6 @@ module docter-agent {
                   type string;    // TODO pattern [label:] gnmi_path
                   min-elements 0; // Implicit report for condition path
                 }
-
               } // end list observe
             } // end intensive-care
 
