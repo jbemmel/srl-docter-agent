@@ -79,7 +79,7 @@ module docter-agent {
                  leaf name {
                    type leafref {
                     path "../../../intensive-care/observe/name";
-                    require-instance "true";
+                    // require-instance "true";
                    }
                  }
 
@@ -101,7 +101,7 @@ module docter-agent {
                  leaf name {
                    type leafref {
                     path "../../../intensive-care/observe/name";
-                    require-instance "true";
+                    // require-instance "true";
                    }
                  }
 
@@ -145,6 +145,7 @@ module docter-agent {
                   }
                   leaf-list thresholds {
                     description "Boundary condition(s), single value for match=green or for example [80,95] for >80%=yellow, >95%=red";
+                    ordered-by user; // otherwise system will sort the values
                     type string;
                   }
                   leaf sample-period {

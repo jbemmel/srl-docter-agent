@@ -170,19 +170,22 @@ def Update_Filtered():
     logging.info(f"Telemetry_Update_Response :: {response}")
 
 def Threshold_Color( val, thresholds ):
-    if len(thresholds)==0:
-        return "green"
-    elif len(thresholds)==1:
-        return "red" if val != thresholds[0] else "green"
-    elif len(thresholds)==2:
-        return ("red"    if int(val) < int(thresholds[0]) else
-               ("yellow" if int(val) < int(thresholds[1]) else
-                "green"))
-    else: # 3 or more
-        return ("red"    if int(val) < int(thresholds[0]) else
-               ("orange" if int(val) < int(thresholds[1]) else
-               ("yellow" if int(val) < int(thresholds[2]) else
-                "green")))
+    try:
+       if len(thresholds)==0:
+           return "green"
+       elif len(thresholds)==1:
+           return "red" if val != thresholds[0] else "green"
+       elif len(thresholds)==2:
+           return ("red"    if int(val) < int(thresholds[0]) else
+                  ("yellow" if int(val) < int(thresholds[1]) else
+                   "green"))
+       else: # 3 or more
+           return ("red"    if int(val) < int(thresholds[0]) else
+                  ("orange" if int(val) < int(thresholds[1]) else
+                  ("yellow" if int(val) < int(thresholds[2]) else
+                   "green")))
+    except ValueError:
+       return "grey"
 #
 # Given a time series history of [(ts:value)], calculate "<MISSING>" intervals
 # as % of total ( ts[-1] - ts[0] ns )
@@ -281,7 +284,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
         if thresholds != []:
            # TODO calculate min/max/avg as requested
            if thresholds[0]=="availability":
-               val = int(sla)
+               val = int(float(sla))
                thresholds = thresholds[1:]
            else:
                val = updates[0][1]
