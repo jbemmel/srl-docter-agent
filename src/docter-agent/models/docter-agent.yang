@@ -98,7 +98,7 @@ module docter-agent {
                   //leaf t {
                   //  description "gNMI timestamp received in update, in ns";
                   //  type uint64;
-                  }
+                  //}
                   //leaf v { type string; }
                   // }
 
