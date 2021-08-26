@@ -169,21 +169,35 @@ def Update_Filtered():
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
+def Threshold_Color( val, thresholds ):
+    if len(thresholds)==0:
+        return "green"
+    elif len(thresholds)==1:
+        return "red" if val != thresholds[0] else "green"
+    elif len(thresholds)==2:
+        return ("red"    if int(val) < int(thresholds[0]) else
+                "yellow" if int(val) < int(thresholds[1]) else
+                "green")
+    else: # 3 or more
+        return ("red"    if int(val) < int(thresholds[0]) else
+                "orange" if int(val) < int(thresholds[1]) else
+                "yellow" if int(val) < int(thresholds[2]) else
+                "green")
 #
 # Given a time series history of [(ts:value)], calculate "<MISSING>" intervals
 # as % of total ( ts[-1] - ts[0] ns )
 #
 def Calculate_SLA(history):
     if len(history)==0:
-        return 0.0
+        return "0.0"
     elif len(history)==1:
-        return 100.0
+        return "100.0"
 
     ts_start, v_start = history[0]
     ts_end, v_end = history[-1]
 
     if ts_start == ts_end:
-        return 100.0
+        return "100.0"
 
     ts_cur = ts_start
     missing_ns = 0
@@ -196,12 +210,16 @@ def Calculate_SLA(history):
             missing_ns += (ts - ts_cur)
             in_missing = False
         ts_cur = ts
-    return 100.0 * (1.0 - (missing_ns / (ts_end - ts_start)))
+    avail = 100.0 * (1.0 - (missing_ns / (ts_end - ts_start)))
+    return f'{avail:.3f}' # 3 digits, e.g. 99.999
 
-def Update_Observation(name, trigger, sample_interval, updates, history):
+def Update_Observation(o, trigger, sample_interval, updates, history):
     global filter_count
     global reports_count
     reports_count = reports_count + 1
+
+    name = o['name']
+    thresholds = [ t['value'] for t in (o['conditions']['thresholds'] if 'thresholds' in o['conditions'] else []) ]
 
     now = datetime.datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -239,13 +257,15 @@ def Update_Observation(name, trigger, sample_interval, updates, history):
       'sample_period': { 'value': sample_interval },
       'trigger': { 'value': trigger },
       'values': [ f'{path}={value}' for path,value in updates ],
-      'availability': { 'value': str(Calculate_SLA(history)) },
+      'availability': { 'value': Calculate_SLA(history) },
     }
+    if thresholds != []:
+        update_data['status'] = { 'value' : Threshold_Color( updates[0][1], thresholds ) }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
     # XXX very inefficient, could use a bulk method
     for ts,value in history:
-      js_path2 = event_path + f'.history{{.t=="{ts}"}}'
+      js_path2 = js_path + f'.history{{.name=="{name}"}}.event{{.t=="{ts}"}}'
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':value} }) )
       # logging.info(f"Telemetry_Update_Response history :: {response}")
 
@@ -590,7 +610,7 @@ class MonitoringThread(Thread):
                              index = _key.rindex('/') + 1
                              ts_ns = _ts + 1000000000 * int(_sample_period)
                              history = update_history( ts_ns, _o, _key, val="<MISSING>" )
-                             Update_Observation( _o['name'], f"{_key[index:]}=missing sample={sample_period}", int(_sample_period), [(_key,None)], history )
+                             Update_Observation( _o, f"{_key[index:]}=missing sample={sample_period}", int(_sample_period), [(_key,None)], history )
 
                           timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
                           timer.start()
@@ -616,7 +636,7 @@ class MonitoringThread(Thread):
                       history = update_history( int( update['timestamp'] ), o, key, val=u['val'] )
                       index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
-                      Update_Observation( o['name'], f"{key[index:]}={u['val']} sample={sample}", int(sample), updates, history )
+                      Update_Observation( o, f"{key[index:]}={u['val']} sample={sample}", int(sample), updates, history )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))

@@ -21,10 +21,11 @@ module docter-agent {
         reference "TBD";
     }
 
+    // This gets complicated with 'digits' and 'precision'
     typedef sla_type {
          type decimal64 {
              fraction-digits 3;
-             range "0 .. 99.999 | 100";
+             // range "0 .. 99.999 | 100.0";
          }
     }
 
@@ -71,19 +72,30 @@ module docter-agent {
                 leaf trigger { type string; }
                 leaf-list values { type string; }
 
-                list history {
-                   description "History of trigger condition values";
-                   key t;
-                   leaf t {
-                     description "gNMI timestamp received in update, in ns";
-                     type uint64;
-                   }
-                   leaf v { type string; }
-                }
                 leaf availability {
                   description "For sampled state variables, percentage of time that the value was present";
-                  type sla_type;
+                  // type sla_type;
+                  type string; // decimal, e.g. 99.999
                 }
+                leaf status {
+                  description "Color set based on defined threshold(s)";
+                  type string;
+                }
+              }
+
+              list history {
+                 description "History of trigger condition values";
+                 key name;
+                 leaf name { type string; } // reference to observations/name
+
+                 list event {
+                   key t;
+                   leaf t {
+                    description "gNMI timestamp received in update, in ns";
+                    type uint64;
+                   }
+                   leaf v { type string; }
+                 }
               }
             }
 
@@ -107,6 +119,7 @@ module docter-agent {
             }
 
             container intensive-care {
+
               list observe {
                 key name;
                 leaf name { type string; mandatory "true"; }
@@ -127,6 +140,10 @@ module docter-agent {
                   }
                   leaf filter {
                     description "Optional filter expression, for example != 'established'";
+                    type string;
+                  }
+                  leaf-list thresholds {
+                    description "Boundary condition(s), single value for match=green or for example [80,95] for >80%=yellow, >95%=red";
                     type string;
                   }
                   leaf sample-period {
