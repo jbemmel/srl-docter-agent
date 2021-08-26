@@ -2,7 +2,7 @@
 # coding=utf-8
 
 import grpc
-import datetime
+from datetime import datetime, timezone
 import sys
 import logging
 import socket
@@ -129,7 +129,7 @@ def Update_Peer_State(peer_ip, section, update_data):
     logging.info(f"Telemetry_Update_Response :: {response}")
 
 def Grafana_Test():
-    now = datetime.datetime.now()
+    now = datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
       'leaflist' : [ 123, 456 ],
@@ -157,7 +157,7 @@ def Update_Filtered():
     global filter_count
     filter_count = filter_count + 1
 
-    now = datetime.datetime.now()
+    now = datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
       'last_updated' : { "value" : now_ts },
@@ -214,7 +214,7 @@ def Calculate_SLA(history):
     avail = 100.0 * (1.0 - (missing_ns / (ts_end - ts_start)))
     return f'{avail:.3f}' # 3 digits, e.g. 99.999
 
-def Update_Observation(o, trigger, sample_interval, updates, history):
+def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, history):
     global filter_count
     global reports_count
     reports_count = reports_count + 1
@@ -222,7 +222,7 @@ def Update_Observation(o, trigger, sample_interval, updates, history):
     name = o['name']
     thresholds = [ t['value'] for t in (o['conditions']['thresholds'] if 'thresholds' in o['conditions'] else []) ]
 
-    now = datetime.datetime.now()
+    now = datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     update_data = {
       'last_updated' : { "value" : now_ts },
@@ -249,18 +249,21 @@ def Update_Observation(o, trigger, sample_interval, updates, history):
 
     #now_ms = now.strftime("%Y-%m-%d %H:%M:%S.%f")
     #event_path = js_path + f'.report{{.event=="{now_ms} {name}"}}'
-    now_ms = now.strftime("%Y-%m-%d_%H:%M:%S.%f")
+    gnmi_ts = datetime.fromtimestamp(timestamp_ns // 1000000000, tz=timezone.utc)
+    gnmi_str = gnmi_ts.strftime("%Y-%m-%d_%H:%M:%S.%f")
     # event_path = js_path + f'.report{{.event=="t{now_ms}"}}'
-    event_path = js_path + f'.events{{.event=="{now_ms} {name}"}}'
+    event_path = js_path + f'.events{{.event=="{gnmi_str} {name}"}}'
     update_data = {
       'name': { 'value': name },
-      'timestamp': { 'value': now_ts },
+      'timestamp': timestamp_ns,  # Use gNMI reported timestamp
       'sample_period': { 'value': sample_interval },
       'trigger': { 'value': trigger },
       'values': [ f'{path}={value}' for path,value in updates ],
-      'availability': { 'value': Calculate_SLA(history) },
     }
+    if sample_interval != 0:
+        update_data['availability'] = { 'value': Calculate_SLA(history) }
     if thresholds != []:
+        # TODO calculate min/max/avg as requested
         update_data['status'] = { 'value' : Threshold_Color( updates[0][1], thresholds ) }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
@@ -269,8 +272,13 @@ def Update_Observation(o, trigger, sample_interval, updates, history):
     # for path in history:
     #  for ts,val in history[path]:
     path,val = updates[0]
-    js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{now_ts}"}}'
+    # js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{now_ts}"}}'
+    # js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}'
+    # response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'t': now.timestamp(), 'v': {'value':val} }) )
+
+    js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
     response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val} }) )
+
       # logging.info(f"Telemetry_Update_Response history :: {response}")
 
 def Update_Global_State(state, var, val):
@@ -423,7 +431,7 @@ def Update_BFDFlapcounts(state,peer_ip,status=4):
     if peer_ip not in state.bfd_flaps:
        logging.info(f"BFD : initializing flap state for {peer_ip} status={status}")
        state.bfd_flaps[peer_ip] = {}
-    now = datetime.datetime.now()
+    now = datetime.now()
     flaps_this_period, history = Update_Flapcounts(state, now, peer_ip, status,
                                                    state.bfd_flaps,
                                                    state.flap_period_mins)
@@ -444,7 +452,7 @@ def Update_RouteFlapcounts(state,peer_ip,prefix):
     if peer_ip not in state.route_flaps:
        logging.info(f"ROUTE : initializing flap state for {peer_ip}")
        state.route_flaps[peer_ip] = {}
-    now = datetime.datetime.now()
+    now = datetime.now()
     flaps_this_period, history = Update_Flapcounts(state, now, peer_ip, prefix,
                                                    state.route_flaps,
                                                    state.flap_period_mins)
@@ -618,7 +626,7 @@ class MonitoringThread(Thread):
                              index = _key.rindex('/') + 1
                              ts_ns = _ts + 1000000000 * int(_sample_period)
                              history = update_history( ts_ns, _o, _key, [ (_key,"<MISSING>") ] )
-                             Update_Observation( _o, f"{_key[index:]}=missing sample={sample_period}", int(_sample_period), [(_key,None)], history )
+                             Update_Observation( _o, ts_ns, f"{_key[index:]}=missing sample={sample_period}", int(_sample_period), [(_key,None)], history )
 
                           timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
                           timer.start()
@@ -644,7 +652,7 @@ class MonitoringThread(Thread):
                       history = update_history( int( update['timestamp'] ), o, key, updates )
                       index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
-                      Update_Observation( o, f"{key[index:]}={u['val']} sample={sample}", int(sample), updates, history )
+                      Update_Observation( o, int( update['timestamp'] ), f"{key[index:]}={u['val']} sample={sample}", int(sample), updates, history )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
@@ -759,7 +767,7 @@ if __name__ == '__main__':
       handlers=[RotatingFileHandler(log_filename, maxBytes=3000000,backupCount=5)],
       format='%(asctime)s,%(msecs)03d %(name)s %(levelname)s %(message)s',
       datefmt='%H:%M:%S', level=logging.INFO)
-    logging.info("START TIME :: {}".format(datetime.datetime.now()))
+    logging.info("START TIME :: {}".format(datetime.now()))
     if Run():
         logging.info('Docter agent unregistered')
     else:

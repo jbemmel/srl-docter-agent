@@ -93,13 +93,19 @@ module docter-agent {
                   key path;
                   leaf path { type string; }
 
+                  //list event {
+                  // key t;
+                  //leaf t {
+                  //  description "gNMI timestamp received in update, in ns";
+                  //  type uint64;
+                  }
+                  //leaf v { type string; }
+                  // }
+
                   list event {
-                   key t;
-                   leaf t {
-                    description "gNMI timestamp received in update, in ns";
-                    type uint64;
-                   }
-                   leaf v { type string; }
+                    key t;
+                    leaf t { type uint64; }
+                    leaf v { type string; }
                   }
                  }
               }
