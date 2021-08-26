@@ -88,13 +88,19 @@ module docter-agent {
                  key name;
                  leaf name { type string; } // reference to observations/name
 
-                 list event {
+                 // subitem under subscription path
+                 list path {
+                  key path;
+                  leaf path { type string; }
+
+                  list event {
                    key t;
                    leaf t {
                     description "gNMI timestamp received in update, in ns";
                     type uint64;
                    }
                    leaf v { type string; }
+                  }
                  }
               }
             }

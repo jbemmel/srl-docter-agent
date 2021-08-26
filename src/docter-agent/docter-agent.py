@@ -189,12 +189,13 @@ def Threshold_Color( val, thresholds ):
 #
 def Calculate_SLA(history):
     if len(history)==0:
-        return "0.0"
-    elif len(history)==1:
-        return "100.0"
+        return "N/A"
 
     ts_start, v_start = history[0]
     ts_end, v_end = history[-1]
+
+    if v_end == "<MISSING>":
+        return "DOWN" # Dont report a stale availability value, it will stay the same until samples continue
 
     if ts_start == ts_end:
         return "100.0"
@@ -264,9 +265,12 @@ def Update_Observation(o, trigger, sample_interval, updates, history):
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
     # XXX very inefficient, could use a bulk method
-    for ts,value in history:
-      js_path2 = js_path + f'.history{{.name=="{name}"}}.event{{.t=="{ts}"}}'
-      response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':value} }) )
+    # Add only this new measurement to history, use now_ts instead of gNMI reported ts
+    # for path in history:
+    #  for ts,val in history[path]:
+    path,val = updates[0]
+    js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{now_ts}"}}'
+    response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val} }) )
       # logging.info(f"Telemetry_Update_Response history :: {response}")
 
 def Update_Global_State(state, var, val):
@@ -547,17 +551,21 @@ class MonitoringThread(Thread):
             return o
         return None
 
-      def update_history( ts_ns, o, key, val = None ):
-          history = o['data'][ key ] if key in o['data'] else []
-          if 'history_window' in o['conditions']:
-             window = ts_ns - int(o['conditions']['history_window']['value']) * 1000000000 # X seconds ago
-             history = [ (ts,val) for ts,val in history if ts>=window ]
-          if 'history_items' in o['conditions']:
-             history = history[ -(int(o['conditions']['history_items']['value'])): ]
-          if val is not None:
-             history.append( (ts_ns,val) )
+      def update_history( ts_ns, o, key, updates ):
+          history = o['data'][ key ] if key in o['data'] else {}
+          for path, val in updates:
+             subitem = history[path] if path in history else []
+             if 'history_window' in o['conditions']:
+                window = ts_ns - int(o['conditions']['history_window']['value']) * 1000000000 # X seconds ago
+                subitem = [ (ts,val) for ts,val in subitem if ts>=window ]
+             if 'history_items' in o['conditions']:
+                subitem = subitem[ -(int(o['conditions']['history_items']['value'])): ]
+             subitem.append( (ts_ns,val) )
+             history[ path ] = subitem
           o['data'][ key ] = history
-          return history
+
+          # Return top path history
+          return history[ updates[0][0] ]
 
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
       with gNMIclient(target=('unix:///opt/srlinux/var/run/sr_gnmi_server',57400),
@@ -609,7 +617,7 @@ class MonitoringThread(Thread):
                              logging.info( f"Missing sample: {_key}" )
                              index = _key.rindex('/') + 1
                              ts_ns = _ts + 1000000000 * int(_sample_period)
-                             history = update_history( ts_ns, _o, _key, val="<MISSING>" )
+                             history = update_history( ts_ns, _o, _key, [ (_key,"<MISSING>") ] )
                              Update_Observation( _o, f"{_key[index:]}=missing sample={sample_period}", int(_sample_period), [(_key,None)], history )
 
                           timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
@@ -633,7 +641,7 @@ class MonitoringThread(Thread):
                            i = i + 1
 
                       # Update historical data, indexed by key. Remove old entries
-                      history = update_history( int( update['timestamp'] ), o, key, val=u['val'] )
+                      history = update_history( int( update['timestamp'] ), o, key, updates )
                       index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
                       Update_Observation( o, f"{key[index:]}={u['val']} sample={sample}", int(sample), updates, history )
