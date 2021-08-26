@@ -247,11 +247,9 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     #response = Add_Telemetry( js_path=t_path, js_data=json.dumps({ 'testvalue' : { 'value' : trigger }}) )
     # end test
 
-    #now_ms = now.strftime("%Y-%m-%d %H:%M:%S.%f")
-    #event_path = js_path + f'.report{{.event=="{now_ms} {name}"}}'
-    gnmi_ts = datetime.fromtimestamp(timestamp_ns // 1000000000, tz=timezone.utc)
-    gnmi_str = gnmi_ts.strftime("%Y-%m-%d_%H:%M:%S.%f")
-    # event_path = js_path + f'.report{{.event=="t{now_ms}"}}'
+    gnmi_ts = datetime.fromtimestamp(timestamp_ns // 1e9, tz=timezone.utc)
+    gnmi_str = '{}.{:09.0f}'.format(gnmi_ts.strftime('%Y-%m-%dT%H:%M:%S'), timestamp_ns % 1e9)
+
     event_path = js_path + f'.events{{.event=="{gnmi_str} {name}"}}'
     update_data = {
       'name': { 'value': name },
