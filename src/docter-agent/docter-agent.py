@@ -188,6 +188,7 @@ def Threshold_Color( val, thresholds ):
 # as % of total ( ts[-1] - ts[0] ns )
 #
 def Calculate_SLA(history):
+    logging.info( f"Calculate_SLA history={history}" )
     if len(history)==0:
         return "N/A"
 
@@ -260,6 +261,10 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     }
     if sample_interval != 0:
         update_data['availability'] = { 'value': Calculate_SLA(history) }
+    if 'history_window' in o['conditions']:
+        # XXX could simply copy all parameters
+        update_data['history_window'] = o['conditions']['history_window']
+
     if thresholds != []:
         # TODO calculate min/max/avg as requested
         update_data['status'] = { 'value' : Threshold_Color( updates[0][1], thresholds ) }
@@ -571,6 +576,7 @@ class MonitoringThread(Thread):
           o['data'][ key ] = history
 
           # Return top path history
+          logging.info( f'update_history: after {history} -> returning {updates[0][0]}' )
           return history[ updates[0][0] ]
 
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
@@ -624,7 +630,7 @@ class MonitoringThread(Thread):
                              index = _key.rindex('/') + 1
                              ts_ns = _ts + 1000000000 * int(_sample_period)
                              history = update_history( ts_ns, _o, _key, [ (_key,"<MISSING>") ] )
-                             Update_Observation( _o, ts_ns, f"{_key[index:]}=missing sample={sample_period}", int(_sample_period), [(_key,None)], history )
+                             Update_Observation( _o, ts_ns, f"{_key[index:]}=missing sample={sample_period}", int(_sample_period), [(_key,"<MISSING>")], history )
 
                           timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
                           timer.start()

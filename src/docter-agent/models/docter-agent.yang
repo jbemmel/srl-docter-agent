@@ -72,6 +72,11 @@ module docter-agent {
                 leaf trigger { type string; }
                 leaf-list values { type string; }
 
+                leaf history-window {
+                  description "Time window used to calculate availability, in seconds";
+                  type uint16;
+                }
+
                 leaf availability {
                   description "For sampled state variables, percentage of time that the value was present";
                   // type sla_type;
@@ -92,15 +97,6 @@ module docter-agent {
                  list path {
                   key path;
                   leaf path { type string; }
-
-                  //list event {
-                  // key t;
-                  //leaf t {
-                  //  description "gNMI timestamp received in update, in ns";
-                  //  type uint64;
-                  //}
-                  //leaf v { type string; }
-                  // }
 
                   list event {
                     key t;
