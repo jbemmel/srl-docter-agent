@@ -128,6 +128,19 @@ def Update_Peer_State(peer_ip, section, update_data):
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
+def Show_Dummy_Health(controlplane="green",links="green"):
+
+    now = datetime.now()
+    now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    update_data = {
+      'last_updated' : { "value" : now_ts },
+      'controlplane': { "value" : controlplane },
+      'links': { "value": links },
+    }
+    js_path = '.' + agent_name + '.health'
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
+    logging.info(f"Telemetry_Update_Response :: {response}")
+
 def Grafana_Test():
     now = datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -279,17 +292,21 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     if sample_interval != 0:
         sla = Calculate_SLA(history)
         data = {
-          'availability': { 'value': sla }
+          'availability': { 'value': sla } # "CRASH-TEST" also crashes
         }
         if thresholds != []:
            # TODO calculate min/max/avg as requested
            if thresholds[0]=="availability":
-               val = int(float(sla))
+               val = int(float(sla)) if sla!="DOWN" else 0
                thresholds = thresholds[1:]
            else:
                val = updates[0][1]
            data['status'] = { 'value' : Threshold_Color( val, thresholds ) }
-        js_path += f'.availability{{.name=="{name}"}}'
+
+        # js_path += f'.availability{{.name=="{name}"}}' # crashes
+        js_path = '.' + agent_name + '.health.route'
+        logging.info( f"About to Add_Telemetry: {js_path}={data}" )
+        # This leads to SRL mgr crashes
         response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
 
       # logging.info(f"Telemetry_Update_Response history :: {response}")
@@ -680,7 +697,7 @@ class MonitoringThread(Thread):
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
-       logging.error(f'Exception caught in gNMI :: {e} m={m} stack:{traceback_str}')
+       logging.error(f'Exception caught in gNMI :: {e} stack:{traceback_str}')
     except:
        logging.error(f"Unexpected error: {sys.exc_info()[0]}")
 
@@ -726,6 +743,7 @@ def Run():
     stream_response = sub_stub.NotificationStream(stream_request, metadata=metadata)
 
     # Grafana_Test()
+    Show_Dummy_Health( controlplane="green", links="orange" )
 
     state = State()
     count = 1

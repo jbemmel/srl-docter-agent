@@ -39,6 +39,40 @@ module docter-agent {
             description "Top level enclosing container for auto config agent sample app
                          config and operational state data";
 
+            // Placeholder for demo
+            container health {
+              srl_nokia-ext:delivery-node-override true;
+              config false;
+
+              leaf last-updated {
+                type srl_nokia-comm:date-and-time-delta;
+              }
+
+              leaf controlplane {
+                description "Evaluated status of control plane health, with conditions on route flaps per interval, per peer and peering errors over time";
+                type string;
+                default "green";
+              }
+
+              leaf links {
+                description "Evaluated status of physical links, with conditions on flaps per interval and packet errors over time";
+                type string;
+                default "green";
+              }
+
+              container route {
+                leaf status {
+                  type string;
+                  default "green";
+                }
+                leaf availability {
+                  type string;
+                  default "100.0";
+                }
+              }
+            }
+
+
             // gNMI reporting to collectors
             container reports {
               srl_nokia-ext:delivery-node-override true;
@@ -78,9 +112,10 @@ module docter-agent {
 
                  leaf name {
                    type leafref {
-                    path "../../../intensive-care/observe/name";
-                    // require-instance "true";
+                     path "../../../intensive-care/observe/name";
+                    // // require-instance "true";
                    }
+                   // type string;
                  }
 
                  leaf availability {
