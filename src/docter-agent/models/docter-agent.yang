@@ -44,9 +44,9 @@ module docter-agent {
               srl_nokia-ext:delivery-node-override true;
               config false;
 
-              leaf last-updated {
-                type srl_nokia-comm:date-and-time-delta;
-              }
+              // leaf last-updated {
+              //  type srl_nokia-comm:date-and-time-delta;
+              // }
 
               leaf controlplane {
                 description "Evaluated status of control plane health, with conditions on route flaps per interval, per peer and peering errors over time";

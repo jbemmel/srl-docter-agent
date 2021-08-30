@@ -17,11 +17,3 @@ build:
 	  --build-arg SR_LINUX_RELEASE="${SR_LINUX_RELEASE}" \
 		-f Docker/Dockerfile -t ${IMG} .
 	sudo docker tag ${IMG} ${NAME}:${SR_LINUX_RELEASE}
-
-build-frr:
-	cd .. && sudo docker build --build-arg http_proxy=${HTTP_PROXY} --build-arg https_proxy=${HTTP_PROXY} \
-	         -f Docker/Dockerfile.frr -t frr-with-lldp .
-	sudo docker tag frr-with-lldp frr-with-lldp:latest
-
-login:
-	docker log -u ${DOCKER_USER} -p ${DOCKER_PASS}
