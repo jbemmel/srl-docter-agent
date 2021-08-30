@@ -215,7 +215,7 @@ def Calculate_SLA(history):
         return "DOWN" # Dont report a stale availability value, it will stay the same until samples continue
 
     if ts_start == ts_end:
-        return "100.0"
+        return "100.000"
 
     ts_cur = ts_start
     missing_ns = 0
