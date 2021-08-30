@@ -36,7 +36,7 @@ topology:
     #  binds:
     #    - configs/client2:/config
     #  mgmt_ipv4: 172.20.20.32 # Pick a fixed IP
-    #  mgmt_ipv6: 2001:172:20:20::32           
+    #  mgmt_ipv6: 2001:172:20:20::32
     client3:
       kind: linux
       group: hosts
@@ -108,6 +108,6 @@ topology:
     - endpoints: ["spine2:e1-1", "leaf1:e1-2"]
     - endpoints: ["spine2:e1-2", "leaf2:e1-2"]
     - endpoints: ["spine2:e1-3", "leaf3:e1-2"]
-    - endpoints: ["leaf1:e1-3", "client1:e1-1"]
-    - endpoints: ["leaf2:e1-3", "client2:eth1"]
-    - endpoints: ["leaf3:e1-3", "client3:eth1"]
+    - endpoints: ["leaf1:e1-3", "client1:e1-1"]  # SRL
+    - endpoints: ["leaf2:e1-3", "client2:e1-1"]  # SRL
+    - endpoints: ["leaf3:e1-3", "client3:eth1"]  # Linux
