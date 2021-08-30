@@ -11,39 +11,40 @@ topology:
       image: ghcr.io/hellt/network-multitool
 
   nodes:
-  
+
   ###### DC FABRIC ######
-  
-    spine1: { kind: srl, mgmt_ipv4: 172.20.20.2, startup-config: auto-spine.cfg.json }
-    spine2: { kind: srl, mgmt_ipv4: 172.20.20.3, startup-config: auto-spine.cfg.json }
-    leaf1:  { kind: srl, mgmt_ipv4: 172.20.20.4, startup-config: auto-leaf.cfg.json }
-    leaf2:  { kind: srl, mgmt_ipv4: 172.20.20.5, startup-config: auto-leaf.cfg.json }
-    leaf3:  { kind: srl, mgmt_ipv4: 172.20.20.6, startup-config: auto-leaf.cfg.json }
- 
-    client1: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
-#    client2: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
+
+    spine1: { kind: srl, group: spines, mgmt_ipv4: 172.20.20.2, startup-config: auto-spine.cfg.json }
+    spine2: { kind: srl, group: spines, mgmt_ipv4: 172.20.20.3, startup-config: auto-spine.cfg.json }
+    leaf1:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.4, startup-config: auto-leaf.cfg.json }
+    leaf2:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.5, startup-config: auto-leaf.cfg.json }
+    leaf3:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.6, startup-config: auto-leaf.cfg.json }
+
+    client1: { kind: srl, group: hosts, startup-config: auto-host-with-vip.cfg.json }
+    client2: { kind: srl, group: hosts, startup-config: auto-host-with-vip.cfg.json }
 #    client3: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
- 
+
 ### CLIENTS ###
     #client1:
     #  kind: linux
     #  binds:
     #    - configs/client1:/config
     #  mgmt_ipv4: 172.20.20.31 # Pick a fixed IP
-    #  mgmt_ipv6: 2001:172:20:20::31       
-    client2:
-      kind: linux
-      binds:
-        - configs/client2:/config
-      mgmt_ipv4: 172.20.20.32 # Pick a fixed IP
-      mgmt_ipv6: 2001:172:20:20::32           
+    #  mgmt_ipv6: 2001:172:20:20::31
+    #client2:
+    #  kind: linux
+    #  binds:
+    #    - configs/client2:/config
+    #  mgmt_ipv4: 172.20.20.32 # Pick a fixed IP
+    #  mgmt_ipv6: 2001:172:20:20::32           
     client3:
       kind: linux
+      group: hosts
       binds:
         - configs/client3:/config
       mgmt_ipv4: 172.20.20.33 # Pick a fixed IP
-      mgmt_ipv6: 2001:172:20:20::33   
-      
+      mgmt_ipv6: 2001:172:20:20::33
+
   ###### TELEMETRY STACK ######
 
     grafana: # Added, connect via mgmt network
@@ -60,23 +61,23 @@ topology:
       mgmt_ipv4: 172.20.20.10 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::10
       ports:
-        - 3000:3000      
+        - 3000:3000
 
     telegraf: # Added, connect via mgmt network
       kind: linux
       image: telegraf
-      binds: 
+      binds:
         - configs/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       mgmt_ipv4: 172.20.20.11 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::11
       # startup-delay: 20
-      
+
     influxdb: # Added, connect via mgmt network
       kind: linux
       image: influxdb:1.8
       mgmt_ipv4: 172.20.20.12 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::12
-      
+
     gnmic:
       kind: linux
       image: ghcr.io/karimra/gnmic:0.18.0
@@ -84,7 +85,7 @@ topology:
         - configs/gnmic/gnmic-config.yml:/gnmic-config.yml:ro
       cmd: --config /gnmic-config.yml --log subscribe
       # startup-delay: 20
-      
+
     prometheus:
       kind: linux
       image: prom/prometheus:v2.23.0
@@ -93,7 +94,7 @@ topology:
       cmd: --config.file=/etc/prometheus/prometheus.yml
       ports:
         - 9090:9090
-      
+
 #    mysocketio:
 #      kind: mysocketio
 #      image: ghcr.io/hellt/mysocketctl:0.4.0
