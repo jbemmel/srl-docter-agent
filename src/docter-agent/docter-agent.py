@@ -296,7 +296,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
            }
 
         # Only update if SLA has changed, else this triggers onchange events
-        if 'last_sla' not in o or o['last_sla'] != (sla,val):
+        if True: # 'last_sla' not in o or o['last_sla'] != (sla,val):
            if thresholds != []:
               # TODO calculate min/max/avg as requested
               if thresholds[0]=="availability":
