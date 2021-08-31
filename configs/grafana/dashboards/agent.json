@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630446500656,
+  "iteration": 1630446855462,
   "links": [],
   "panels": [
     {
@@ -181,7 +181,7 @@
             [
               {
                 "params": [
-                  "/docter_agent:docter_agent/health/route_status"
+                  "/docter_agent:docter_agent/health/route_availability"
                 ],
                 "type": "field"
               },
@@ -216,14 +216,16 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:160",
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": null,
+          "max": "100",
           "min": null,
           "show": true
         },
         {
+          "$$hashKey": "object:161",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1285,7 +1287,7 @@
     ]
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
