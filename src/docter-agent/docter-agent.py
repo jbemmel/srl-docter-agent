@@ -120,7 +120,7 @@ def Show_Dummy_Health(controlplane="green",links="green"):
     metric_data = {
       'status' : { 'value' : 'not happening right now' }
     }
-    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(metric_data) )
+    # response = Add_Telemetry( js_path=js_path, js_data=json.dumps(metric_data) )
 
 def Grafana_Test():
     now = datetime.now()

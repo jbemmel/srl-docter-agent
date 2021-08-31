@@ -240,6 +240,13 @@ module docter-agent {
                     }
                     default "no";
                   }
+
+                  leaf metric {
+                    description "Health metric this item contributes to (optional)";
+                    type leafref {
+                      path "../../../health/metric/name";
+                    }
+                  }
                 }
                 leaf-list report {
                   description "gNMI path of value to report when conditions are met";
