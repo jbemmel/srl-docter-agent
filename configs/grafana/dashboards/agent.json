@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630443411883,
+  "iteration": 1630446500656,
   "links": [],
   "panels": [
     {
@@ -161,15 +161,22 @@
       "steppedLine": false,
       "targets": [
         {
-          "groupBy": [],
+          "groupBy": [
+            {
+              "params": [
+                "source"
+              ],
+              "type": "tag"
+            }
+          ],
           "measurement": "SRL_docter-agent",
           "orderByTime": "ASC",
           "policy": "default",
           "query": "SELECT source AS \"Node\",  \"/docter_agent:docter_agent/health/route_availability\" AS \"Availability\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
           "queryType": "randomWalk",
-          "rawQuery": true,
+          "rawQuery": false,
           "refId": "A",
-          "resultFormat": "table",
+          "resultFormat": "time_series",
           "select": [
             [
               {
@@ -1278,7 +1285,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-7d",
     "to": "now"
   },
   "timepicker": {},
