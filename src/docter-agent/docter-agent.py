@@ -621,7 +621,7 @@ def Run():
     stream_response = sub_stub.NotificationStream(stream_request, metadata=metadata)
 
     # Grafana_Test()
-    # Show_Dummy_Health( controlplane="green", links="orange" )
+    Show_Dummy_Health( controlplane="green", links="orange" )
 
     state = State()
     count = 1
