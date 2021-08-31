@@ -129,7 +129,7 @@ def Update_Metric(metric, contributor, contrib_status):
         if w!=overall:
             overall = w
             cause = c
-    
+
     logging.info( f"Updated metric {metric}: {overall} cause={cause}" )
     js_path = '.' + agent_name + f'.health.metric{{.name=="{metric}"}}'
     data = {
@@ -234,7 +234,7 @@ def Calculate_SLA(history):
     ts_end, v_end = history[-1]
 
     if v_end == "<MISSING>":
-        return "DOWN" # Dont report a stale availability value, it will stay the same until samples continue
+        return "0.000" # Dont report a stale availability value, it will stay the same until samples continue
 
     if ts_start == ts_end:
         return "100.000"
