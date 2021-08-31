@@ -243,9 +243,10 @@ module docter-agent {
 
                   leaf metric {
                     description "Health metric this item contributes to (optional)";
-                    type leafref {
-                      path "/docter-agent/health/metric/name";
-                    }
+                    type string; // cannot refer to non-config leaf
+                    // type leafref {
+                    //  path "/docter-agent/health/metric/name";
+                    // }
                   }
                 }
                 leaf-list report {
