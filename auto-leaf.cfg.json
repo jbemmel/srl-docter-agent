@@ -59,7 +59,20 @@
       	  "thresholds": [ "50", "80", "90" ]
         }
       ]
+    },
+    {
+      "name": "Broadcast traffic out of physical links",
+      "conditions": [
+        {
+          "gnmi-path": "/interface[name=ethernet-*]/statistics/out-broadcast-packets",
+          "metric": "LINKS",
+      	  "sample-period": 60,
+      	  "history-window": 600,
+      	  "thresholds": [ "5", "10", "20" ]
+        }
+      ]
     }
+
       ]
     }
   },
