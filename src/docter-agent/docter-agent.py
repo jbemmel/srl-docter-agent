@@ -290,7 +290,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
            }
 
         # Only update if SLA has changed, else this triggers onchange events
-        if 'last_sla' not in o or o['last_sla'] != sla:
+        if 'last_sla' not in o or o['last_sla'] != (sla,val):
            if thresholds != []:
               # TODO calculate min/max/avg as requested
               if thresholds[0]=="availability":
@@ -305,7 +305,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
            logging.info( f"About to Add_Telemetry: {js_path}={data}" )
            # This leads to SRL mgr crashes
            response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
-           o['last_sla'] = sla
+           o['last_sla'] = (sla,val)
 
       # logging.info(f"Telemetry_Update_Response history :: {response}")
 
