@@ -1,0 +1,1234 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 3,
+  "iteration": 1630442992986,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "groupBy": [],
+          "measurement": "SRL_docter-agent",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT source AS \"Node\",  \"/docter_agent:docter_agent/health/route_status\" AS \"Status\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_status"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Status"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Prefix monitoring",
+      "type": "table"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 7,
+      "options": {
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time"
+          }
+        ]
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "groupBy": [],
+          "measurement": "SRL_docter-agent",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT source AS \"Node\",  \"/docter_agent:docter_agent/health/route_availability\" AS \"Availability\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_status"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Status"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Prefix Availability",
+      "type": "table"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "flowchartsData": {
+        "flowcharts": [
+          {
+            "allowDrawio": false,
+            "bgColor": null,
+            "center": true,
+            "csv": "## See more information for the syntax at https://drawio-app.com/import-from-csv-to-drawio/\n##\n## Example CSV. Use ## for comments and # for configuration.\n## The following names are reserved and should not be used (or ignored):\n## id, tooltip, placeholder(s), link and label (see below)\n##\n#\n## Node label with placeholders and HTML.\n## Default is '%name_of_first_column%'.\n#\n# label: %name%<br><i style=\"color:gray;\">%position%</i><br><a href=\"mailto:%email%\">Email</a>\n#\n## Node style (placeholders are replaced once).\n## Default is the current style for nodes.\n#\n# style: label;image=%image%;whiteSpace=wrap;html=1;rounded=1;fillColor=%fill%;strokeColor=%stroke%;\n#\n## Parent style for nodes with child nodes (placeholders are replaced once).\n#\n# parentstyle: swimlane;whiteSpace=wrap;html=1;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;\n#\n## Optional column name that contains a reference to a named style in styles.\n## Default is the current style for nodes.\n#\n# stylename: -\n#\n## JSON for named styles of the form {\"name\": \"style\", \"name\": \"style\"} where style is a cell style with\n## placeholders that are replaced once.\n#\n# styles: -\n#\n## Optional column name that contains a reference to a named label in labels.\n## Default is the current label.\n#\n# labelname: -\n#\n## JSON for named labels of the form {\"name\": \"label\", \"name\": \"label\"} where label is a cell label with\n## placeholders.\n#\n# labels: -\n#\n## Uses the given column name as the identity for cells (updates existing cells).\n## Default is no identity (empty value or -).\n#\n# identity: -\n#\n## Uses the given column name as the parent reference for cells. Default is no parent (empty or -).\n## The identity above is used for resolving the reference so it must be specified.\n#\n# parent: -\n#\n## Adds a prefix to the identity of cells to make sure they do not collide with existing cells (whose\n## IDs are numbers from 0..n, sometimes with a GUID prefix in the context of realtime collaboration).\n## Default is csvimport-.\n#\n# namespace: csvimport-\n#\n## Connections between rows (\"from\": source colum, \"to\": target column).\n## Label, style and invert are optional. Defaults are '', current style and false.\n## If placeholders are used in the style, they are replaced with data from the source.\n## An optional placeholders can be set to target to use data from the target instead.\n## In addition to label, an optional fromlabel and tolabel can be used to name the column\n## that contains the text for the label in the edges source or target (invert ignored).\n## The label is concatenated in the form fromlabel + label + tolabel if all are defined.\n## The target column may contain a comma-separated list of values.\n## Multiple connect entries are allowed.\n#\n# connect: {\"from\": \"manager\", \"to\": \"name\", \"invert\": true, \"label\": \"manages\", \\\n#          \"style\": \"curved=1;endArrow=blockThin;endFill=1;fontSize=11;\"}\n# connect: {\"from\": \"refs\", \"to\": \"id\", \"style\": \"curved=1;fontSize=11;\"}\n#\n## Node x-coordinate. Possible value is a column name. Default is empty. Layouts will\n## override this value.\n#\n# left: \n#\n## Node y-coordinate. Possible value is a column name. Default is empty. Layouts will\n## override this value.\n#\n# top: \n#\n## Node width. Possible value is a number (in px), auto or an @ sign followed by a column\n## name that contains the value for the width. Default is auto.\n#\n# width: auto\n#\n## Node height. Possible value is a number (in px), auto or an @ sign followed by a column\n## name that contains the value for the height. Default is auto.\n#\n# height: auto\n#\n## Padding for autosize. Default is 0.\n#\n# padding: -12\n#\n## Comma-separated list of ignored columns for metadata. (These can be\n## used for connections and styles but will not be added as metadata.)\n#\n# ignore: id,image,fill,stroke,refs,manager\n#\n## Column to be renamed to link attribute (used as link).\n#\n# link: url\n#\n## Spacing between nodes. Default is 40.\n#\n# nodespacing: 40\n#\n## Spacing between levels of hierarchical layouts. Default is 100.\n#\n# levelspacing: 100\n#\n## Spacing between parallel edges. Default is 40. Use 0 to disable.\n#\n# edgespacing: 40\n#\n## Name or JSON of layout. Possible values are auto, none, verticaltree, horizontaltree,\n## verticalflow, horizontalflow, organic, circle or a JSON string as used in Layout, Apply.\n## Default is auto.\n#\n# layout: auto\n#\n## ---- CSV below this line. First line are column names. ----\nname,position,id,location,manager,email,fill,stroke,refs,url,image\nEvan Miller,CFO,emi,Office 1,,me@example.com,#dae8fc,#6c8ebf,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-9-2-128.png\nEdward Morrison,Brand Manager,emo,Office 2,Evan Miller,me@example.com,#d5e8d4,#82b366,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-10-3-128.png\nRon Donovan,System Admin,rdo,Office 3,Evan Miller,me@example.com,#d5e8d4,#82b366,\"emo,tva\",https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-2-128.png\nTessa Valet,HR Director,tva,Office 4,Evan Miller,me@example.com,#d5e8d4,#82b366,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-3-128.png\n",
+            "download": false,
+            "editorTheme": "dark",
+            "editorUrl": "https://www.draw.io",
+            "enableAnim": true,
+            "grid": false,
+            "lock": true,
+            "name": "Main",
+            "scale": true,
+            "tooltip": true,
+            "type": "xml",
+            "url": "http://<YourUrl>/<Your XML/drawio file/api>",
+            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-08-31T20:41:13.546Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.78\" etag=\"ptuT3cbZkrIeN_AFPPoR\" version=\"15.0.4\" type=\"embed\"><diagram id=\"tNf07pysN7_GjRuUVJie\" name=\"Page-1\">7VlNc9sgEP01PjYjhL5ybJykPbQzmcmhzZFIWKKVhQfj2O6vLxiQBJId24nlScY5ZLQPWMG+fbBYIzierr4xNCt+0gyXI9/LViN4O/L9OIrEfwmsFRBE1wrIGckUBBrgkfzDGvQ0uiAZnlsdOaUlJzMbTGlV4ZRbGGKMLu1uE1rab52hHHeAxxSVXfQXyXih0MSPG/w7Jnlh3gzM+qbIdNYrmRcoo8uWV3g3gmNGKVdP09UYlzJ2Ji5q3P2W1npiDFd8nwE+VCNeULnQi9MT42uzWkYXVYblADCCN8uCcPw4Q6lsXQp6BVbwaambJ6Qsx7SkbDMW3m/+BD7njP7FrZYJTJ+9rG4xcQwlYoIiHeYMZUSsxgytaIVb8C1hgmFCK9E0pwvp46YbBB2XF8w4XrnRFlmK6RRzthZddKsfaIJ0hibaXDZ0A8Nh0aI60hjSGZbXnhsSxIPmoZ8TeOGkl5PAA+fjJLhw0scJBKHFCQyDAUkJL6T0kVIH/CykRBdS+kgJfXBGUpIOBzgTJY02KeMFzWmFyrsGvbFZavr8oHSmwT+Y87Wuz9CCU5s5ESy2/i0M78oPjf0kbWPcrixrra0OtTCJQvTcoTZuU6vcZF9lfSfXJBJQIfekNDNK6ZSkui9HLMf8ATMiwomZTEBS5aLxC9i8CDHu+NpgLW94RbhaXqitp1ZLszZpmKVtzSSRaizFdlWmpmifQJK3nfnGcIk4ebFL1b7k0UMfKBFTaXZ0z948BGC7UBPVo9qlpePIdxzBOLAdaQJcRyLoaN3qNpMd5gdMOPF2zgsG4a7+4kHNoBFWHdy9tGYqx2G19uEk4++vmaP3kePFFg4jtnpz17kI4iPFBswOX58ujqMtYjsmv7vn+bBnCfzkh0l8oDLqt74566Nhsj5wsr7+XefQrA89eysP/BMdMdCZcLz7iAndBcbvfMTAM0sw/twKPOBs2kts8IxHDHQug8C9T+wrNhg5V/0T1XMBtC9K5ozcWmcCb1f/t4stuIjtA92derU21N0JvlM5B2NHa8mJtBY5Wnvl7hR4J747hRetnVJriZe01XblgXh3fSmMo8rLXhUOVF5C59sNSI5VYeKo8Ho/Fb6e+MJsvvGp7s2HUnj3Hw==</diagram></mxfile>",
+            "zoom": "100%"
+          }
+        ]
+      },
+      "format": "short",
+      "graphId": "flowchart_4",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 4,
+      "newFlag": false,
+      "pluginVersion": "7.3.7",
+      "rulesData": {
+        "rulesData": [
+          {
+            "aggregation": "current",
+            "alias": "route_spine12",
+            "colors": [
+              "#5794F2",
+              "rgb(90, 90, 90)",
+              "#73BF69",
+              "#FADE2A",
+              "#FF9830",
+              "#F2495C"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": true,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": true,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 1,
+            "overlayIcon": false,
+            "pattern": "route_status_spine2",
+            "rangeData": [],
+            "reduce": true,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "33",
+                "style": "fillColor"
+              }
+            ],
+            "shapeProp": "id",
+            "shapeRegEx": false,
+            "stringThresholds": [
+              "/grey/",
+              "/green/",
+              "/tellow/",
+              "/orange/",
+              "/red/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [
+              50,
+              80
+            ],
+            "tooltip": true,
+            "tooltipColors": true,
+            "tooltipLabel": "Route Availability",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "string",
+            "unit": "short",
+            "valueData": []
+          },
+          {
+            "aggregation": "current",
+            "alias": "route_spine1",
+            "colors": [
+              "#5794F2",
+              "rgb(90, 90, 90)",
+              "#73BF69",
+              "#FADE2A",
+              "#FF9830",
+              "#F2495C"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": true,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": true,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 2,
+            "overlayIcon": false,
+            "pattern": "route_status_spine1",
+            "rangeData": [],
+            "reduce": true,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "23",
+                "style": "fillColor"
+              }
+            ],
+            "shapeProp": "id",
+            "shapeRegEx": false,
+            "stringThresholds": [
+              "/grey/",
+              "/green/",
+              "/tellow/",
+              "/orange/",
+              "/red/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [
+              50,
+              80
+            ],
+            "tooltip": true,
+            "tooltipColors": true,
+            "tooltipLabel": "Route Availability",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "string",
+            "unit": "short",
+            "valueData": []
+          },
+          {
+            "aggregation": "current",
+            "alias": "route_leaf1",
+            "colors": [
+              "#5794F2",
+              "rgb(90, 90, 90)",
+              "#73BF69",
+              "#FADE2A",
+              "#FF9830",
+              "#F2495C"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": true,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": true,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 3,
+            "overlayIcon": false,
+            "pattern": "route_status_leaf1",
+            "rangeData": [],
+            "reduce": true,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "35",
+                "style": "fillColor"
+              }
+            ],
+            "shapeProp": "id",
+            "shapeRegEx": false,
+            "stringThresholds": [
+              "/grey/",
+              "/green/",
+              "/tellow/",
+              "/orange/",
+              "/red/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [
+              50,
+              80
+            ],
+            "tooltip": true,
+            "tooltipColors": true,
+            "tooltipLabel": "Route Availability",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "string",
+            "unit": "short",
+            "valueData": []
+          },
+          {
+            "aggregation": "current",
+            "alias": "route_leaf2",
+            "colors": [
+              "#5794F2",
+              "rgb(90, 90, 90)",
+              "#73BF69",
+              "#FADE2A",
+              "#FF9830",
+              "#F2495C"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": true,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": true,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 4,
+            "overlayIcon": false,
+            "pattern": "route_status_leaf2",
+            "rangeData": [],
+            "reduce": true,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "34",
+                "style": "fillColor"
+              }
+            ],
+            "shapeProp": "id",
+            "shapeRegEx": false,
+            "stringThresholds": [
+              "/grey/",
+              "/green/",
+              "/tellow/",
+              "/orange/",
+              "/red/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [
+              50,
+              80
+            ],
+            "tooltip": true,
+            "tooltipColors": true,
+            "tooltipLabel": "Route Availability",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "string",
+            "unit": "short",
+            "valueData": []
+          },
+          {
+            "aggregation": "current",
+            "alias": "route_leaf3",
+            "colors": [
+              "#5794F2",
+              "rgb(90, 90, 90)",
+              "#73BF69",
+              "#FADE2A",
+              "#FF9830",
+              "#F2495C"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": true,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": true,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 5,
+            "overlayIcon": false,
+            "pattern": "route_status_leaf3",
+            "rangeData": [],
+            "reduce": true,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "36",
+                "style": "fillColor"
+              }
+            ],
+            "shapeProp": "id",
+            "shapeRegEx": false,
+            "stringThresholds": [
+              "/grey/",
+              "/green/",
+              "/tellow/",
+              "/orange/",
+              "/red/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [
+              50,
+              80
+            ],
+            "tooltip": true,
+            "tooltipColors": true,
+            "tooltipLabel": "Route Availability",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "string",
+            "unit": "short",
+            "valueData": []
+          }
+        ]
+      },
+      "targets": [
+        {
+          "alias": "route_status_leaf1",
+          "groupBy": [],
+          "measurement": "SRL_docter-agent",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "queryType": "randomWalk",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_status"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-leaf1"
+            }
+          ]
+        },
+        {
+          "alias": "route_status_leaf2",
+          "groupBy": [],
+          "measurement": "SRL_docter-agent",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "queryType": "randomWalk",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_status"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-leaf2"
+            }
+          ]
+        },
+        {
+          "alias": "route_status_leaf3",
+          "groupBy": [],
+          "measurement": "SRL_docter-agent",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "queryType": "randomWalk",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_status"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-leaf3"
+            }
+          ]
+        },
+        {
+          "alias": "route_status_spine1",
+          "groupBy": [],
+          "measurement": "SRL_docter-agent",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "queryType": "randomWalk",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_status"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-spine1"
+            }
+          ]
+        },
+        {
+          "alias": "route_status_spine2",
+          "groupBy": [],
+          "measurement": "SRL_docter-agent",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "queryType": "randomWalk",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_status"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-spine2"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Topology",
+      "type": "agenty-flowcharting-panel",
+      "valueName": "current",
+      "version": "0.9.0"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/docter_agent:docter_agent/reports/events_trigger"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 270
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/docter_agent:docter_agent/reports/events_values_0"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 946
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/docter_agent:docter_agent/reports/events_name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 271
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/docter_agent:docter_agent/health/route_status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 227
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/docter_agent:docter_agent/health/route_availability"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/docter_agent:docter_agent/reports/events_values_1"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 1843
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "route_status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 107
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "events_name"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 285
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "events_sample-period"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 144
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "events_timestamp"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 181
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "events_trigger"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 309
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/docter_agent:docter_agent/reports/events_values_2"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 442
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/docter_agent:docter_agent/reports/history/path/event_v"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 225
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "/docter_agent:docter_agent/reports_count"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 227
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Node"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 203
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 177
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 2,
+      "options": {
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.3.7",
+      "targets": [
+        {
+          "alias": "session state",
+          "groupBy": [],
+          "measurement": "SRL_docter-agent",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT source AS \"Node\", \"/docter_agent:docter_agent/health/route_availability\" AS \"route_availability\", \"/docter_agent:docter_agent/health/route_status\" AS \"route_status\", \"/docter_agent:docter_agent/reports/events_name\" AS \"events_name\", \"/docter_agent:docter_agent/reports/events_sample-period\" AS \"events_sample-period\", \"/docter_agent:docter_agent/reports/events_timestamp\" AS \"events_timestamp\", \"/docter_agent:docter_agent/reports/events_trigger\" AS \"events_trigger\", \"/docter_agent:docter_agent/reports/events_values_0\" AS \"events_values_0\", \"/docter_agent:docter_agent/reports/events_values_1\" AS \"events_values_1\", \"/docter_agent:docter_agent/reports/events_values_2\" AS \"events_values2\", \"/docter_agent:docter_agent/reports/history/path/event_v\" AS \"event_v\", \"/docter_agent:docter_agent/reports_count\" AS \"reports_count\", \"/docter_agent:docter_agent/reports_filtered\" AS \"reports_filtered\", \"/docter_agent:docter_agent/reports_last-updated\" AS \"reports_last-updated\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_availability"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "route_availability"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_status"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "route_status"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_name"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "events_name"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_sample-period"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "events_sample-period"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_timestamp"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "events_timestamp"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_trigger"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "events_trigger"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_values_0"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "events_values_0"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_values_1"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "events_values_1"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/events_values_2"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "events_values2"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports/history/path/event_v"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "event_v"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports_count"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "reports_count"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports_filtered"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "reports_filtered"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/reports_last-updated"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "reports_last-updated"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Events",
+      "type": "table"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 26,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "tags": [],
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "InfluxDB",
+        "definition": "",
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "hostname",
+        "multi": true,
+        "name": "Hostname",
+        "options": [
+          {
+            "selected": true,
+            "text": "All",
+            "value": "$__all"
+          },
+          {
+            "selected": false,
+            "text": "leaf-1-1.1.1.1",
+            "value": "leaf-1-1.1.1.1"
+          },
+          {
+            "selected": false,
+            "text": "leaf-2-1.1.1.2",
+            "value": "leaf-2-1.1.1.2"
+          },
+          {
+            "selected": false,
+            "text": "spine-1-1.1.0.1",
+            "value": "spine-1-1.1.0.1"
+          },
+          {
+            "selected": false,
+            "text": "spine-2-1.1.0.2",
+            "value": "spine-2-1.1.0.2"
+          }
+        ],
+        "query": "SELECT \"/srl_nokia_system:system/srl_nokia_system_name:name_host-name\" FROM \"SRL_all\"",
+        "refresh": 0,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Agent Telemetry",
+  "uid": "Zm69_k47z",
+  "version": 10
+}
