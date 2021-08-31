@@ -99,7 +99,7 @@ def Add_Telemetry(js_path, js_data):
 ############################################################
 metrics = {}
 def Update_Metric(metric, contributor, contrib_status):
-    base_path = '.' + agent_name + f'.health.metrics.metric{{.name=="{metric}"}}'
+    base_path = '.' + agent_name + f'.metrics.metric{{.name=="{metric}"}}'
     js_path = base_path + f'.contribution{{.name=="{contributor}"}}'
     metric_data = {
       'status' : { 'value' : contrib_status }

@@ -78,10 +78,15 @@ module docter-agent {
                   ordered-by user; // otherwise system will sort the values
                 }
               }
+            } // end health
 
-              // Generalized health metrics
-              container metrics { // workaround for disappearing data
+            // Generalized health metrics
+            container metrics { // workaround for disappearing data? Nope
                presence "Metrics container";
+               srl_nokia-ext:delivery-node-override true;
+               srl_nokia-ext:stream-mode on_change;
+               config false;
+
                list metric {
                 key name;
                 leaf name { type string; }
@@ -99,9 +104,7 @@ module docter-agent {
                   leaf status { type string; } // e.g. color
                 }
                }
-              }
             }
-
 
             // gNMI reporting to collectors
             container reports {
