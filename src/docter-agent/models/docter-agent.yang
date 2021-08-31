@@ -67,7 +67,7 @@ module docter-agent {
                 }
                 leaf availability {
                   type string;
-                  default "100.0";
+                  default "100.000";
                 }
               }
             }
