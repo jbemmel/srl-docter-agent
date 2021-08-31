@@ -302,7 +302,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
 
            # js_path += f'.availability{{.name=="{name}"}}' # crashes
            js_path = '.' + agent_name + '.health.route'
-           logging.info( f"About to Add_Telemetry: {js_path}={data}" )
+           logging.info( f"About to Add_Telemetry: {js_path}={data} {sla} {val}" )
            # This leads to SRL mgr crashes
            response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
            o['last_sla'] = (sla,val)
