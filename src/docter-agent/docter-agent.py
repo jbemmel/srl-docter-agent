@@ -116,7 +116,6 @@ def Show_Dummy_Health(controlplane="green",links="green"):
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
-    # Populate a sample metric
     js_path += f'.metric{{.name=="CPU"}}.contribution{{.name=="spikes"}}'
     metric_data = {
       'status' : { 'value' : 'not happening right now' }
@@ -309,7 +308,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
 
            # js_path += f'.availability{{.name=="{name}"}}' # crashes
            js_path = '.' + agent_name + '.health.route'
-           logging.info( f"SLA Add_Telemetry({name}): {js_path}={data} {sla} {val}" )
+           logging.info( f"SLA Add_Telemetry({o}): {js_path}={data} {sla} {val}" )
            # This leads to SRL mgr crashes
            response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
            o['last_sla'] = (sla,val)
@@ -622,7 +621,7 @@ def Run():
     stream_response = sub_stub.NotificationStream(stream_request, metadata=metadata)
 
     # Grafana_Test()
-    Show_Dummy_Health( controlplane="green", links="orange" )
+    # Show_Dummy_Health( controlplane="green", links="orange" )
 
     state = State()
     count = 1
