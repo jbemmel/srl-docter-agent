@@ -274,10 +274,20 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val} }) )
 
     if sample_interval != 0:
-        sla = Calculate_SLA(history)
-        data = {
-          'availability': { 'value': sla } # "CRASH-TEST" also crashes
-        }
+        if path == "count":
+           max_count = max( [ int(c) for t,c in history ] )
+           avail = 100.0 * (int(val) / max_count)
+           sla = f'{avail:.3f}' # 3 digits, e.g. 99.999
+           data = {
+             'availability': { 'value': sla },
+             'count': { 'value': int(val) },
+             'values': updates[1][1]
+           }
+        else:
+           sla = Calculate_SLA(history)
+           data = {
+             'availability': { 'value': sla } # "CRASH-TEST" also crashes
+           }
         if thresholds != []:
            # TODO calculate min/max/avg as requested
            if thresholds[0]=="availability":
