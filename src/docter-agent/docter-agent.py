@@ -275,8 +275,8 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
 
     if sample_interval != 0:
         if path == "count":
-           max_count = max( [ len(vs) for t,vs in history ] )
-           avail = 100.0 * (len(val) / max_count) if max_count>0 else "100.000"
+           max_count = max( [ len(vs) for t,vs in history ] + [ len(val) ] )
+           avail = 100.0 * (len(val) / max_count)
            sla = f'{avail:.3f}' # 3 digits, e.g. 99.999
            data = {
              'availability': { 'value': sla },
@@ -560,7 +560,7 @@ class MonitoringThread(Thread):
                       cur_set = set( v for ts,vs in series for v in vs )
                       summary = [("count",list(cur_set))]
                       sample = unique_count_o['conditions']['sample_period']['value']
-                      Update_Observation( unique_count_o, int( update['timestamp'] ), f"count={vals}", int(sample), summary, series )
+                      Update_Observation( unique_count_o, int( update['timestamp'] ), f"count={summary}", int(sample), summary, series )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
