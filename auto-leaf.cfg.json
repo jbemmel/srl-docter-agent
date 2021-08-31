@@ -51,7 +51,7 @@
       "name": "CPU usage",
       "conditions": [
         {
-          "gnmi-path": "/platform/control[slot=A]/cpu/total/instant",
+          "gnmi-path": "/platform/control[slot=A]/cpu[index=all]/total/instant",
           "filter": "int(_) > 80",
       	  "sample-period": 10,
       	  "history-window": 100,
