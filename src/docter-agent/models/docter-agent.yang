@@ -244,7 +244,7 @@ module docter-agent {
                   leaf metric {
                     description "Health metric this item contributes to (optional)";
                     type leafref {
-                      path "../../../health/metric/name";
+                      path "../../health/metric/name";
                     }
                   }
                 }
