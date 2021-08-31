@@ -80,7 +80,9 @@ module docter-agent {
               }
 
               // Generalized health metrics
-              list metric {
+              container metrics { // workaround for disappearing data
+               presence "Metrics container";
+               list metric {
                 key name;
                 leaf name { type string; }
                 leaf status {
@@ -96,6 +98,7 @@ module docter-agent {
                   leaf name { type string; }
                   leaf status { type string; } // e.g. color
                 }
+               }
               }
             }
 

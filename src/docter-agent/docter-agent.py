@@ -99,7 +99,8 @@ def Add_Telemetry(js_path, js_data):
 ############################################################
 metrics = {}
 def Update_Metric(metric, contributor, contrib_status):
-    js_path = '.' + agent_name + f'.health.metric{{.name=="{metric}"}}.contribution{{.name=="{contributor}"}}'
+    base_path = '.' + agent_name + f'.health.metrics.metric{{.name=="{metric}"}}'
+    js_path = base_path + f'.contribution{{.name=="{contributor}"}}'
     metric_data = {
       'status' : { 'value' : contrib_status }
     }
@@ -131,12 +132,11 @@ def Update_Metric(metric, contributor, contrib_status):
             cause = c
 
     logging.info( f"Updated metric {metric}: {overall} cause={cause}" )
-    js_path = '.' + agent_name + f'.health.metric{{.name=="{metric}"}}'
     data = {
        'status' : { 'value' : overall },
        'cause'  : { 'value' : cause }
     }
-    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+    response = Add_Telemetry( js_path=base_path, js_data=json.dumps(data) )
 
 def Show_Dummy_Health(controlplane="green",links="green"):
 
