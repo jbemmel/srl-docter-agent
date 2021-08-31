@@ -53,6 +53,7 @@
         {
           "gnmi-path": "/platform/control[slot=A]/cpu[index=all]/total/instant",
           "filter": "int(_) > 80",
+          "metric": "CPU",
       	  "sample-period": 10,
       	  "history-window": 100,
       	  "thresholds": [ "50", "80", "90" ]

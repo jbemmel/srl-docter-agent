@@ -61,6 +61,7 @@ module docter-agent {
               }
 
               container route {
+                presence "Route health container";
                 leaf status {
                   type string;
                   default "green";
@@ -85,6 +86,10 @@ module docter-agent {
                 leaf status {
                   type string; // e.g. color
                   default "unknown";
+                }
+                leaf cause {
+                  description "Latest contributing cause of degradation";
+                  type string;
                 }
                 list contribution {
                   key name;

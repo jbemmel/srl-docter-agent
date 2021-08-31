@@ -97,11 +97,44 @@ def Add_Telemetry(js_path, js_data):
 ## Function to populate state fields of the agent
 ## It updates command: info from state auto-config-agent
 ############################################################
-def Update_Peer_State(peer_ip, section, update_data):
-    _ip_key = '.'.join([i.zfill(3) for i in peer_ip.split('.')]) # sortable
-    js_path = '.' + agent_name + '.peer{.peer_ip=="' + _ip_key + '"}.'+section
-    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
-    logging.info(f"Telemetry_Update_Response :: {response}")
+metrics = {}
+def Update_Metric(metric, contributor, contrib_status):
+    js_path = '.' + agent_name + f'.health.metric{{.name=="{metric}"}}.contribution{{.name=="{contributor}"}}'
+    metric_data = {
+      'status' : { 'value' : contrib_status }
+    }
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(metric_data) )
+    logging.info(f"Update_Metric Telemetry_Update_Response :: {response}")
+
+    def worst(s1,s2):
+        if s1=="red" or s2=="red":
+            return "red"
+        elif s1=="orange" or s2=="orange"
+            return "orange"
+        else:
+            return "green"
+
+    # Update the parent
+    global metrics
+    if metric in metrics:
+        m = metrics[metric]
+    else:
+        metrics[metric] = m = {}
+    m.update( { contributor : contrib_status } )
+    overall = contrib_status
+    cause = contributor
+    for c,v in m.entries():
+        w = worst( overall, v )
+        if w!=overall:
+            overall = w
+            cause = c
+    logging.info( f"Updated metric {metric}: {overall} cause={cause}" )
+    js_path = '.' + agent_name + f'.health.metric{{.name=="{metric}"}}'
+    data = {
+       'status' : { 'value' : overall },
+       'cause'  : { 'value' : cause }
+    }
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
 
 def Show_Dummy_Health(controlplane="green",links="green"):
 
@@ -304,7 +337,12 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
                   thresholds = thresholds[1:]
               else:
                   val = updates[0][1]
-              data['status'] = { 'value' : Threshold_Color( val, thresholds ) }
+
+              status = Threshold_Color( val, thresholds )
+              data['status'] = { 'value' : status }
+              if 'metric' in o['conditions']:
+                  metric = o['conditions']['metric']['value']
+                  Update_Metric( metric, name, status )
 
            # js_path += f'.availability{{.name=="{name}"}}' # crashes
            js_path = '.' + agent_name + '.health.route'
