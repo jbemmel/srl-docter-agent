@@ -120,14 +120,16 @@ def Update_Metric(metric, contributor, contrib_status):
         m = metrics[metric]
     else:
         metrics[metric] = m = {}
+
     m.update( { contributor : contrib_status } )
     overall = contrib_status
     cause = contributor
-    for c,v in m.entries():
+    for c,v in m.items():
         w = worst( overall, v )
         if w!=overall:
             overall = w
             cause = c
+    
     logging.info( f"Updated metric {metric}: {overall} cause={cause}" )
     js_path = '.' + agent_name + f'.health.metric{{.name=="{metric}"}}'
     data = {
