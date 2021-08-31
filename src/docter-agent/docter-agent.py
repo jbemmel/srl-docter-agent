@@ -271,17 +271,17 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     # response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'t': now.timestamp(), 'v': {'value':val} }) )
 
     js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
-    response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val} }) )
+    response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
 
     if sample_interval != 0:
         if path == "count":
-           max_count = max( [ int(c) for t,c in history ] )
-           avail = 100.0 * (int(val) / max_count)
+           max_count = max( [ len(vs) for t,vs in history ] )
+           avail = 100.0 * (len(val) / max_count) if max_count>0 else "100.000"
            sla = f'{avail:.3f}' # 3 digits, e.g. 99.999
            data = {
              'availability': { 'value': sla },
-             'count': { 'value': int(val) },
-             'values': updates[1][1]
+             'count': { 'value': len(val) },
+             'values': val
            }
         else:
            sla = Calculate_SLA(history)
@@ -525,6 +525,7 @@ class MonitoringThread(Thread):
                               logging.info( f"Match {count_regex} against {key}" )
                               m = re.match( count_regex, key )
                               if m:
+                                logging.info( f"Matches found: {m.groups()}" )
                                 for g in m.groups():
                                    unique_count_matches[ g ] = True
 
@@ -552,10 +553,11 @@ class MonitoringThread(Thread):
                       Update_Observation( o, int( update['timestamp'] ), f"{key[index:]}={u['val']} sample={sample}", int(sample), updates, history )
 
                   if unique_count_o is not None:
+                      logging.info( f"Reporting unique values: {unique_count_matches}" )
                       vals = list(unique_count_matches.keys())
-                      series = update_history( int( update['timestamp'] ), unique_count_o, "count", vals )
+                      updates = [("count",vals)]
+                      series = update_history( int( update['timestamp'] ), unique_count_o, "count", updates )
                       sample = unique_count_o['conditions']['sample_period']['value']
-                      updates = [ ( "count", len(vals) ), ("values",vals) ]
                       Update_Observation( unique_count_o, int( update['timestamp'] ), f"count={vals}", int(sample), updates, series )
 
     except Exception as e:
