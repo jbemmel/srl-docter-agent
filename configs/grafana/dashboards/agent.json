@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630443411883,
+  "iteration": 1630446855462,
   "links": [],
   "panels": [
     {
@@ -161,20 +161,27 @@
       "steppedLine": false,
       "targets": [
         {
-          "groupBy": [],
+          "groupBy": [
+            {
+              "params": [
+                "source"
+              ],
+              "type": "tag"
+            }
+          ],
           "measurement": "SRL_docter-agent",
           "orderByTime": "ASC",
           "policy": "default",
           "query": "SELECT source AS \"Node\",  \"/docter_agent:docter_agent/health/route_availability\" AS \"Availability\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
           "queryType": "randomWalk",
-          "rawQuery": true,
+          "rawQuery": false,
           "refId": "A",
-          "resultFormat": "table",
+          "resultFormat": "time_series",
           "select": [
             [
               {
                 "params": [
-                  "/docter_agent:docter_agent/health/route_status"
+                  "/docter_agent:docter_agent/health/route_availability"
                 ],
                 "type": "field"
               },
@@ -209,14 +216,16 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:160",
           "format": "short",
           "label": null,
           "logBase": 1,
-          "max": null,
+          "max": "100",
           "min": null,
           "show": true
         },
         {
+          "$$hashKey": "object:161",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1278,7 +1287,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
