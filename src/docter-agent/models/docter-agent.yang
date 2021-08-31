@@ -77,6 +77,21 @@ module docter-agent {
                   ordered-by user; // otherwise system will sort the values
                 }
               }
+
+              // Generalized health metrics
+              list metric {
+                key name;
+                leaf name { type string; }
+                leaf status {
+                  type string; // e.g. color
+                  default "unknown";
+                }
+                list contribution {
+                  key name;
+                  leaf name { type string; }
+                  leaf status { type string; } // e.g. color
+                }
+              }
             }
 
 

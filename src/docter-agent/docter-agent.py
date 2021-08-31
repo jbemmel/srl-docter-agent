@@ -116,6 +116,13 @@ def Show_Dummy_Health(controlplane="green",links="green"):
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
 
+    # Populate a sample metric
+    js_path += f'.metric{{.name=="CPU"}}.contribution{{.name=="spikes"}}'
+    metric_data = {
+      'status' : { 'value' : 'not happening right now' }
+    }
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(metric_data) )
+
 def Grafana_Test():
     now = datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -532,6 +539,7 @@ class MonitoringThread(Thread):
                                 # logging.info( f"Matches found: {m.groups()}" )
                                 for g in m.groups():
                                    unique_count_matches[ g ] = True
+                                continue  # Skip updating invidivual values
 
                       # Add condition path as implicit reported value
                       updates = [ (key,u['val']) ]
