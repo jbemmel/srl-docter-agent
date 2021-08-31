@@ -557,7 +557,7 @@ class MonitoringThread(Thread):
                       vals = sorted( list(unique_count_matches.keys()) )
                       updates = [("count",vals)]
                       series = update_history( int( update['timestamp'] ), unique_count_o, "count", updates )
-                      cur_set = set( v for ts,v in series )
+                      cur_set = set( v for ts,vs in series for v in vs )
                       summary = [("count",list(cur_set))]
                       sample = unique_count_o['conditions']['sample_period']['value']
                       Update_Observation( unique_count_o, int( update['timestamp'] ), f"count={vals}", int(sample), summary, series )
