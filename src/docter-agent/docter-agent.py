@@ -554,7 +554,7 @@ class MonitoringThread(Thread):
 
                   if unique_count_o is not None:
                       logging.info( f"Reporting unique values: {unique_count_matches}" )
-                      vals = list(unique_count_matches.keys())
+                      vals = sorted( list(unique_count_matches.keys()) )
                       updates = [("count",vals)]
                       series = update_history( int( update['timestamp'] ), unique_count_o, "count", updates )
                       sample = unique_count_o['conditions']['sample_period']['value']
