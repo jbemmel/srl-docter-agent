@@ -31,7 +31,7 @@
       "conditions": [
         {
           "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/local-rib/routes[prefix=10.10.10.10/32]",
-	  "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=bgp\\]\\[prefix=10.10.10.10/32\\]/used-route",
+	  "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=10.10.10.10/32\\]/used-route",
 	  "filter": "bool(_) == True",
 	  "sample-period": 10,
 	  "history-window": 100,
