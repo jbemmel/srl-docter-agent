@@ -149,6 +149,10 @@ module docter-agent {
                     key t;
                     leaf t { type uint64; }
                     leaf v { type string; }
+                    leaf filter {
+                      description "Flag used to indicate an entry that did not match the filter";
+                      type boolean;
+                    }
                   }
                  }
               }
@@ -176,6 +180,10 @@ module docter-agent {
                   }
                   leaf filter {
                     description "Optional filter expression, for example != 'established'";
+                    type string;
+                  }
+                  leaf count {
+                    description "Optional regex to count unique matches in reported paths, e.g. BGP neighbor IPs: '\\[neighbor=.*\\]'";
                     type string;
                   }
                   leaf-list thresholds {
@@ -216,71 +224,6 @@ module docter-agent {
               } // end list observe
             } // end intensive-care
 
-
-            // Info from state
-            leaf total-bfd-flaps-last-period {
-                srl_nokia-ext:delivery-node-override true;
-                srl_nokia-ext:stream-mode on_change;
-                type srl_nokia-comm:zero-based-counter64;
-
-                config false;
-            }
-            leaf total-route-flaps-last-period {
-                srl_nokia-ext:delivery-node-override true;
-                srl_nokia-ext:stream-mode on_change;
-                type srl_nokia-comm:zero-based-counter64;
-
-                config false;
-            }
-            list peer {
-                key peer-ip;
-                config false;
-
-                leaf peer-ip {
-                  type string;
-                }
-                container bfd {
-                 srl_nokia-ext:delivery-node-override true;
-                 srl_nokia-ext:stream-mode on_change;
-                 presence "State BFD operational parameters";
-
-                 leaf status {
-                  type string;
-                  default "red";
-                 }
-                 leaf flaps-last-period {
-                  srl_nokia-ext:delivery-node-override true;
-                  srl_nokia-ext:stream-mode on_change;
-                  type srl_nokia-comm:zero-based-counter64;
-                 }
-                 leaf flaps-history {
-                  type string;
-                 }
-                 leaf last-flap-timestamp {
-                   type srl_nokia-comm:date-and-time-delta;
-                 }
-                }
-                container routes {
-                 srl_nokia-ext:delivery-node-override true;
-                 srl_nokia-ext:stream-mode on_change;
-                 presence "State Routes operational parameters";
-
-                 leaf status {
-                  type string;
-                 }
-                 leaf flaps-last-period {
-                  srl_nokia-ext:delivery-node-override true;
-                  srl_nokia-ext:stream-mode on_change;
-                  type srl_nokia-comm:zero-based-counter64;
-                 }
-                 leaf flaps-history {
-                  type string;
-                 }
-                 leaf last-flap-timestamp {
-                   type srl_nokia-comm:date-and-time-delta;
-                 }
-              }
-            }
         }
     }
 

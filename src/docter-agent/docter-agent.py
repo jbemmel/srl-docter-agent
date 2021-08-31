@@ -140,7 +140,7 @@ def Grafana_Test():
 reports_count = 0 # Total
 filter_count = 0
 
-def Update_Filtered():
+def Update_Filtered(o, timestamp_ns, path, val):
     global reports_count
     global filter_count
     filter_count = filter_count + 1
@@ -156,6 +156,12 @@ def Update_Filtered():
     js_path = '.' + agent_name + '.reports'
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(update_data) )
     logging.info(f"Telemetry_Update_Response :: {response}")
+
+    # Use the first value not matching the filter to reset any threshold alarms
+    if 'reset_flag' not in o:
+      js_path2 = js_path + f'.history{{.name=="{o["name"]}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
+      response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val}, 'filter': False }) )
+      o['reset_flag'] = timestamp_ns
 
 def Threshold_Color( val, thresholds ):
     try:
@@ -210,6 +216,9 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     global filter_count
     global reports_count
     reports_count = reports_count + 1
+
+    # Clear any reset flag
+    o.pop('reset_flag', None)
 
     name = o['name']
     thresholds = [ t['value'] for t in (o['conditions']['thresholds'] if 'thresholds' in o['conditions'] else []) ]
@@ -452,6 +461,10 @@ class MonitoringThread(Thread):
               update = parsed['update']
               if update['update']:
                   logging.info( f"Update: {update['update']}")
+
+                  # For entries with a 'count' regex, count unique values in this update
+                  unique_count_o = None
+                  unique_count_matches = {}
                   for u in update['update']:
 
                       # Ignore any updates without 'val'
@@ -477,7 +490,7 @@ class MonitoringThread(Thread):
                           _locals  = { "_" : u['val'] }
                           if not eval( filter, _globals, _locals ):
                               logging.info( f"Filter {filter} with value _='{u['val']}' = False, skipping..." )
-                              Update_Filtered()
+                              Update_Filtered(o, int( update['timestamp'] ), key, u['val'] )
                               continue;
 
                       # For sampled state, reset the interval timer
@@ -494,6 +507,13 @@ class MonitoringThread(Thread):
 
                           timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
                           timer.start()
+
+                          # Also process any 'count' regex, could compile once
+                          if 'count' in o['conditions']:
+                              count_regex = o['conditions']['count']['value']
+                              unique_count_o = o
+                              for g in re.match( count_regex, key ).groups():
+                                  unique_count_matches[ g ] = True
 
                       # Add condition path as implicit reported value
                       updates = [ (key,u['val']) ]
@@ -517,6 +537,13 @@ class MonitoringThread(Thread):
                       index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
                       Update_Observation( o, int( update['timestamp'] ), f"{key[index:]}={u['val']} sample={sample}", int(sample), updates, history )
+
+                  if unique_count_o is not None:
+                      vals = list(unique_count_matches.keys())
+                      series = update_history( int( update['timestamp'] ), unique_count_o, "count", vals )
+                      sample = unique_count_o['conditions']['sample_period']['value']
+                      updates = [ ( "count", len(vals) ), ("values",vals) ]
+                      Update_Observation( unique_count_o, int( update['timestamp'] ), f"count={vals}", int(sample), updates, series )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))

@@ -30,6 +30,7 @@
         {
           "gnmi-path": "/network-instance[name=default]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes[ip-prefix=10.10.10.10/32]",
 	        "update-path-match": "/network-instance\\[name=default\\]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes\\[.*\\]/next-hop",
+          "count": "\\[neighbor=(.*)\\]",
 	        "sample-period": 10,
 	        "history-window": 100,
 	        "thresholds": [ "availability", "50", "80", "90" ]
