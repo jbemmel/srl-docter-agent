@@ -109,7 +109,7 @@ def Update_Metric(metric, contributor, contrib_status):
     def worst(s1,s2):
         if s1=="red" or s2=="red":
             return "red"
-        elif s1=="orange" or s2=="orange"
+        elif s1=="orange" or s2=="orange":
             return "orange"
         else:
             return "green"
