@@ -74,6 +74,7 @@ module docter-agent {
                 }
                 leaf-list values {
                   type string;
+                  ordered-by user; // otherwise system will sort the values
                 }
               }
             }
@@ -110,7 +111,10 @@ module docter-agent {
                 leaf timestamp { type string; }
                 leaf sample-period { type uint16; }
                 leaf trigger { type string; }
-                leaf-list values { type string; }
+                leaf-list values {
+                  type string;
+                  ordered-by user; // otherwise system will sort the values
+                }
               }
 
               list availability {
