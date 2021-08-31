@@ -493,7 +493,7 @@ class MonitoringThread(Thread):
                          logging.info( f"No matching key found and no regexes - skipping: '{key}' = {u['val']}" )
                          continue
 
-                      logging.info( f"Evaluate any filters: {o}" )
+                      # logging.info( f"Evaluate any filters: {o}" )
                       if 'conditions' in o and 'filter' in o['conditions']:
                           filter = o['conditions']['filter']['value']
                           _globals = { "ipaddress" : ipaddress }
@@ -522,10 +522,10 @@ class MonitoringThread(Thread):
                           if 'count' in o['conditions']:
                               count_regex = o['conditions']['count']['value']
                               unique_count_o = o
-                              logging.info( f"Match {count_regex} against {key}" )
+                              # logging.info( f"Match {count_regex} against {key}" )
                               m = re.match( count_regex, key )
                               if m:
-                                logging.info( f"Matches found: {m.groups()}" )
+                                # logging.info( f"Matches found: {m.groups()}" )
                                 for g in m.groups():
                                    unique_count_matches[ g ] = True
 
