@@ -46,6 +46,18 @@
           "gnmi-path": "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]"
         }
       ]
+    },
+    {
+      "name": "CPU usage",
+      "conditions": [
+        {
+          "gnmi-path": "/platform/control[slot=A]/cpu/total/instant",
+          "filter": "int(_) > 80",
+      	  "sample-period": 10,
+      	  "history-window": 100,
+      	  "thresholds": [ "50", "80", "90" ]
+        }
+      ]
     }
       ]
     }

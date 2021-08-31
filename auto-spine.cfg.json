@@ -17,7 +17,11 @@
           "conditions": [
             {
               "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=*]/session-state",
-              "filter": "_ == 'established'"
+              "filter": "_ == 'established'",
+              "count": ".*\\[peer-address=(.*)\\].*",
+              "sample-period": 10,
+    	        "history-window": 100,
+    	        "thresholds": [ "availability", "50" ]
             }
           ]
         },

@@ -522,8 +522,11 @@ class MonitoringThread(Thread):
                           if 'count' in o['conditions']:
                               count_regex = o['conditions']['count']['value']
                               unique_count_o = o
-                              for g in re.match( count_regex, key ).groups():
-                                  unique_count_matches[ g ] = True
+                              logging.info( f"Match {count_regex} against {key}" )
+                              m = re.match( count_regex, key )
+                              if m:
+                                for g in m.groups():
+                                   unique_count_matches[ g ] = True
 
                       # Add condition path as implicit reported value
                       updates = [ (key,u['val']) ]
