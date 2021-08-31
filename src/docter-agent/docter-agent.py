@@ -112,8 +112,12 @@ def Update_Metric(metric, contributor, contrib_status):
             return "red"
         elif s1=="orange" or s2=="orange":
             return "orange"
+        elif s1=="yellow" or s2=="yellow":
+            return "yellow"
+        elif s1!="green":
+            return s1
         else:
-            return "green"
+            return s2
 
     # Update the parent
     global metrics
