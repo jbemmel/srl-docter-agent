@@ -209,21 +209,28 @@ def Update_Filtered(o, timestamp_ns, path, val):
       o['reset_flag'] = timestamp_ns
 
 def Threshold_Color( val, thresholds ):
+    logging.info( f"Threshold_Color({val}) with thresholds={thresholds}" )
+    availability = [ "red", "orange", "yellow", "green" ]
+    colors = [ "green", "yellow", "orange", "red" ]
+    if thresholds[0]=="availability":
+        colors = availability
+        thresholds = thresholds[1:]
     try:
        if len(thresholds)==0:
            return "green"
        elif len(thresholds)==1:
            return "red" if val != thresholds[0] else "green"
        elif len(thresholds)==2:
-           return ("red"    if int(val) < int(thresholds[0]) else
-                  ("yellow" if int(val) < int(thresholds[1]) else
-                   "green"))
+           return (colors[0] if int(val) < int(thresholds[0]) else
+                  (colors[1] if int(val) < int(thresholds[1]) else
+                   colors[2]))
        else: # 3 or more
-           return ("red"    if int(val) < int(thresholds[0]) else
-                  ("orange" if int(val) < int(thresholds[1]) else
-                  ("yellow" if int(val) < int(thresholds[2]) else
-                   "green")))
-    except ValueError:
+           return (colors[0] if int(val) < int(thresholds[0]) else
+                  (colors[1] if int(val) < int(thresholds[1]) else
+                  (colors[2] if int(val) < int(thresholds[2]) else
+                   colors[3])))
+    except ValueError as ve:
+       logging.error(ve)
        return "grey"
 #
 # Given a time series history of [(ts:value)], calculate "<MISSING>" intervals
@@ -340,7 +347,6 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
               # TODO calculate min/max/avg as requested
               if thresholds[0]=="availability":
                   val = int(float(sla)) if sla!="DOWN" else 0
-                  thresholds = thresholds[1:]
               else:
                   val = updates[0][1]
 
