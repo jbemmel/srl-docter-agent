@@ -302,7 +302,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
 
            # js_path += f'.availability{{.name=="{name}"}}' # crashes
            js_path = '.' + agent_name + '.health.route'
-           logging.info( f"About to Add_Telemetry: {js_path}={data} {sla} {val}" )
+           logging.info( f"SLA Add_Telemetry({name}): {js_path}={data} {sla} {val}" )
            # This leads to SRL mgr crashes
            response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
            o['last_sla'] = (sla,val)
@@ -562,7 +562,7 @@ class MonitoringThread(Thread):
                       updates = [("count",vals)]
                       series = update_history( int( update['timestamp'] ), unique_count_o, "count", updates )
                       cur_set = set( v for ts,vs in series for v in vs )
-                      summary = [("count",list(cur_set))]
+                      summary = [( "count", sorted(list(cur_set)) )]
                       sample = unique_count_o['conditions']['sample_period']['value']
                       Update_Observation( unique_count_o, int( update['timestamp'] ), f"count={summary}", int(sample), summary, series )
 
