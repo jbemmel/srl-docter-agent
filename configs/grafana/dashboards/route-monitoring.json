@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630506450645,
+  "iteration": 1630510614551,
   "links": [],
   "panels": [
     {
@@ -138,6 +138,7 @@
       "legend": {
         "avg": false,
         "current": false,
+        "hideZero": true,
         "max": false,
         "min": false,
         "show": true,
@@ -146,18 +147,18 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "connected",
       "options": {
         "alertThreshold": true
       },
-      "percentage": false,
+      "percentage": true,
       "pluginVersion": "7.3.7",
       "pointradius": 2,
-      "points": false,
+      "points": true,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
@@ -167,14 +168,20 @@
                 "source"
               ],
               "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
             }
           ],
           "measurement": "SRL_docter-agent",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT source AS \"Node\",  \"/docter_agent:docter_agent/health/route_availability\" AS \"Availability\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
+          "query": "SELECT \"/docter_agent:docter_agent/health/route_availability\" AS \"Status\" FROM \"SRL_docter-agent\" WHERE $timeFilter GROUP BY \"source\" fill(previous)",
           "queryType": "randomWalk",
-          "rawQuery": false,
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -271,7 +278,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_23763571993",
+      "graphId": "flowchart_4",
       "gridPos": {
         "h": 8,
         "w": 24,
@@ -596,7 +603,7 @@
             "overlayIcon": false,
             "pattern": "route_status_leaf3",
             "rangeData": [],
-            "reduce": false,
+            "reduce": true,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -1287,7 +1294,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
