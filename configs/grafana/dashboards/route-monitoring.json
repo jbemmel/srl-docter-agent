@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630446855462,
+  "iteration": 1630505267485,
   "links": [],
   "panels": [
     {
@@ -1292,7 +1292,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Agent Telemetry",
+  "title": "Route Monitoring",
   "uid": "Zm69_k47z",
   "version": 1
 }
