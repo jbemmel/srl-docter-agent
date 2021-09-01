@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630505267485,
+  "iteration": 1630506450645,
   "links": [],
   "panels": [
     {
@@ -271,7 +271,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_4",
+      "graphId": "flowchart_23763571993",
       "gridPos": {
         "h": 8,
         "w": 24,
@@ -328,7 +328,7 @@
             "stringThresholds": [
               "/grey/",
               "/green/",
-              "/tellow/",
+              "/yellow/",
               "/orange/",
               "/red/"
             ],
@@ -399,7 +399,7 @@
             "stringThresholds": [
               "/grey/",
               "/green/",
-              "/tellow/",
+              "/yellow/",
               "/orange/",
               "/red/"
             ],
@@ -470,7 +470,7 @@
             "stringThresholds": [
               "/grey/",
               "/green/",
-              "/tellow/",
+              "/yellow/",
               "/orange/",
               "/red/"
             ],
@@ -541,7 +541,7 @@
             "stringThresholds": [
               "/grey/",
               "/green/",
-              "/tellow/",
+              "/yellow/",
               "/orange/",
               "/red/"
             ],
@@ -596,7 +596,7 @@
             "overlayIcon": false,
             "pattern": "route_status_leaf3",
             "rangeData": [],
-            "reduce": true,
+            "reduce": false,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -612,7 +612,7 @@
             "stringThresholds": [
               "/grey/",
               "/green/",
-              "/tellow/",
+              "/yellow/",
               "/orange/",
               "/red/"
             ],
