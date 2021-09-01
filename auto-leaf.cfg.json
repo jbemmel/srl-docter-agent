@@ -31,7 +31,7 @@
       "conditions": [
         {
           "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/local-rib/routes[prefix=10.10.10.10/32]",
-	  "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=10.10.10.10/32\\]/used-route",
+	        "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=10.10.10.10/32\\]/used-route",
 	  "filter": "bool(_) == True",
 	  "sample-period": 10,
 	  "history-window": 100,
@@ -64,7 +64,8 @@
       "name": "Broadcast traffic out of physical links",
       "conditions": [
         {
-          "gnmi-path": "/interface[name=ethernet-*]/statistics/out-broadcast-packets",
+          "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-broadcast-packets",
+          "update-path-match": "/interface\\[name=ethernet-1/[12]\\]/statistics/out-broadcast-packets",
           "metric": "LINKS",
       	  "sample-period": 60,
       	  "history-window": 600,
@@ -76,7 +77,8 @@
       "name": "Balanced uplinks",
       "conditions": [
         {
-          "gnmi-path": "/interface[name=ethernet-1/[1-2]]/statistics/out-unicast-packets",
+          "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-unicast-packets",
+
           "metric": "LINKS",
           "sample-period": 60,
           "history-window": 600,
