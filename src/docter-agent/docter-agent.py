@@ -325,45 +325,41 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
     response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
 
-    if sample_interval != 0:
-        if path == "count":
-           max_count = max( [ len(vs) for t,vs in history ] + [ len(val) ] )
-           avail = 100.0 * (len(val) / max_count)
-           sla = f'{avail:.3f}' # 3 digits, e.g. 99.999
-           data = {
-             'availability': { 'value': sla },
-             'count': { 'value': len(val) },
-             'values': val
-           }
-        else:
-           sla = Calculate_SLA(history)
-           data = {
-             'availability': { 'value': sla } # "CRASH-TEST" also crashes
-           }
+    # if sample_interval != 0:
+    if path == "count":
+       max_count = max( [ len(vs) for t,vs in history ] + [ len(val) ] )
+       avail = 100.0 * (len(val) / max_count)
+       sla = f'{avail:.3f}' # 3 digits, e.g. 99.999
+       data = {
+         'availability': { 'value': sla },
+         'count': { 'value': len(val) },
+         'values': val
+       }
+    else:
+       sla = Calculate_SLA(history)
+       data = {
+         'availability': { 'value': sla } # "CRASH-TEST" also crashes
+       }
 
-        # Only update if SLA has changed, else this triggers onchange events
-        if True: # 'last_sla' not in o or o['last_sla'] != (sla,val):
-           if thresholds != []:
-              # TODO calculate min/max/avg as requested
-              if thresholds[0]=="availability":
-                  val = int(float(sla)) if sla!="DOWN" else 0
-              else:
-                  val = updates[0][1]
+    # Note: implies that metrics always require thresholds to be defined
+    if thresholds != []:
+       # TODO calculate min/max/avg as requested
+       if thresholds[0]=="availability":
+           val = int(float(sla)) if sla!="DOWN" else 0
+       else:
+           val = updates[0][1]
 
-              status = Threshold_Color( val, thresholds )
-              data['status'] = { 'value' : status }
-              if 'metric' in o['conditions']:
-                  metric = o['conditions']['metric']['value']
-                  Update_Metric( metric, name, status )
+       status = Threshold_Color( val, thresholds )
+       data['status'] = { 'value' : status }
+       if 'metric' in o['conditions']:
+           metric = o['conditions']['metric']['value']
+           Update_Metric( metric, name, status )
 
-           # js_path += f'.availability{{.name=="{name}"}}' # crashes
-           js_path = '.' + agent_name + '.health.route'
-           logging.info( f"SLA Add_Telemetry({o}): {js_path}={data} {sla} {val}" )
-           # This leads to SRL mgr crashes
-           response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
-           o['last_sla'] = (sla,val)
-
-      # logging.info(f"Telemetry_Update_Response history :: {response}")
+    # js_path += f'.availability{{.name=="{name}"}}' # crashes SRL mgr
+    js_path = '.' + agent_name + '.health.route'
+    logging.info( f"SLA Add_Telemetry({o}): {js_path}={data} {sla} {val}" )
+    response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+     # logging.info(f"Telemetry_Update_Response history :: {response}")
 
 def Update_Global_State(state, var, val):
     js_path = '.' + agent_name + '.' + var

@@ -258,6 +258,10 @@ module docter-agent {
                     // type leafref {
                     //  path "/docter-agent/health/metric/name";
                     // }
+
+                    must "count(../thresholds) > 0" {
+                      error-message "Metric requires definition of threshold(s)";
+                    }
                   }
                 }
                 leaf-list report {

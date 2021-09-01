@@ -28,6 +28,7 @@
           "conditions": [
             {
               "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-unicast-packets",
+              "filter": "int(_) > 0",
               "metric": "DATA_PLANE",
               "sample-period": 300,
               "history-window": 3000,
