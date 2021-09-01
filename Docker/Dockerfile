@@ -13,6 +13,9 @@ FROM srl/auto-config:$SR_LINUX_RELEASE
 # sudo docker run -it --privileged -v /tmp/var_lib_docker:/var/lib/balena-engine srl/auto-config:latest
 # RUN curl -sfL https://balena.io/engine/install.sh | sh
 
+# Install 'stress' tool for CPU overload emulation
+RUN sudo yum -y install epel-release && sudo yum install -y stress
+
 # Integrate CLI agent, change CLI network namespace to 'default'
 COPY cliplugin/*.py /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux/mgmt/cli/plugins/reports/
 RUN sudo sh -c ' echo "fabric = srlinux.mgmt.cli.plugins.reports.fabric:Plugin" >> /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux-0.1-py3.6.egg-info/entry_points.txt'

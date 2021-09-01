@@ -37,7 +37,7 @@
           ]
         },
         {
-          "name": "bgp-flaps-due-to-mac-table-overflow",
+          "name": "BGP peering sessions",
           "report": [
             "/network-instance[name=lag3]/bridge-table/statistics/total-entries",
             "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/xdp/resource[name=mac-addresses]/used-entries"
@@ -45,7 +45,8 @@
           "conditions": [
             {
               "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=*]/session-state",
-              "filter": "_ == 'established'"
+              "metric": "CONTROL_PLANE",
+              "thresholds": [ "established" ]
             }
           ]
         },
