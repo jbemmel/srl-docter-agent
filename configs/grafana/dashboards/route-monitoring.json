@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630510614551,
+  "iteration": 1630511924401,
   "links": [],
   "panels": [
     {
@@ -171,7 +171,7 @@
             },
             {
               "params": [
-                "null"
+                "previous"
               ],
               "type": "fill"
             }
@@ -179,9 +179,9 @@
           "measurement": "SRL_docter-agent",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"/docter_agent:docter_agent/health/route_availability\" AS \"Status\" FROM \"SRL_docter-agent\" WHERE $timeFilter GROUP BY \"source\" fill(previous)",
+          "query": "SELECT (\"/docter_agent:docter_agent/health/route_availability\") AS \"Status\" FROM \"SRL_docter-agent\" WHERE $timeFilter GROUP BY \"source\" fill(previous)",
           "queryType": "randomWalk",
-          "rawQuery": true,
+          "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1003,7 +1003,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 177
+                "value": null
               }
             ]
           }
@@ -1294,7 +1294,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
