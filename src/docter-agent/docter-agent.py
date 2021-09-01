@@ -231,7 +231,7 @@ def Threshold_Color( val, thresholds ):
                    colors[3])))
     except ValueError as ve:
        logging.error(ve)
-       return "grey"
+       return "red" # e.g. <MISSING>
 #
 # Given a time series history of [(ts:value)], calculate "<MISSING>" intervals
 # as % of total ( ts[-1] - ts[0] ns )
