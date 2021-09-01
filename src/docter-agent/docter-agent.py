@@ -98,7 +98,7 @@ def Add_Telemetry(js_path, js_data):
 ## It updates command: info from state auto-config-agent
 ############################################################
 metrics = {}
-def Update_Metric(metric, contributor, contrib_status):
+def Update_Metric(ts_ns, metric, contributor, contrib_status):
     base_path = '.' + agent_name + f'.metrics.metric{{.name=="{metric}"}}'
     js_path = base_path + f'.contribution{{.name=="{contributor}"}}'
     metric_data = {
@@ -138,7 +138,8 @@ def Update_Metric(metric, contributor, contrib_status):
     logging.info( f"Updated metric {metric}: {overall} cause={cause}" )
     data = {
        'status' : { 'value' : overall },
-       'cause'  : { 'value' : cause }
+       'cause'  : { 'value' : cause },
+       'status_summary' : { 'value' : f"{ts_ns}:status='{overall}',cause='{cause}'" }
     }
     response = Add_Telemetry( js_path=base_path, js_data=json.dumps(data) )
 
@@ -210,7 +211,7 @@ def Update_Filtered(o, timestamp_ns, path, val):
           # Copy&pasted code, TODO cleanup
           metric = o['conditions']['metric']['value']
           thresholds = [ t['value'] for t in (o['conditions']['thresholds'] if 'thresholds' in o['conditions'] else []) ]
-          Update_Metric( metric, o['name'], Threshold_Color(val,thresholds) )
+          Update_Metric( timestamp_ns, metric, o['name'], Threshold_Color(val,thresholds) )
       o['reset_flag'] = timestamp_ns
 
 def Threshold_Color( val, thresholds ):
@@ -359,7 +360,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
        data['status'] = { 'value' : status }
        if 'metric' in o['conditions']:
            metric = o['conditions']['metric']['value']
-           Update_Metric( metric, name, status )
+           Update_Metric( timestamp_ns, metric, name, status )
 
     # js_path += f'.availability{{.name=="{name}"}}' # crashes SRL mgr
     js_path = '.' + agent_name + '.health.route'

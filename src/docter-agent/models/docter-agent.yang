@@ -98,6 +98,10 @@ module docter-agent {
                   description "Latest contributing cause of degradation";
                   type string;
                 }
+                leaf status-summary {
+                  description "Consolidated status string with timestamp";
+                  type string;
+                }
                 list contribution {
                   key name;
                   leaf name { type string; }
