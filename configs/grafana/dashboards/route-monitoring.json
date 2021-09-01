@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630505267485,
+  "iteration": 1630512362563,
   "links": [],
   "panels": [
     {
@@ -138,6 +138,7 @@
       "legend": {
         "avg": false,
         "current": false,
+        "hideZero": true,
         "max": false,
         "min": false,
         "show": true,
@@ -146,35 +147,36 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "connected",
       "options": {
         "alertThreshold": true
       },
-      "percentage": false,
+      "percentage": true,
       "pluginVersion": "7.3.7",
       "pointradius": 2,
-      "points": false,
+      "points": true,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": false,
+      "stack": true,
       "steppedLine": false,
       "targets": [
         {
+          "alias": "test",
           "groupBy": [
             {
               "params": [
-                "source"
+                "$interval"
               ],
-              "type": "tag"
+              "type": "time"
             }
           ],
           "measurement": "SRL_docter-agent",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT source AS \"Node\",  \"/docter_agent:docter_agent/health/route_availability\" AS \"Availability\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
+          "query": "SELECT \"/docter_agent:docter_agent/health/route_availability\" AS \"Status\" FROM \"SRL_docter-agent\" WHERE $timeFilter GROUP BY last",
           "queryType": "randomWalk",
-          "rawQuery": false,
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -328,7 +330,7 @@
             "stringThresholds": [
               "/grey/",
               "/green/",
-              "/tellow/",
+              "/yellow/",
               "/orange/",
               "/red/"
             ],
@@ -399,7 +401,7 @@
             "stringThresholds": [
               "/grey/",
               "/green/",
-              "/tellow/",
+              "/yellow/",
               "/orange/",
               "/red/"
             ],
@@ -470,7 +472,7 @@
             "stringThresholds": [
               "/grey/",
               "/green/",
-              "/tellow/",
+              "/yellow/",
               "/orange/",
               "/red/"
             ],
@@ -541,7 +543,7 @@
             "stringThresholds": [
               "/grey/",
               "/green/",
-              "/tellow/",
+              "/yellow/",
               "/orange/",
               "/red/"
             ],
@@ -612,7 +614,7 @@
             "stringThresholds": [
               "/grey/",
               "/green/",
-              "/tellow/",
+              "/yellow/",
               "/orange/",
               "/red/"
             ],
@@ -996,7 +998,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 177
+                "value": null
               }
             ]
           }
@@ -1287,7 +1289,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
