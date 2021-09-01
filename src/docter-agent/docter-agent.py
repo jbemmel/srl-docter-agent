@@ -206,6 +206,11 @@ def Update_Filtered(o, timestamp_ns, path, val):
     if 'reset_flag' not in o:
       js_path2 = js_path + f'.history{{.name=="{o["name"]}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val}, 'filter': False }) )
+      if 'metric' in o['conditions']:
+          # Copy&pasted code, TODO cleanup
+          metric = o['conditions']['metric']['value']
+          thresholds = [ t['value'] for t in (o['conditions']['thresholds'] if 'thresholds' in o['conditions'] else []) ]
+          Update_Metric( metric, o['name'], Threshold_Color(val,thresholds) )
       o['reset_flag'] = timestamp_ns
 
 def Threshold_Color( val, thresholds ):
@@ -273,6 +278,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     o.pop('reset_flag', None)
 
     name = o['name']
+    # XXX could do this one when processing config
     thresholds = [ t['value'] for t in (o['conditions']['thresholds'] if 'thresholds' in o['conditions'] else []) ]
 
     now = datetime.now()
