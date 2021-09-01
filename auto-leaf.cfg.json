@@ -71,6 +71,18 @@
       	  "thresholds": [ "5", "10", "20" ]
         }
       ]
+    },
+    {
+      "name": "Balanced uplinks",
+      "conditions": [
+        {
+          "gnmi-path": "/interface[name=ethernet-1/[1-2]]/statistics/out-unicast-packets",
+          "metric": "LINKS",
+          "sample-period": 60,
+          "history-window": 600,
+          "thresholds": [ "100", "500", "1000" ]
+        }
+      ]
     }
 
       ]

@@ -472,17 +472,32 @@ class MonitoringThread(Thread):
       # Build lookup map
       lookup = {}
       regexes = []
+
+      def fix(regex):
+          return regex.replace('*','.*').replace('[','\[').replace(']','\]')
+
       for name,atts in self.observations.items():
           path = atts['path']     # normalized in pygnmi patch
           update_match = atts['conditions']['update_path_match']['value']
           obj = { 'name': name, 'data': {}, **atts }
-          if '*' in path or update_match!="":
-             # Turn path into a Python regex
-             regex = (update_match if update_match!=""
-                else path.replace('*','.*').replace('[','\[').replace(']','\]'))
+          range_match = re.match("(.*)(\\[\d+[-]\d+\\])(.*)",path)
+
+          # Turn path into a Python regex
+          if update_match!="":
+             regex = update_match
+             if range_match:
+                 logging.warning( f"update_match overrides range match in gnmi-path: {path}" )
+          elif range_match:
+             p1 = fix( range_match.groups()[0] )
+             r  = range_match.groups()[1]
+             p2 = fix( range_match.groups()[2] )
+             regex = p1 + r + p2
+          elif '*' in path:
+             regex = fix(path)
              regexes.append( (re.compile(regex),obj) )
           else:
              lookup[ path ] = obj
+
       logging.info( f"Built lookup map: {lookup} regexes={regexes} for sub={subscribe}" )
 
       def find_regex( path ):
@@ -557,7 +572,7 @@ class MonitoringThread(Thread):
                       if 'conditions' in o and 'filter' in o['conditions']:
                           filter = o['conditions']['filter']['value']
                           _globals = { "ipaddress" : ipaddress }
-                          _locals  = { "_" : u['val'] }
+                          _locals  = { "_" : u['val'], "avg" : "TODO", "changes_in_window" : "TODO" }
                           if not eval( filter, _globals, _locals ):
                               logging.info( f"Filter {filter} with value _='{u['val']}' = False, skipping..." )
                               Update_Filtered(o, int( update['timestamp'] ), key, u['val'] )
