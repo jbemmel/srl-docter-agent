@@ -11,6 +11,19 @@
    "intensive-care": {
       "observe": [
         {
+          "name": "Any changes in link or interface operational state",
+          "conditions": [
+            {
+              "gnmi-path": "/interface[name=*]/oper-state",
+              "metric": "DATA_PLANE",
+          	  "thresholds": [ "up" ]
+            }
+          ],
+          "report": [
+            "/interface[name={name}]/oper-down-reason"
+          ]
+        },
+        {
           "name": "bgp-flaps-due-to-mac-table-overflow",
           "report": [
             "/network-instance[name=lag3]/bridge-table/statistics/total-entries",
@@ -18,7 +31,7 @@
           ],
           "conditions": [
             {
-              "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=1.1.0.1]/session-state",
+              "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=*]/session-state",
               "filter": "_ == 'established'"
             }
           ]

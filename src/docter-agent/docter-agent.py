@@ -453,6 +453,7 @@ class MonitoringThread(Thread):
     try:
       logging.info( f"MonitoringThread: {self.observations}")
 
+      # TODO expand paths like in opergroup agent, to allow regex generators
       subscribe = {
         'subscription': [
             {
@@ -609,7 +610,19 @@ class MonitoringThread(Thread):
                       updates = [ (key,u['val']) ]
                       reports = o['reports']
                       if reports != []:
-                        data = c.get(path=reports, encoding='json_ietf')
+                        def _lookup(param): # match looks like {x}
+                           _var = param[1:-1]  # Strip '{' and '}'
+                           _val = re.match( f".*\[{_var}=([^]])\].*", key)
+                           if _val:
+                              return _val.groups()[0]
+                           else:
+                              logging.error( f"Unable to resolve {param} in {key}" )
+                              return ""
+
+                        # Substitute any {key} values in paths
+                        resolved_paths = [ re.sub('\{(.*)\}', lambda m: _lookup(m.group()), path) for path in reports ]
+
+                        data = c.get(path=resolved_paths, encoding='json_ietf')
                         logging.info( f"Reports:{data} val={u['val']}" )
                         # update Telemetry, iterate
                         i = 0
@@ -619,7 +632,7 @@ class MonitoringThread(Thread):
                                 updates.append( (u2['path'],u2['val']) )
                            else:
                              # Assumes updates are in same order
-                             updates.append( (reports[i], 'GET failed') )
+                             updates.append( (resolved_paths[i], 'GET failed') )
                            i = i + 1
 
                       # Update historical data, indexed by key. Remove old entries
