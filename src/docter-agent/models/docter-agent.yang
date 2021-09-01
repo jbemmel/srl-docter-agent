@@ -259,7 +259,7 @@ module docter-agent {
                     //  path "/docter-agent/health/metric/name";
                     // }
 
-                    must "count(../thresholds) > 0" {
+                    must "../thresholds" {
                       error-message "Metric requires definition of threshold(s)";
                     }
                   }
