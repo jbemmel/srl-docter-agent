@@ -24,6 +24,18 @@
           ]
         },
         {
+          "name": "Balanced uplinks",
+          "conditions": [
+            {
+              "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-unicast-packets",
+              "metric": "DATA_PLANE",
+              "sample-period": 300,
+              "history-window": 3000,
+              "thresholds": [ "100", "500", "1000" ]
+            }
+          ]
+        },
+        {
           "name": "bgp-flaps-due-to-mac-table-overflow",
           "report": [
             "/network-instance[name=lag3]/bridge-table/statistics/total-entries",
@@ -85,21 +97,7 @@
       	  "thresholds": [ "5", "10", "20" ]
         }
       ]
-    },
-    {
-      "name": "Balanced uplinks",
-      "conditions": [
-        {
-          "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-unicast-packets",
-
-          "metric": "LINKS",
-          "sample-period": 60,
-          "history-window": 600,
-          "thresholds": [ "100", "500", "1000" ]
-        }
-      ]
     }
-
       ]
     }
   },

@@ -612,12 +612,12 @@ class MonitoringThread(Thread):
                       if reports != []:
                         def _lookup(param): # match looks like {x}
                            _var = param[1:-1]  # Strip '{' and '}'
-                           _val = re.match( f".*\[{_var}=([^]])\].*", key)
+                           _val = re.match( f".*\[{_var}=([^]]+)\].*", key)
                            if _val:
                               return _val.groups()[0]
                            else:
-                              logging.error( f"Unable to resolve {param} in {key}" )
-                              return ""
+                              logging.error( f"Unable to resolve {param} in {key}, returning '*'" )
+                              return "*" # Avoid causing gNMI errors
 
                         # Substitute any {key} values in paths
                         resolved_paths = [ re.sub('\{(.*)\}', lambda m: _lookup(m.group()), path) for path in reports ]
