@@ -481,7 +481,7 @@ class MonitoringThread(Thread):
 
           # Turn path into a Python regex
           if update_match!="":
-             regex = update_match
+             regexes.append( (re.compile(update_match),obj) )
              #if range_match:
              #   logging.warning( f"update_match overrides range match in gnmi-path: {path}" )
           #elif range_match:
@@ -490,8 +490,7 @@ class MonitoringThread(Thread):
           #     p2 = fix( range_match.groups()[2] )
           #     regex = p1 + r + p2
           elif '*' in path:
-             regex = fix(path)
-             regexes.append( (re.compile(regex),obj) )
+             regexes.append( (re.compile( fix(path) ),obj) )
           else:
              lookup[ path ] = obj
 
