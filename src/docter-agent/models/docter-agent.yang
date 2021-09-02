@@ -106,6 +106,7 @@ module docter-agent {
                   key name;
                   leaf name { type string; }
                   leaf status { type string; } // e.g. color
+                  leaf-list reports { type string; } // detailed reports
                 }
                }
             }

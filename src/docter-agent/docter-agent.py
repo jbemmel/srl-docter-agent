@@ -98,12 +98,15 @@ def Add_Telemetry(js_path, js_data):
 ## It updates command: info from state auto-config-agent
 ############################################################
 metrics = {}
-def Update_Metric(ts_ns, metric, contributor, contrib_status):
+def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[] ):
     base_path = '.' + agent_name + f'.metrics.metric{{.name=="{metric}"}}'
     js_path = base_path + f'.contribution{{.name=="{contributor}"}}'
     metric_data = {
       'status' : { 'value' : contrib_status }
     }
+    if updates!=[]:
+        metric_data['reports'] = [ f'{path}={value}' for path,value in updates ]
+
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(metric_data) )
     logging.info(f"Update_Metric Telemetry_Update_Response :: {response}")
 
@@ -364,7 +367,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
        data['status'] = { 'value' : status }
        if 'metric' in o['conditions']:
            metric = o['conditions']['metric']['value']
-           Update_Metric( timestamp_ns, metric, name, status )
+           Update_Metric( timestamp_ns, metric, name, status, updates )
 
        # js_path += f'.availability{{.name=="{name}"}}' # crashes SRL mgr
        js_path = '.' + agent_name + '.health.route'
