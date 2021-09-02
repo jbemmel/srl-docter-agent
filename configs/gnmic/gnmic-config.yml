@@ -22,14 +22,14 @@ subscriptions:
       - /interface[name=ethernet-1/*]/statistics
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_cpu:
     paths:
       - /platform/control[slot=*]/cpu[index=all]/total
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_mem:
     paths:
@@ -43,28 +43,28 @@ subscriptions:
       - /network-instance[name=*]/protocols/bgp/statistics
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_ipv4_routes:
     paths:
       - /network-instance[name=*]/route-table/ipv4-unicast/statistics/
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_ipv6_routes:
     paths:
       - /network-instance[name=*]/route-table/ipv6-unicast/statistics/
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_apps:
     paths:
       - /system/app-management/application[name=*]
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
     
 #  srl_docter-agent:
 #    paths:
@@ -72,20 +72,20 @@ subscriptions:
 #    mode: stream
 #    stream-mode: on_change  
     
-  srl_docter-agent:
-    paths:
-      - /docter-agent
-      - /docter-agent/intensive-care/statistics/report
-    mode: stream
-    stream-mode: sample
-    sample-interval: 5s 
+#  srl_docter-agent:
+#    paths:
+#      - /docter-agent
+#      - /docter-agent/intensive-care/statistics/report
+#    mode: stream
+#    stream-mode: sample
+#    sample-interval: 5s 
 
-  srl_docter-agent2:
-    paths:
-      - /docter-agent/grafana-test
-    mode: stream
-    stream-mode: sample
-    sample-interval: 5s 
+#  srl_docter-agent2:
+#    paths:
+#      - /docter-agent/grafana-test
+#    mode: stream
+#    stream-mode: sample
+#    sample-interval: 5s 
       
 
 outputs:
