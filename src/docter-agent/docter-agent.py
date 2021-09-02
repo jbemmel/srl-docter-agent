@@ -204,15 +204,17 @@ def Update_Filtered(o, timestamp_ns, path, val):
     logging.info(f"Telemetry_Update_Response :: {response}")
 
     # Use the first value not matching the filter to reset any threshold alarms
-    if 'reset_flag' not in o:
+    if 'reset_flag' not in o or o['reset_flag'] != "green":
       js_path2 = js_path + f'.history{{.name=="{o["name"]}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val}, 'filter': False }) )
+      color = "green"
       if 'metric' in o['conditions']:
           # Copy&pasted code, TODO cleanup
           metric = o['conditions']['metric']['value']
           thresholds = [ t['value'] for t in (o['conditions']['thresholds'] if 'thresholds' in o['conditions'] else []) ]
-          Update_Metric( timestamp_ns, metric, o['name'], Threshold_Color(val,thresholds) )
-      o['reset_flag'] = timestamp_ns
+          color = Threshold_Color(val,thresholds)
+          Update_Metric( timestamp_ns, metric, o['name'], color )
+      o['reset_flag'] = color
 
 def Threshold_Color( val, thresholds ):
     logging.info( f"Threshold_Color({val}) with thresholds={thresholds}" )
