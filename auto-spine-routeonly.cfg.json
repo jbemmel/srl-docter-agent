@@ -11,7 +11,8 @@
         {
          "name": "route-propagation",
          "report": [
-           "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries"
+           "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries",
+           "/network-instance[name=default]/protocols/bgp/evpn/received-routes"
          ],
          "conditions": [
            {
@@ -22,23 +23,23 @@
    	        "thresholds": [ "availability", "50", "80", "90" ]
            }
          ]
-       },
-       {
-        "name": "BGP EVPN routes",
-        "conditions": [
-          {
-           "gnmi-path": "/network-instance[name=default]/protocols/bgp/evpn/received-routes"
-          }
-        ]
-      },
-      {
-        "name": "BGP protocol stats",
-        "conditions": [
-          {
-           "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics"
-          }
-        ]
-      }
+        },
+        {
+         "name": "Changes in BGP EVPN routes",
+         "conditions": [
+           {
+            "gnmi-path": "/network-instance[name=default]/protocols/bgp/evpn/received-routes"
+           }
+         ]
+        },
+        {
+          "name": "Changes in BGP protocol stats",
+          "conditions": [
+            {
+             "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics"
+            }
+          ]
+        }
       ]
     }
   },
