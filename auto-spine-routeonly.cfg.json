@@ -28,15 +28,15 @@
         "name": "BGP EVPN routes",
         "conditions": [
           {
-           "gnmi-path": "/srl_nokia-network-instance:network-instance[name=default]/protocols/srl_nokia-bgp:bgp/evpn/received-routes"
+           "gnmi-path": "/network-instance[name=default]/protocols/bgp/evpn/received-routes"
           }
         ]
       },
       {
-        "name": "BGP EVPN stats",
+        "name": "BGP protocol stats",
         "conditions": [
           {
-           "gnmi-path": "srl_nokia-network-instance:network-instance[name=default]/protocols/srl_nokia-bgp:bgp/statistics"
+           "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics"
           }
         ]
       }
