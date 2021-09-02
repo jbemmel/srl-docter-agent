@@ -68,6 +68,9 @@
     },
     {
       "name": "CPU usage spikes (onchange >80%)",
+      "report": [
+        "/platform/control[slot=A]/process[pid=*]/cpu-utilization"
+      ],
       "conditions": [
         {
           "gnmi-path": "/platform/control[slot=A]/cpu[index=all]/total/instant",

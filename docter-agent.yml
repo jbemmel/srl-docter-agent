@@ -7,7 +7,7 @@ docter_agent:
    failure-threshold: 100
    failure-action: wait=forever
    author: 'Demo agent'
-   version-command: ' cat build_version'
+   version-command: ' cat agent_version'
    yang-modules:
        names:
            - "docter-agent"
