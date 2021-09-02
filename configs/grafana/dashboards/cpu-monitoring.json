@@ -21,7 +21,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
   "links": [],
   "panels": [
     {
@@ -86,7 +85,7 @@
         },
         "mergeValues": true,
         "rowHeight": 0.9,
-        "showValue": "auto",
+        "showValue": "never",
         "tooltip": {
           "mode": "single"
         }
@@ -484,5 +483,5 @@
   "timezone": "",
   "title": "Custom Agent CPU Monitoring",
   "uid": "rJH5HEVnz",
-  "version": 7
+  "version": 1
 }
