@@ -198,12 +198,12 @@ def Color(o,val):
     else:
         for c in ["red","orange","yellow","green"]:
             if c in o['conditions']:
-                exp = o['conditions'][c]
+                exp = o['conditions'][c]['value']
                 try:
                   if eval( exp, {}, { 'value': val } ):
                     return c, None
                 except Exception as ex:
-                  logging.error( f"Error evaluating color {c}={exp}: {ex}" )
+                  logging.error( f"Error evaluating color {c}={exp}: {ex} (value={val} type={type(val)})" )
         logging.error( f"None of the color expressions matched '{val}' -> red" )
         return "red", None
 
