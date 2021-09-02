@@ -11,105 +11,21 @@
    "intensive-care": {
       "observe": [
         {
-          "name": "Any changes in link or interface operational state",
-          "conditions": [
+           "name": "route-propagation",
+           "report": [
+             "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries"
+           ],
+           "conditions": [
             {
-              "gnmi-path": "/interface[name=*]/oper-state",
-              "metric": "DATA_PLANE",
-          	  "thresholds": [ "up" ]
-            }
-          ],
-          "report": [
-            "/interface[name={name}]/oper-down-reason"
-          ]
-        },
-        {
-          "name": "Balanced uplinks",
-          "conditions": [
-            {
-              "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-unicast-packets",
-              "filter": "int(_) > 0",
-              "metric": "DATA_PLANE",
-              "sample-period": 300,
-              "history-window": 3000,
-              "thresholds": [ "100", "500", "1000" ]
-            }
-          ]
-        },
-        {
-          "name": "BGP peering sessions",
-          "report": [
-            "/network-instance[name=lag3]/bridge-table/statistics/total-entries",
-            "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/xdp/resource[name=mac-addresses]/used-entries"
-          ],
-          "conditions": [
-            {
-              "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=*]/session-state",
-              "metric": "CONTROL_PLANE",
-              "thresholds": [ "established" ]
-            }
-          ]
-        },
-        {
-      "name": "route-propagation",
-      "report": [
-        "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries"
-      ],
-      "conditions": [
-        {
-          "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/local-rib/routes[prefix=10.10.10.10/32]",
-	        "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=10.10.10.10/32\\]/used-route",
-	  "filter": "bool(_) == True",
-	  "sample-period": 10,
-	  "history-window": 100,
-	  "thresholds": [ "availability", "50", "80", "90" ]
-        }
-      ]
-    },
-    {
-      "name": "ASIC resources",
-      "conditions": [
-        {
-          "gnmi-path": "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]"
-        }
-      ]
-    },
-    {
-      "name": "CPU usage spikes",
-      "conditions": [
-        {
-          "gnmi-path": "/platform/control[slot=A]/cpu[index=all]/total/instant",
-          "filter": "int(_) > 80",
-          "metric": "CPU",
-      	  "sample-period": 10,
-      	  "history-window": 100,
-      	  "thresholds": [ "50", "80", "90" ]
-        }
-      ]
-    },
-    {
-      "name": "Broadcast traffic out of physical links",
-      "conditions": [
-        {
-          "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-broadcast-packets",
-          "update-path-match": "/interface\\[name=ethernet-1/[12]\\]/statistics/out-broadcast-packets",
-          "metric": "LINKS",
-      	  "sample-period": 60,
-      	  "history-window": 600,
-      	  "thresholds": [ "5", "10", "20" ]
-        }
-      ]
-    },
-    {
-      "name": "BFD sessions",
-      "conditions": [
-        {
-          "gnmi-path": "/bfd/total-bfd-sessions",
-          "metric": "DATA_PLANE",
-      	  "thresholds": [ "1", "2" ]
-        }
-      ]
-    }
+              "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/local-rib/routes[prefix=10.10.10.10/32]",
+     	        "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=10.10.10.10/32\\]/used-route",
+     	        "filter": "bool(_) == True",
+     	        "sample-period": 10,
+     	        "history-window": 100,
+     	        "thresholds": [ "availability", "50", "80", "90" ]
+             }
+           ]
+         }
       ]
     }
   },
