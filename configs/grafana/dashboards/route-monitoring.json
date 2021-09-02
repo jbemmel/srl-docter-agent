@@ -8,6 +8,12 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
@@ -15,7 +21,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630512362563,
+  "iteration": 1630536457456,
   "links": [],
   "panels": [
     {
@@ -24,6 +30,7 @@
         "defaults": {
           "custom": {
             "align": null,
+            "displayMode": "auto",
             "filterable": false
           },
           "mappings": [],
@@ -60,7 +67,7 @@
           }
         ]
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.1.1",
       "targets": [
         {
           "groupBy": [],
@@ -97,86 +104,80 @@
       "type": "table"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
       "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
           "custom": {
-            "align": null,
-            "filterable": false
+            "fillOpacity": 70,
+            "lineWidth": 0
           },
           "mappings": [],
           "thresholds": {
-            "mode": "absolute",
+            "mode": "percentage",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": null
               },
               {
-                "color": "red",
+                "color": "orange",
                 "value": 80
+              },
+              {
+                "color": "yellow",
+                "value": 90
+              },
+              {
+                "color": "green",
+                "value": 100
               }
             ]
-          }
+          },
+          "unit": "percent"
         },
         "overrides": []
       },
-      "fill": 1,
-      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 12,
         "y": 0
       },
-      "hiddenSeries": false,
       "id": 7,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "hideZero": true,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "connected",
       "options": {
-        "alertThreshold": true
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "mode": "single"
+        }
       },
-      "percentage": true,
-      "pluginVersion": "7.3.7",
-      "pointradius": 2,
-      "points": true,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": true,
-      "steppedLine": false,
+      "pluginVersion": "8.1.1",
       "targets": [
         {
-          "alias": "test",
+          "alias": "$tag_source",
           "groupBy": [
             {
               "params": [
-                "$interval"
+                "source"
               ],
-              "type": "time"
+              "type": "tag"
             }
           ],
           "measurement": "SRL_docter-agent",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"/docter_agent:docter_agent/health/route_availability\" AS \"Status\" FROM \"SRL_docter-agent\" WHERE $timeFilter GROUP BY last",
+          "query": "SELECT \"/docter_agent:docter_agent/health/route_availability\" FROM \"SRL_docter-agent\" WHERE $timeFilter GROUP BY \"source\"",
           "queryType": "randomWalk",
-          "rawQuery": true,
+          "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -189,7 +190,7 @@
               },
               {
                 "params": [
-                  "Status"
+                  "alias"
                 ],
                 "type": "alias"
               }
@@ -198,57 +199,13 @@
           "tags": []
         }
       ],
-      "thresholds": [],
       "timeFrom": null,
-      "timeRegions": [],
       "timeShift": null,
       "title": "Prefix Availability",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:160",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": "100",
-          "min": null,
-          "show": true
-        },
-        {
-          "$$hashKey": "object:161",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "type": "state-timeline"
     },
     {
       "datasource": "InfluxDB",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
       "flowchartsData": {
         "flowcharts": [
           {
@@ -792,6 +749,7 @@
         "defaults": {
           "custom": {
             "align": null,
+            "displayMode": "auto",
             "filterable": false
           },
           "mappings": [],
@@ -1016,7 +974,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "7.3.7",
+      "pluginVersion": "8.1.1",
       "targets": [
         {
           "alias": "session state",
@@ -1223,7 +1181,7 @@
     }
   ],
   "refresh": "5s",
-  "schemaVersion": 26,
+  "schemaVersion": 30,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1232,7 +1190,6 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "tags": [],
           "text": [
             "All"
           ],
@@ -1242,46 +1199,20 @@
         },
         "datasource": "InfluxDB",
         "definition": "",
+        "description": null,
         "error": null,
         "hide": 0,
         "includeAll": true,
         "label": "hostname",
         "multi": true,
         "name": "Hostname",
-        "options": [
-          {
-            "selected": true,
-            "text": "All",
-            "value": "$__all"
-          },
-          {
-            "selected": false,
-            "text": "leaf-1-1.1.1.1",
-            "value": "leaf-1-1.1.1.1"
-          },
-          {
-            "selected": false,
-            "text": "leaf-2-1.1.1.2",
-            "value": "leaf-2-1.1.1.2"
-          },
-          {
-            "selected": false,
-            "text": "spine-1-1.1.0.1",
-            "value": "spine-1-1.1.0.1"
-          },
-          {
-            "selected": false,
-            "text": "spine-2-1.1.0.2",
-            "value": "spine-2-1.1.0.2"
-          }
-        ],
+        "options": [],
         "query": "SELECT \"/srl_nokia_system:system/srl_nokia_system_name:name_host-name\" FROM \"SRL_all\"",
-        "refresh": 0,
+        "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
         "tagValuesQuery": "",
-        "tags": [],
         "tagsQuery": "",
         "type": "query",
         "useTags": false
@@ -1289,7 +1220,7 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
