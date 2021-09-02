@@ -36,7 +36,7 @@ subscriptions:
       - /platform/control[slot=*]/memory
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_bgp_stats:
     paths:
