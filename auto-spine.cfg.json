@@ -24,16 +24,32 @@
         {
       "name": "route-propagation",
       "report": [
-        "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries"
+        "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries",
+        "/network-instance[name=default]/protocols/bgp/evpn/received-routes"
       ],
       "conditions": [
         {
           "gnmi-path": "/network-instance[name=default]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes[ip-prefix=10.10.10.10/32]",
 	        "update-path-match": "/network-instance\\[name=default\\]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes\\[.*\\]/next-hop",
-          "count": ".*\\[neighbor=([^]]+)\\].*",
 	        "sample-period": 10,
 	        "history-window": 100,
 	        "thresholds": [ "availability", "50", "80", "90" ]
+        },
+        {
+         "name": "Changes in BGP EVPN routes",
+         "conditions": [
+           {
+            "gnmi-path": "/network-instance[name=default]/protocols/bgp/evpn/received-routes"
+           }
+         ]
+        },
+        {
+          "name": "Changes in BGP protocol stats",
+          "conditions": [
+            {
+             "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics"
+            }
+          ]
         }
       ]
     },

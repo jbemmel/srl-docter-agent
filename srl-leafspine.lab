@@ -21,7 +21,7 @@ topology:
     leaf3:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.6, startup-config: auto-leaf.cfg.json }
 
     client1: { kind: srl, group: hosts, startup-config: auto-host-with-vip.cfg.json }
-    client2: { kind: srl, group: hosts, startup-config: auto-host-with-vip.cfg.json }
+#    client2: { kind: srl, group: hosts, startup-config: auto-host-with-vip.cfg.json }
 #    client3: { kind: srl, startup-config: auto-host-with-vip.cfg.json }
 
 ### CLIENTS ###
@@ -31,12 +31,12 @@ topology:
     #    - configs/client1:/config
     #  mgmt_ipv4: 172.20.20.31 # Pick a fixed IP
     #  mgmt_ipv6: 2001:172:20:20::31
-    #client2:
-    #  kind: linux
-    #  binds:
-    #    - configs/client2:/config
-    #  mgmt_ipv4: 172.20.20.32 # Pick a fixed IP
-    #  mgmt_ipv6: 2001:172:20:20::32
+    client2:
+      kind: linux
+      binds:
+        - configs/client2:/config
+      mgmt_ipv4: 172.20.20.32 # Pick a fixed IP
+      mgmt_ipv6: 2001:172:20:20::32
     client3:
       kind: linux
       group: hosts
@@ -52,9 +52,9 @@ topology:
 #      publish:
 #       - tcp/3000     # tcp port 3000 will be exposed via mysocket.io
 #      image: grafana/grafana:7.3.7
-      image: grafana/grafana:latest      
+      image: grafana/grafana:8.1.1
       env:
-        GF_INSTALL_PLUGINS: agenty-flowcharting-panel,agenty-flowcharting-panel,flant-statusmap-panel
+        GF_INSTALL_PLUGINS: agenty-flowcharting-panel,agenty-flowcharting-panel
       binds:
         - configs/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
         - configs/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
@@ -110,5 +110,5 @@ topology:
     - endpoints: ["spine2:e1-2", "leaf2:e1-2"]
     - endpoints: ["spine2:e1-3", "leaf3:e1-2"]
     - endpoints: ["leaf1:e1-3", "client1:e1-1"]  # SRL
-    - endpoints: ["leaf2:e1-3", "client2:e1-1"]  # SRL
+    - endpoints: ["leaf2:e1-3", "client2:eth1"]  # Linux
     - endpoints: ["leaf3:e1-3", "client3:eth1"]  # Linux
