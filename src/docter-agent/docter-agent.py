@@ -533,7 +533,7 @@ class MonitoringThread(Thread):
           o['data'][ key ] = history
 
           # Return top path history
-          logging.info( f'update_history max={max_items} window={window} -> returning {updates[0][0]}' )
+          logging.info( f'update_history max={max_items} window={window} -> returning "{updates[0][0]}"={ history[ updates[0][0] ] }' )
           return history[ updates[0][0] ]
 
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
@@ -644,11 +644,11 @@ class MonitoringThread(Thread):
                       Update_Observation( o, int( update['timestamp'] ), f"{key[index:]}={u['val']} sample={sample}", int(sample), updates, history )
 
                   if unique_count_o is not None:
-                      logging.info( f"Reporting unique values: {unique_count_matches}" )
                       vals = sorted( list(unique_count_matches.keys()) )
                       updates = [("count",vals)]
                       series = update_history( int( update['timestamp'] ), unique_count_o, "count", updates )
                       cur_set = set( v for ts,vs in series for v in vs )
+                      logging.info( f"Reporting unique values: {unique_count_matches} -> cur_set={cur_set}" )                  
                       summary = [( "count", sorted(list(cur_set)) )]
                       sample = unique_count_o['conditions']['sample_period']['value']
                       Update_Observation( unique_count_o, int( update['timestamp'] ), f"count={summary}", int(sample), summary, series )
