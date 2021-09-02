@@ -1201,22 +1201,6 @@
       "admin-state": "enable"
     },
     {
-      "name": "ethernet-1/5",
-      "admin-state": "enable"
-    },
-    {
-      "name": "ethernet-1/6",
-      "admin-state": "enable"
-    },
-    {
-      "name": "ethernet-1/7",
-      "admin-state": "enable"
-    },
-    {
-      "name": "ethernet-1/8",
-      "admin-state": "enable"
-    },
-    {
       "name": "lo0",
       "admin-state": "enable",
       "subinterface": [
