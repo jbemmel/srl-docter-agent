@@ -93,7 +93,6 @@
           "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-broadcast-packets",
           "update-path-match": "/interface\\[name=ethernet-1/[12]\\]/statistics/out-broadcast-packets",
           "metric": "LINKS",
-      	  "sample-period": 60,
       	  "history-window": 600,
       	  "thresholds": [ "5", "10", "20" ]
         }
