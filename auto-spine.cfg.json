@@ -34,22 +34,22 @@
 	        "sample-period": 10,
 	        "history-window": 100,
 	        "thresholds": [ "availability", "50", "80", "90" ]
-        },
+        }
+      ]
+    },
+    {
+     "name": "Changes in BGP EVPN routes",
+     "conditions": [
+       {
+        "gnmi-path": "/network-instance[name=default]/protocols/bgp/evpn/received-routes"
+       }
+     ]
+    },
+    {
+      "name": "Changes in BGP protocol stats",
+      "conditions": [
         {
-         "name": "Changes in BGP EVPN routes",
-         "conditions": [
-           {
-            "gnmi-path": "/network-instance[name=default]/protocols/bgp/evpn/received-routes"
-           }
-         ]
-        },
-        {
-          "name": "Changes in BGP protocol stats",
-          "conditions": [
-            {
-             "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics"
-            }
-          ]
+         "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics"
         }
       ]
     },
