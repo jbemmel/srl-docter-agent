@@ -14,10 +14,10 @@ topology:
 
   ###### DC FABRIC ######
 
-    spine1: { kind: srl, group: spines, mgmt_ipv4: 172.20.20.2, startup-config: auto-spine-routeonly.cfg.json }
+    spine1: { kind: srl, group: spines, mgmt_ipv4: 172.20.20.8, startup-config: auto-spine-routeonly.cfg.json }
     # spine2: { kind: srl, group: spines, mgmt_ipv4: 172.20.20.3, startup-config: auto-spine.cfg.json }
-    leaf1:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.4, startup-config: auto-leaf-routeonly.cfg.json }
-    leaf2:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.5, startup-config: auto-leaf-routeonly.cfg.json }
+    leaf1:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.9, startup-config: auto-leaf-routeonly.cfg.json }
+    leaf2:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.10, startup-config: auto-leaf-routeonly.cfg.json }
     # leaf3:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.6, startup-config: auto-leaf.cfg.json }
 
     client1: { kind: srl, group: hosts, startup-config: auto-host-with-vip.cfg.json }
