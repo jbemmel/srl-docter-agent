@@ -44,11 +44,14 @@
              {
                "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-unicast-packets",
                "update-path-match": "/interface\\[name=ethernet-1/[12]\\]/statistics/out-unicast-packets",
-               "filter": "min( last_known.values() ) / max( last_known.values() ) < 0.8",
+               "value": "min(last_known_ints()) / max(last_known_ints())",
+               "filter": "value < 0.8",
                "metric": "DATA_PLANE",
                "sample-period": 30,
                "history-window": 3000,
-               "thresholds": [ "100", "500", "1000" ]
+               "green": "value > 0.8",
+               "yellow": "value > 0.5 and value <= 0.8",
+               "red": "value <= 0.5"
              }
            ]
          }

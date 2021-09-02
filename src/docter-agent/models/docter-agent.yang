@@ -44,21 +44,9 @@ module docter-agent {
               srl_nokia-ext:delivery-node-override true;
               config false;
 
-              leaf last-updated {
-                type srl_nokia-comm:date-and-time-delta;
-              }
-
-              leaf controlplane {
-                description "Evaluated status of control plane health, with conditions on route flaps per interval, per peer and peering errors over time";
-                type string;
-                default "green";
-              }
-
-              leaf links {
-                description "Evaluated status of physical links, with conditions on flaps per interval and packet errors over time";
-                type string;
-                default "green";
-              }
+              //leaf last-updated {
+              //  type srl_nokia-comm:date-and-time-delta;
+              //}
 
               container route {
                 presence "Route health container";
@@ -223,10 +211,30 @@ module docter-agent {
                     description "Optional filter expression, for example != 'established'";
                     type string;
                   }
-                  leaf count {
-                    description "Optional regex to count unique matches in reported paths, e.g. BGP neighbor IPs: '\\[neighbor=.*\\]'";
+                  leaf value {
+                    description "Optional Python expression to calculate a value to report";
                     type string;
                   }
+                  leaf green {
+                    description "Expression to report as 'green'";
+                    type string;
+                  }
+                  leaf yellow {
+                    description "Expression to report as 'yellow'";
+                    type string;
+                  }
+                  leaf orange {
+                    description "Expression to report as 'orange'";
+                    type string;
+                  }
+                  leaf red {
+                    description "Expression to report as 'red'";
+                    type string;
+                  }
+                  //leaf count {
+                  //  description "Optional regex to count unique matches in reported paths, e.g. BGP neighbor IPs: '\\[neighbor=.*\\]'";
+                  //  type string;
+                  //}
                   leaf-list thresholds {
                     description "Boundary condition(s), single value for match=green or for example [80,95] for >80%=yellow, >95%=red";
                     ordered-by user; // otherwise system will sort the values

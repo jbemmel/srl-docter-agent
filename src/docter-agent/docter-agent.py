@@ -146,6 +146,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[] ):
     }
     response = Add_Telemetry( js_path=base_path, js_data=json.dumps(data) )
 
+# No longer used
 def Show_Dummy_Health(controlplane="green",links="green"):
 
     now = datetime.now()
@@ -189,6 +190,23 @@ def Grafana_Test():
 reports_count = 0 # Total
 filter_count = 0
 
+def Color(o,val):
+    if 'thresholds' in o['conditions']:
+        # XXX could do this one when processing config
+        thresholds = [ t['value'] for t in o['conditions']['thresholds'] ]
+        return Threshold_Color(val,thresholds), thresholds
+    else:
+        for c in ["red","orange","yellow","green"]:
+            if c in o['conditions']:
+                exp = o['conditions'][c]
+                try:
+                  if eval( exp, {}, { 'value': val } ):
+                    return c, None
+                except Exception as ex:
+                  logging.error( f"Error evaluating color {c}={exp}: {ex}" )
+        logging.error( f"None of the color expressions matched '{val}' -> red" )
+        return "red", None
+
 def Update_Filtered(o, timestamp_ns, path, val):
     global reports_count
     global filter_count
@@ -212,10 +230,8 @@ def Update_Filtered(o, timestamp_ns, path, val):
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val}, 'filter': False }) )
       color = "green"
       if 'metric' in o['conditions']:
-          # Copy&pasted code, TODO cleanup
           metric = o['conditions']['metric']['value']
-          thresholds = [ t['value'] for t in (o['conditions']['thresholds'] if 'thresholds' in o['conditions'] else []) ]
-          color = Threshold_Color(val,thresholds)
+          color, _ = Color(o, val)
           Update_Metric( timestamp_ns, metric, o['name'], color )
       o['reset_flag'] = color
 
@@ -275,7 +291,7 @@ def Calculate_SLA(history):
     avail = 100.0 * (1.0 - (missing_ns / (ts_end - ts_start)))
     return f'{avail:.3f}' # 3 digits, e.g. 99.999
 
-def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, history):
+def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, history, value=None):
     global filter_count
     global reports_count
     reports_count = reports_count + 1
@@ -284,8 +300,6 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     o.pop('reset_flag', None)
 
     name = o['name']
-    # XXX could do this one when processing config
-    thresholds = [ t['value'] for t in (o['conditions']['thresholds'] if 'thresholds' in o['conditions'] else []) ]
 
     now = datetime.now()
     now_ts = now.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -337,43 +351,23 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
     response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
 
-    # Only report route.availability for entries with defined thresholds
-    # Note: implies that metrics always require thresholds to be defined
-    if thresholds != []:
+    color, thresholds = Color(o,value)
+    data = { 'status' : { 'value' : color } }
+    if thresholds is not None:
+        sla = Calculate_SLA(history)
+        data['availability'] = { 'value': sla }
+        # TODO more?
 
-       # if sample_interval != 0:
-       if path == "count":
-          max_count = max( [ len(vs) for t,vs in history ] + [ len(val) ] )
-          avail = 100.0 * (len(val) / max_count)
-          sla = f'{avail:.3f}' # 3 digits, e.g. 99.999
-          data = {
-            'availability': { 'value': sla },
-            'count': { 'value': len(val) },
-            'values': val
-          }
-       else:
-          sla = Calculate_SLA(history)
-          data = {
-            'availability': { 'value': sla } # "CRASH-TEST" also crashes
-          }
-
-       # TODO calculate min/max/avg as requested
-       if thresholds[0]=="availability":
-           val = int(float(sla)) if sla!="DOWN" else 0
-       else:
-           val = updates[0][1]
-
-       status = Threshold_Color( val, thresholds )
-       data['status'] = { 'value' : status }
-       if 'metric' in o['conditions']:
-           metric = o['conditions']['metric']['value']
-           Update_Metric( timestamp_ns, metric, name, status, updates )
-
-       # js_path += f'.availability{{.name=="{name}"}}' # crashes SRL mgr
-       js_path = '.' + agent_name + '.health.route'
-       logging.info( f"SLA Add_Telemetry({o}): {js_path}={data} {sla} {val}" )
-       response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
-       # logging.info(f"Telemetry_Update_Response history :: {response}")
+    if 'metric' in o['conditions']:
+       metric = o['conditions']['metric']['value']
+       Update_Metric( timestamp_ns, metric, name, color, updates )
+    else:
+      # Legacy reporting structure of route availability
+      # js_path += f'.availability{{.name=="{name}"}}' # crashes SRL mgr
+      js_path = '.' + agent_name + '.health.route'
+      logging.info( f"SLA Add_Telemetry({o}): {js_path}={data} {val}" )
+      response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+      # logging.info(f"Telemetry_Update_Response history :: {response}")
 
 def Update_Global_State(state, var, val):
     js_path = '.' + agent_name + '.' + var
@@ -558,8 +552,8 @@ class MonitoringThread(Thread):
                   logging.info( f"Update: {update['update']}")
 
                   # For entries with a 'count' regex, count unique values in this update
-                  unique_count_o = None
-                  unique_count_matches = {}
+                  # unique_count_o = None
+                  # unique_count_matches = {}
                   for u in update['update']:
 
                       # Ignore any updates without 'val'
@@ -578,8 +572,11 @@ class MonitoringThread(Thread):
                          logging.info( f"No matching key found and no regexes - skipping: '{key}' = {u['val']}" )
                          continue
 
-                      if 'conditions' in o: # Should be the case always
+                      value = u['val']
+                      # Add path='val' as implicit reported value
+                      updates = [ (key,value) ]
 
+                      if 'conditions' in o: # Should be the case always
                         # To group subscriptions matching multiple paths, can collect by custom regex 'index'
                         index = key
                         if 'index' in o['conditions']:
@@ -591,14 +588,28 @@ class MonitoringThread(Thread):
                               logging.error( f"Error applying 'index' regex: {_re} to {key}" )
                         o['last_known'][ index ] = u['val']
 
+                        # Helper function
+                        def last_known_ints():
+                          return list(map(int,o['last_known'].values()))
+                        _globals = { "ipaddress" : ipaddress }
+                        _locals  = { "_" : u['val'], **o, "last_known_ints": last_known_ints }
+
+                        # Custom value calculation, before filter
+                        if 'value' in o['conditions']:
+                          value_exp = o['conditions']['value']['value']
+                          try:
+                             value = eval( value_exp, _globals, _locals )
+                             updates.append( (value_exp,value) )
+                          except Exception as e:
+                             logging.error( f"Custom value {value_exp} failed: {e}")
+
                         # logging.info( f"Evaluate any filters: {o}" )
                         if 'filter' in o['conditions']:
                           filter = o['conditions']['filter']['value']
-                          _globals = { "ipaddress" : ipaddress }
-                          _locals  = { "_" : u['val'], **o }
+                          _locals.update( { 'value': value } )
                           if not eval( filter, _globals, _locals ):
-                              logging.info( f"Filter {filter} with value _='{u['val']}' = False, skipping..." )
-                              Update_Filtered(o, int( update['timestamp'] ), key, u['val'] )
+                              logging.info( f"Filter {filter} with _='{u['val']}' value='{value}' = False, skipping..." )
+                              Update_Filtered(o, int( update['timestamp'] ), key, value )
                               continue;
 
                       # For sampled state, reset the interval timer
@@ -616,20 +627,18 @@ class MonitoringThread(Thread):
                           timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
                           timer.start()
 
-                          # Also process any 'count' regex, could compile once
-                          if 'count' in o['conditions']:
-                              count_regex = o['conditions']['count']['value']
-                              unique_count_o = o
-                              # logging.info( f"Match {count_regex} against {key}" )
-                              m = re.match( count_regex, key )
-                              if m:
-                                # logging.info( f"Matches found: {m.groups()}" )
-                                for g in m.groups():
-                                   unique_count_matches[ g ] = True
-                                continue  # Skip updating invidivual values
+                        # Also process any 'count' regex, could compile once
+                        # if 'count' in o['conditions']:
+                        #      count_regex = o['conditions']['count']['value']
+                        #      unique_count_o = o
+                        #      # logging.info( f"Match {count_regex} against {key}" )
+                        #      m = re.match( count_regex, key )
+                        #      if m:
+                        #        # logging.info( f"Matches found: {m.groups()}" )
+                        #        for g in m.groups():
+                        #           unique_count_matches[ g ] = True
+                        #        continue  # Skip updating invidivual values
 
-                      # Add condition path as implicit reported value
-                      updates = [ (key,u['val']) ]
                       reports = o['reports']
                       if reports != []:
                         def _lookup(param): # match looks like {x}
@@ -645,7 +654,7 @@ class MonitoringThread(Thread):
                         resolved_paths = [ re.sub('\{(.*)\}', lambda m: _lookup(m.group()), path) for path in reports ]
 
                         data = c.get(path=resolved_paths, encoding='json_ietf')
-                        logging.info( f"Reports:{data} val={u['val']}" )
+                        logging.info( f"Reports:{data} val={value}" )
                         # update Telemetry, iterate
                         i = 0
                         for n in data['notification']:
@@ -661,17 +670,17 @@ class MonitoringThread(Thread):
                       history = update_history( int( update['timestamp'] ), o, key, updates )
                       index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
-                      Update_Observation( o, int( update['timestamp'] ), f"{key[index:]}={u['val']} sample={sample}", int(sample), updates, history )
+                      Update_Observation( o, int( update['timestamp'] ), f"{key[index:]}={value} sample={sample}", int(sample), updates, history, value )
 
-                  if unique_count_o is not None:
-                      vals = sorted( list(unique_count_matches.keys()) )
-                      updates = [("count",vals)]
-                      series = update_history( int( update['timestamp'] ), unique_count_o, "count", updates )
-                      cur_set = set( v for ts,vs in series for v in vs )
-                      logging.info( f"Reporting unique values: {unique_count_matches} -> cur_set={cur_set}" )
-                      summary = [( "count", sorted(list(cur_set)) )]
-                      sample = unique_count_o['conditions']['sample_period']['value']
-                      Update_Observation( unique_count_o, int( update['timestamp'] ), f"count={summary}", int(sample), summary, series )
+                #  if unique_count_o is not None:
+                #      vals = sorted( list(unique_count_matches.keys()) )
+                #      updates = [("count",vals)]
+                #      series = update_history( int( update['timestamp'] ), unique_count_o, "count", updates )
+                #      cur_set = set( v for ts,vs in series for v in vs )
+                #      logging.info( f"Reporting unique values: {unique_count_matches} -> cur_set={cur_set}" )
+                #      summary = [( "count", sorted(list(cur_set)) )]
+                #      sample = unique_count_o['conditions']['sample_period']['value']
+                #      Update_Observation( unique_count_o, int( update['timestamp'] ), f"count={summary}", int(sample), summary, series )
 
     except Exception as e:
        traceback_str = ''.join(traceback.format_tb(e.__traceback__))
@@ -721,7 +730,7 @@ def Run():
     stream_response = sub_stub.NotificationStream(stream_request, metadata=metadata)
 
     # Grafana_Test()
-    Show_Dummy_Health( controlplane="green", links="orange" )
+    # Show_Dummy_Health( controlplane="green", links="orange" )
 
     state = State()
     count = 1

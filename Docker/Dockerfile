@@ -14,7 +14,7 @@ FROM srl/auto-config:$SR_LINUX_RELEASE
 # RUN curl -sfL https://balena.io/engine/install.sh | sh
 
 # Install 'stress' tool for CPU overload emulation
-RUN sudo yum -y install epel-release && sudo yum install -y stress
+RUN sudo yum -y install epel-release && sudo yum install -y stress nmap
 
 # Integrate CLI agent, change CLI network namespace to 'default'
 COPY cliplugin/*.py /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux/mgmt/cli/plugins/reports/
