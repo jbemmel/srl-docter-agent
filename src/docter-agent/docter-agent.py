@@ -490,7 +490,7 @@ class MonitoringThread(Thread):
       for name,atts in self.observations.items():
           path = atts['path']     # normalized in pygnmi patch
           update_match = atts['conditions']['update_path_match']['value']
-          obj = { 'name': name, 'data': {}, **atts }
+          obj = { 'name': name, 'history': {}, 'last_known': {}, **atts }
           # range_match = re.match("(.*)(\\[\d+[-]\d+\\])(.*)",path)
 
           # Turn path into a Python regex
@@ -517,7 +517,7 @@ class MonitoringThread(Thread):
         return None
 
       def update_history( ts_ns, o, key, updates ):
-          history = o['data'][ key ] if key in o['data'] else {}
+          history = o['history'][ key ] if key in o['history'] else {}
 
           if 'history_window' in o['conditions']:
             window = ts_ns - int(o['conditions']['history_window']['value']) * 1000000000 # X seconds ago
@@ -537,7 +537,7 @@ class MonitoringThread(Thread):
                 subitem = subitem[ -max_items: ]
              subitem.append( (ts_ns,val) )
              history[ path ] = subitem
-          o['data'][ key ] = history
+          o['history'][ key ] = history
 
           # Return top path history
           logging.info( f'update_history max={max_items} window={window} -> returning "{updates[0][0]}"={ history[ updates[0][0] ] }' )
@@ -578,11 +578,24 @@ class MonitoringThread(Thread):
                          logging.info( f"No matching key found and no regexes - skipping: '{key}' = {u['val']}" )
                          continue
 
-                      # logging.info( f"Evaluate any filters: {o}" )
-                      if 'conditions' in o and 'filter' in o['conditions']:
+                      if 'conditions' in o: # Should be the case always
+
+                        # To group subscriptions matching multiple paths, can collect by custom regex 'index'
+                        index = key
+                        if 'index' in o['conditions']:
+                            _re = o['conditions']['index']['value']
+                            _i = re.match( _re, key)
+                            if _i and len(_i.groups()) > 0:
+                              index = _i.groups()[0]
+                            else:
+                              logging.error( f"Error applying 'index' regex: {_re} to {key}" )
+                        o['last_known'][ index ] = u['val']
+
+                        # logging.info( f"Evaluate any filters: {o}" )
+                        if 'filter' in o['conditions']:
                           filter = o['conditions']['filter']['value']
                           _globals = { "ipaddress" : ipaddress }
-                          _locals  = { "_" : u['val'], "avg" : "TODO", "changes_in_window" : "TODO" }
+                          _locals  = { "_" : u['val'], **o }
                           if not eval( filter, _globals, _locals ):
                               logging.info( f"Filter {filter} with value _='{u['val']}' = False, skipping..." )
                               Update_Filtered(o, int( update['timestamp'] ), key, u['val'] )

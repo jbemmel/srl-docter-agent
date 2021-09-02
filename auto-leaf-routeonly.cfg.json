@@ -44,7 +44,7 @@
              {
                "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-unicast-packets",
                "update-path-match": "/interface\\[name=ethernet-1/[12]\\]/statistics/out-unicast-packets",
-               "filter": "int(_) > 0",
+               "filter": "min( last_known.values() ) / max( last_known.values() ) < 0.8",
                "metric": "DATA_PLANE",
                "sample-period": 30,
                "history-window": 3000,
