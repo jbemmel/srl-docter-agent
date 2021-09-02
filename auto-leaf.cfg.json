@@ -59,18 +59,10 @@
         {
           "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/local-rib/routes[prefix=10.10.10.10/32]",
 	        "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=10.10.10.10/32\\]/used-route",
-	  "filter": "bool(_) == True",
-	  "sample-period": 10,
-	  "history-window": 100,
-	  "thresholds": [ "availability", "50", "80", "90" ]
-        }
-      ]
-    },
-    {
-      "name": "ASIC resources",
-      "conditions": [
-        {
-          "gnmi-path": "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]"
+	        "filter": "bool(_) == True",
+	        "sample-period": 10,
+	        "history-window": 100,
+	        "thresholds": [ "availability", "50", "80", "90" ]
         }
       ]
     },
@@ -95,16 +87,6 @@
           "metric": "LINKS",
       	  "history-window": 600,
       	  "thresholds": [ "5", "10", "20" ]
-        }
-      ]
-    },
-    {
-      "name": "BFD sessions",
-      "conditions": [
-        {
-          "gnmi-path": "/bfd/total-bfd-sessions",
-          "metric": "DATA_PLANE",
-      	  "thresholds": [ "1", "2" ]
         }
       ]
     }
