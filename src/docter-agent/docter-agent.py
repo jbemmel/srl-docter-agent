@@ -142,7 +142,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[] ):
     data = {
        'status' : { 'value' : overall },
        'cause'  : { 'value' : cause },
-       'status_summary' : { 'value' : f"{overall}:{cause}" }
+       'status_summary' : { 'value' : f"{overall}:{cause}" if overall!="green" else "green" }
     }
     response = Add_Telemetry( js_path=base_path, js_data=json.dumps(data) )
 
