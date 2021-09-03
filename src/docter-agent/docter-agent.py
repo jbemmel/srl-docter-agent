@@ -102,6 +102,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[] ):
     base_path = '.' + agent_name + f'.metrics.metric{{.name=="{metric}"}}'
     js_path = base_path + f'.contribution{{.name=="{contributor}"}}'
     metric_data = {
+      'name_copy' : { 'value' : contributor },
       'status' : { 'value' : contrib_status }
     }
     if updates!=[]:
