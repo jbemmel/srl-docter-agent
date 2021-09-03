@@ -93,7 +93,6 @@ module docter-agent {
                 list contribution {
                   key name;
                   leaf name { type string; }
-                  leaf name-copy { type string; } // To show in Grafana, silly
                   leaf status { type string; } // e.g. color
                   leaf-list reports { type string; } // detailed reports
                 }
