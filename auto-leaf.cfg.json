@@ -50,7 +50,10 @@
             {
               "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=*]/session-state",
               "metric": "CONTROL_PLANE",
-              "thresholds": [ "established" ]
+              "green": "value == 'connected'",
+              "yellow": "value == 'openconfirm'",
+              "orange": "value == 'opensent'",
+              "red": "value == 'connect'"
             }
           ]
         },
