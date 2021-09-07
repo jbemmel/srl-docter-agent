@@ -370,8 +370,8 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
        Update_Metric( timestamp_ns, metric, name, color, updates )
 
        # If requested, start a 'clear' timer to reset any non-green state
-       if color != 'green' and 'reset' in o:
-           reset_timer_s = int(o['reset']['value'])
+       if color != 'green' and 'reset' in o['conditions']:
+           reset_timer_s = int(o['conditions']['reset']['value'])
            logging.info( f"Starting reset timer({reset_timer_s}) to clear {color} for {name}" )
            def reset_status():
               ts = timestamp_ns + 1e09 * reset_timer_s
