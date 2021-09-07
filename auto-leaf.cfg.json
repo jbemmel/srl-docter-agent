@@ -55,14 +55,13 @@
           ]
         },
         {
-          "name": "BGP paths",
+          "name": "Changes in BGP path counts",
           "conditions": [
             {
               "gnmi-path": "/network-instance[name=overlay]/protocols/bgp/statistics/total-paths",
+              "value": "abs( max(last_known_ints()) - int(_) )",
               "metric": "CONTROL_PLANE",
-              "green": "value > 5",
-              "yellow": "value >= 2 and value <= 5",
-              "red": "value < 2"
+              "thresholds": [ 0, 2, 5, 8 ]
             }
           ]
         },
