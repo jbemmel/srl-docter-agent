@@ -249,13 +249,13 @@ def Threshold_Color( val, thresholds ):
            return "red" if val != thresholds[0] else "green"
        elif val.isnumeric():
          if len(thresholds)==2:
-           return (colors[0] if int(val) < int(thresholds[0]) else
-                  (colors[1] if int(val) < int(thresholds[1]) else
+           return (colors[0] if int(val) <= int(thresholds[0]) else
+                  (colors[1] if int(val) <= int(thresholds[1]) else
                    colors[2]))
          else: # 3 or more
-           return (colors[0] if int(val) < int(thresholds[0]) else
-                  (colors[1] if int(val) < int(thresholds[1]) else
-                  (colors[2] if int(val) < int(thresholds[2]) else
+           return (colors[0] if int(val) <= int(thresholds[0]) else
+                  (colors[1] if int(val) <= int(thresholds[1]) else
+                  (colors[2] if int(val) <= int(thresholds[2]) else
                    colors[3])))
        else: # Compare strings in order
           for i,t in enumerate(thresholds):

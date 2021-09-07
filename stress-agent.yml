@@ -1,0 +1,15 @@
+# See example_config.yml for an explanation of all the accepted fields
+stress_agent:
+   path: /opt/srlinux/agents/docter-agent/
+   launch-command: /opt/srlinux/agents/docter-agent/scripts/stress-agent.sh
+   search-command: python3 /opt/srlinux/agents/docter-agent/stress-agent.py
+   wait-for-config: Yes
+   failure-threshold: 100
+   failure-action: wait=forever
+   author: 'Demo agent'
+   version-command: ' cat /opt/srlinux/agents/docter-agent/agent_version'
+   yang-modules:
+       names:
+           - "stress-agent"
+       source-directories:
+           - "/opt/srlinux/agents/docter-agent/models/"

@@ -77,6 +77,20 @@
       ]
     },
     {
+      "name": "BFD sessions (on OSPF)",
+      "report": [
+        "/bfd/network-instance[name=default]/peer[local-discriminator={local-discriminator}]"
+      ]
+      "conditions": [
+        {
+          "gnmi-path": "/bfd/network-instance[name=default]/peer/oper-state",
+          "metric": "CONTROL_PLANE",
+          "reset": 10,
+          "thresholds": [ "up" ]
+        }
+      ]
+    },
+    {
       "name": "ASIC resources",
       "conditions": [
         {

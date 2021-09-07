@@ -75,7 +75,7 @@
               "reset": 30,
               "value": "abs( max(history_ints()) - int(_) )",
               "metric": "CONTROL_PLANE",
-              "thresholds": [ 0, 2, 5, 8 ]
+              "thresholds": [ 0, 2, 5 ]
             }
           ]
         },

@@ -1,0 +1,24 @@
+module stress-agent {
+
+    yang-version "1";
+
+    // namespace
+    namespace "urn:srl_test/stress-agent";
+
+    prefix "stress_agent";
+
+    revision "2021-09-07" {
+        description "Initial revision";
+        reference "TBD";
+    }
+
+    container stress-agent {
+      presence "Stress agent parameters";
+
+      leaf seconds {
+        description "Number of seconds to stress CPU usage";
+        type uint8;
+      }
+    }
+
+}
