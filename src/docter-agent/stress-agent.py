@@ -97,6 +97,7 @@ def Handle_Notification(obj):
                 seconds = int( data['seconds']['value'] )
                 logging.info( f"Stress agent: loading CPU for {seconds} seconds" )
                 generate_cpu_load( seconds )
+                logging.info( f"Stress agent: DONE loading CPU for {seconds} seconds" )
                 return True
 
     else:
