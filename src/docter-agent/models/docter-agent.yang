@@ -211,6 +211,10 @@ module docter-agent {
                     description "Optional filter expression, for example != 'established'";
                     type string;
                   }
+                  leaf reset {
+                    description "Optional reset timer (seconds) to clear non-green state";
+                    type uint16;
+                  }
                   leaf value {
                     description "Optional Python expression to calculate a value to report";
                     type string;

@@ -368,6 +368,18 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     if 'metric' in o['conditions']:
        metric = o['conditions']['metric']['value']
        Update_Metric( timestamp_ns, metric, name, color, updates )
+
+       # If requested, start a 'clear' timer to reset any non-green state
+       if color != 'green' and 'reset' in o:
+           reset_timer_s = int(o['reset']['value'])
+           logging.info( f"Starting reset timer({reset_timer_s}) to clear {color} for {name}" )
+           def reset_status():
+              ts = timestamp_ns + 1e09 * reset_timer_s
+              Update_Metric( ts, metric, name, "green" )
+           # Could save this in o['reset_timer']
+           timer = Timer( reset_timer_s, reset_status )
+           timer.start()
+
     else:
       # Legacy reporting structure of route availability
       # js_path += f'.availability{{.name=="{name}"}}' # crashes SRL mgr
