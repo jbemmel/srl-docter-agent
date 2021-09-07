@@ -56,6 +56,11 @@
                   "color": "yellow",
                   "index": 3,
                   "text": "Lightly unbalanced uplinks"
+                },
+                "yellow:Broadcast traffic out of physical links": {
+                  "color": "blue",
+                  "index": 4,
+                  "text": "Broadcast traffic out of physical links"
                 }
               },
               "type": "value"
