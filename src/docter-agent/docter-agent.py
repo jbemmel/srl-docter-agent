@@ -606,7 +606,9 @@ class MonitoringThread(Thread):
                           return [ int(v) for t,v in history ]
 
                         _globals = { "ipaddress" : ipaddress }
-                        _locals  = { "_" : u['val'], **o, "last_known_ints": last_known_ints }
+                        _locals  = { "_" : u['val'], **o,
+                                     "last_known_ints": last_known_ints,
+                                     "history_ints": history_ints        }
 
                         # Custom value calculation, before filter
                         if 'value' in o['conditions']:
