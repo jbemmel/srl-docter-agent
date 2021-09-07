@@ -1,0 +1,519 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 5,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 0
+          },
+          "mappings": [
+            {
+              "options": {
+                "green": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "red:Any changes in link or interface operational state": {
+                  "color": "dark-red",
+                  "index": 1,
+                  "text": "Interface down"
+                },
+                "red:Balanced uplinks": {
+                  "color": "dark-orange",
+                  "index": 2,
+                  "text": "Highly unbalanced uplinks"
+                },
+                "yellow:Balanced uplinks": {
+                  "color": "yellow",
+                  "index": 3,
+                  "text": "Lightly unbalanced uplinks"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "never",
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.1.1",
+      "targets": [
+        {
+          "alias": "$col $tag_source",
+          "groupBy": [
+            {
+              "params": [
+                "source"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "SRL_docter-agent-dataplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric_status\" AS \"Overall Health\", \"/docter_agent:docter_agent/metrics/metric_cause\" AS \"Cause\", \"/docter_agent:docter_agent/metrics/metric/contribution_name-copy\" AS \"Name\" FROM \"SRL_docter-agent-dataplane\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Overall Health"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Data Plane on change Health",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 195
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "source"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 229
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Overall Health"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 215
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time"
+          }
+        ]
+      },
+      "pluginVersion": "8.1.1",
+      "targets": [
+        {
+          "alias": "$tag_source",
+          "groupBy": [
+            {
+              "params": [
+                "source"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "SRL_docter-agent-dataplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric_status\" AS \"Overall Health\", \"/docter_agent:docter_agent/metrics/metric_cause\" AS \"Cause\", \"/docter_agent:docter_agent/metrics/metric/contribution_name-copy\" AS \"Name\" FROM \"SRL_docter-agent-dataplane\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "alias"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Data Plane on change Health Log",
+      "type": "table"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 0
+          },
+          "mappings": [
+            {
+              "options": {
+                "green": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "orange:BGP peering sessions": {
+                  "color": "dark-orange",
+                  "index": 4,
+                  "text": "One or more BGP in Open-Sent state"
+                },
+                "red:BGP peering sessions": {
+                  "color": "dark-red",
+                  "index": 1,
+                  "text": "BGP session down"
+                },
+                "red:Changes in BGP path counts": {
+                  "color": "dark-purple",
+                  "index": 2,
+                  "text": "Changes in BGP path counts"
+                },
+                "yellow:BGP peering sessions": {
+                  "color": "light-yellow",
+                  "index": 3,
+                  "text": "One or more BGP in Open-Confirm state"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 4,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom"
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "never",
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.1.1",
+      "targets": [
+        {
+          "alias": "$col $tag_source",
+          "groupBy": [
+            {
+              "params": [
+                "source"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "SRL_docter-agent-controlplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric_status\" AS \"Overall Health\", \"/docter_agent:docter_agent/metrics/metric_cause\" AS \"Cause\", \"/docter_agent:docter_agent/metrics/metric/contribution_name-copy\" AS \"Name\" FROM \"SRL_docter-agent-dataplane\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Overall Health"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Control Plane on change Health",
+      "type": "state-timeline"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 195
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "source"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 229
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Overall Health"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 215
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 5,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time"
+          }
+        ]
+      },
+      "pluginVersion": "8.1.1",
+      "targets": [
+        {
+          "alias": "$tag_source",
+          "groupBy": [
+            {
+              "params": [
+                "source"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "SRL_docter-agent-controlplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric_status\" AS \"Overall Health\", \"/docter_agent:docter_agent/metrics/metric_cause\" AS \"Cause\", \"/docter_agent:docter_agent/metrics/metric/contribution_name-copy\" AS \"Name\" FROM \"SRL_docter-agent-dataplane\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "alias"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Control Plane on change Health Log",
+      "type": "table"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 30,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "General Health",
+  "uid": "ovcGxWInz",
+  "version": 6
+}
