@@ -54,6 +54,28 @@
       ]
     },
     {
+      "name": "BGP paths",
+      "conditions": [
+        {
+          "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics/total-paths",
+          "metric": "CONTROL_PLANE",
+          "green": "value > 5",
+          "yellow": "value >= 2 and value <= 5",
+          "red": "value < 2"
+        }
+      ]
+    },
+    {
+      "name": "BGP peers spine",
+      "conditions": [
+        {
+          "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics/up-peers",
+          "metric": "CONTROL_PLANE",
+          "thresholds": [ 3, 2, 1, 0 ]
+        }
+      ]
+    },
+    {
       "name": "ASIC resources",
       "conditions": [
         {

@@ -50,10 +50,7 @@
             {
               "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=*]/session-state",
               "metric": "CONTROL_PLANE",
-              "green": "value == 'connected'",
-              "yellow": "value == 'openconfirm'",
-              "orange": "value == 'opensent'",
-              "red": "value == 'connect'"
+              "thresholds": [ "red-to-green", "connect", "opensent", "openconfirm", "established" ]
             }
           ]
         },
@@ -61,7 +58,7 @@
           "name": "BGP paths",
           "conditions": [
             {
-              "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics/total-paths",
+              "gnmi-path": "/network-instance[name=overlay]/protocols/bgp/statistics/total-paths",
               "metric": "CONTROL_PLANE",
               "green": "value > 5",
               "yellow": "value >= 2 and value <= 5",
