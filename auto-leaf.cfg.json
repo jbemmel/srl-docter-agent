@@ -29,7 +29,7 @@
             {
               "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-unicast-packets",
               "update-path-match": "/interface\\[name=ethernet-1/[12]\\]/statistics/out-unicast-packets",
-              "value": "min(last_known_ints()) / max(last_known_ints())",
+              "value": "(min(last_known_ints())+1) / (max(last_known_ints())+1)",
               "filter": "value < 0.8",
               "metric": "DATA_PLANE",
               "sample-period": 30,

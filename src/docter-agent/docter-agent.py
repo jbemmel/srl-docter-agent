@@ -614,10 +614,13 @@ class MonitoringThread(Thread):
                         if 'filter' in o['conditions']:
                           filter = o['conditions']['filter']['value']
                           _locals.update( { 'value': value } )
-                          if not eval( filter, _globals, _locals ):
+                          try:
+                            if not eval( filter, _globals, _locals ):
                               logging.info( f"Filter {filter} with _='{u['val']}' value='{value}' = False, skipping..." )
                               Update_Filtered(o, int( update['timestamp'] ), key, value )
                               continue;
+                          except Exception as ex:
+                            logging.error( f"Exception during filter {filter}: {ex}" )
 
                       # For sampled state, reset the interval timer
                       sample_period = o['conditions']['sample_period']['value']
