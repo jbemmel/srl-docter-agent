@@ -59,6 +59,7 @@
           "conditions": [
             {
               "gnmi-path": "/network-instance[name=overlay]/protocols/bgp/statistics/total-paths",
+              "history-window": 300,
               "value": "abs( max(last_known_ints()) - int(_) )",
               "metric": "CONTROL_PLANE",
               "thresholds": [ 0, 2, 5, 8 ]
