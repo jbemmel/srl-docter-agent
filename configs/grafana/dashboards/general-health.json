@@ -410,7 +410,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 195
+                "value": 153
               }
             ]
           },
@@ -422,7 +422,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 229
+                "value": 184
               }
             ]
           },
@@ -435,6 +435,18 @@
               {
                 "id": "custom.width",
                 "value": 215
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 208
               }
             ]
           }
@@ -486,7 +498,21 @@
               },
               {
                 "params": [
-                  "alias"
+                  "Status"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric/contribution_reports_0"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Value"
                 ],
                 "type": "alias"
               }
