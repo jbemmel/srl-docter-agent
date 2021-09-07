@@ -194,6 +194,7 @@ module docter-agent {
                 leaf name { type string; mandatory "true"; }
                 list conditions {
                   key gnmi-path;
+                  ordered-by user; // because values can be referenced by index
                   description "Set of conditions that must all be true for reporting";
                   min-elements 1;
 
