@@ -597,7 +597,14 @@ class MonitoringThread(Thread):
 
                         # Helper function
                         def last_known_ints():
+                          # List over all subpaths matching this observation
                           return list(map(int,o['last_known'].values()))
+
+                        def history_ints():
+                          # List over a single path's history
+                          history = o['history'][index] if index in o['history'] else []
+                          return [ int(v) for t,v in history ]
+
                         _globals = { "ipaddress" : ipaddress }
                         _locals  = { "_" : u['val'], **o, "last_known_ints": last_known_ints }
 
@@ -617,7 +624,7 @@ class MonitoringThread(Thread):
                           try:
                             if not eval( filter, _globals, _locals ):
                               logging.info( f"Filter {filter} with _='{u['val']}' value='{value}' = False, skipping..." )
-                              Update_Filtered(o, int( update['timestamp'] ), key, value )
+                              Update_Filtered(o, int( update['timestamp'] ), index, value )
                               continue;
                           except Exception as ex:
                             logging.error( f"Exception during filter {filter}: {ex}" )
@@ -677,10 +684,10 @@ class MonitoringThread(Thread):
                            i = i + 1
 
                       # Update historical data, indexed by key. Remove old entries
-                      history = update_history( int( update['timestamp'] ), o, key, updates )
-                      index = key.rindex('/') + 1
+                      history = update_history( int( update['timestamp'] ), o, index, updates )
+                      s_index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
-                      Update_Observation( o, int( update['timestamp'] ), f"{key[index:]}={value} sample={sample}", int(sample), updates, history, value )
+                      Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history, value )
 
                 #  if unique_count_o is not None:
                 #      vals = sorted( list(unique_count_matches.keys()) )
