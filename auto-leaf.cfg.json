@@ -55,6 +55,18 @@
           ]
         },
         {
+          "name": "BGP paths",
+          "conditions": [
+            {
+              "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics/total-paths",
+              "metric": "CONTROL_PLANE",
+              "green": "value > 5",
+              "yellow": "value >= 2 and value <= 5",
+              "red": "value < 2"
+            }
+          ]
+        },
+        {
       "name": "route-propagation",
       "report": [
         "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries"
