@@ -375,7 +375,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
            logging.info( f"Starting reset timer({reset_timer_s}) to clear {color} for {name}" )
            def reset_status():
               ts = timestamp_ns + 1e09 * reset_timer_s
-              Update_Metric( ts, metric, name, "green" )
+              Update_Metric( ts, metric, name, "green", [ (ts, f"reset '{color}' to green" ) ] )
            # Could save this in o['reset_timer']
            timer = Timer( reset_timer_s, reset_status )
            timer.start()
