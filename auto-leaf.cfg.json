@@ -41,6 +41,18 @@
           ]
         },
         {
+          "name": "Broadcast traffic out of physical links",
+          "conditions": [
+            {
+              "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-broadcast-packets",
+              "update-path-match": "/interface\\[name=ethernet-1/[12]\\]/statistics/out-broadcast-packets",
+              "metric": "DATA_PLANE",
+          	  "history-window": 600,
+          	  "thresholds": [ "5", "10", "15", "20" ]
+            }
+          ]
+        },
+        {
           "name": "BGP peering sessions",
           "report": [
             "/network-instance[name=lag3]/bridge-table/statistics/total-entries",
@@ -68,21 +80,21 @@
           ]
         },
         {
-      "name": "route-propagation",
-      "report": [
-        "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries"
-      ],
-      "conditions": [
-        {
-          "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/local-rib/routes[prefix=10.10.10.10/32]",
-	        "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=10.10.10.10/32\\]/used-route",
-	        "filter": "bool(_) == True",
-	        "sample-period": 10,
-	        "history-window": 100,
-	        "thresholds": [ "availability", "50", "80", "90" ]
-        }
-      ]
-    },
+          "name": "route-propagation",
+             "report": [
+              "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries"
+             ],
+             "conditions": [
+                {
+                  "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/local-rib/routes[prefix=10.10.10.10/32]",
+	                "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=10.10.10.10/32\\]/used-route",
+	                "filter": "bool(_) == True",
+	                "sample-period": 10,
+	                "history-window": 100,
+	                "thresholds": [ "availability", "50", "80", "90" ]
+                }
+             ]
+         },
     {
       "name": "CPU usage spikes (onchange >80%)",
       "report": [
@@ -96,20 +108,6 @@
       	  "history-window": 100,
       	  "thresholds": [ "50", "80", "90" ]
         }
-      ]
-    },
-    {
-      "name": "Broadcast traffic out of physical links",
-      "conditions": [
-        {
-          "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-broadcast-packets",
-          "update-path-match": "/interface\\[name=ethernet-1/[12]\\]/statistics/out-broadcast-packets",
-          "metric": "LINKS",
-      	  "history-window": 600,
-      	  "thresholds": [ "5", "10", "20" ]
-        }
-      ]
-    }
       ]
     }
   },
