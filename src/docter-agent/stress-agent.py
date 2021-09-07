@@ -1,33 +1,19 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+import time
 import grpc
-from datetime import datetime, timezone
 import sys
-import logging
-import socket
 import os
-import re
-import ipaddress
-import json
 import signal
-import traceback
-import subprocess
-from threading import Timer
+from datetime import datetime
+import logging
+import json
 
 import sdk_service_pb2
 import sdk_service_pb2_grpc
 import config_service_pb2
 import sdk_common_pb2
-
-# To report state back
-import telemetry_service_pb2
-import telemetry_service_pb2_grpc
-
-# See opt/rh/rh-python36/root/usr/lib/python3.6/site-packages/sdk_protos/bfd_service_pb2.py
-import bfd_service_pb2
-
-from pygnmi.client import gNMIclient, telemetryParser
 
 from logging.handlers import RotatingFileHandler
 
@@ -92,7 +78,7 @@ def generate_cpu_load(sleep_time_secs):
 ## Proc to process the config Notifications received by auto_config_agent
 ## At present processing config from js_path containing agent_name
 ##################################################################
-def Handle_Notification(obj, state):
+def Handle_Notification(obj):
     if obj.HasField('config'):
         logging.info(f"GOT CONFIG :: {obj.config.key.js_path}")
         if agent_name in obj.config.key.js_path:
