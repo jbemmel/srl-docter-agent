@@ -54,24 +54,25 @@
       ]
     },
     {
-      "name": "BGP paths",
+      "name": "Changes in BGP path counts",
       "conditions": [
         {
           "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics/total-paths",
           "metric": "CONTROL_PLANE",
-          "green": "value > 5",
-          "yellow": "value >= 2 and value <= 5",
-          "red": "value < 2"
+          "reset": 30,
+          "value": "abs( max(history_ints()) - int(_) )",
+          "metric": "CONTROL_PLANE",
+          "thresholds": [ 0, 2, 5, 8 ]
         }
       ]
     },
     {
-      "name": "BGP peers spine",
+      "name": "BGP peering sessions",
       "conditions": [
         {
-          "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics/up-peers",
+          "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=*]/session-state",
           "metric": "CONTROL_PLANE",
-          "thresholds": [ 3, 2, 1, 0 ]
+          "thresholds": [ "red-to-green", "connect", "opensent", "openconfirm", "established" ]
         }
       ]
     },
