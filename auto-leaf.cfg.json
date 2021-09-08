@@ -47,8 +47,10 @@
               "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-broadcast-packets",
               "update-path-match": "/interface\\[name=ethernet-1/[12]\\]/statistics/out-broadcast-packets",
               "metric": "DATA_PLANE",
-          	  "history-window": 600,
-          	  "thresholds": [ "5", "10", "15", "20" ]
+          	  "history-window": 60,
+              "reset": 10,
+              "value": "abs( max(history_ints()) - int(_) )",
+          	  "thresholds": [ "1", "2", "3" ]
             }
           ]
         },
