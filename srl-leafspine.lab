@@ -8,7 +8,8 @@ topology:
       image: srl/docter-agent:latest
       agents: [ ../srl-self-organizing/auto-config-agent.yml, docter-agent.yml, stress-agent.yml ]
     linux:
-      image: ghcr.io/hellt/network-multitool
+      # image: ghcr.io/hellt/network-multitool
+      image: frr-with-lldp:latest
 
   nodes:
 
