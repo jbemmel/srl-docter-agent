@@ -34,15 +34,16 @@ topology:
     #  mgmt_ipv6: 2001:172:20:20::31
     client2:
       kind: linux
+      group: hosts
       binds:
-        - configs/client2/ffr.conf:/etc/frr/frr.conf
+        - configs/client2/frr.conf:/etc/frr/frr.conf
       mgmt_ipv4: 172.20.20.32 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::32
     client3:
       kind: linux
       group: hosts
       binds:
-        - configs/client3:/config
+        - configs/client3/frr.conf:/etc/frr/frr.conf
       mgmt_ipv4: 172.20.20.33 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::33
 

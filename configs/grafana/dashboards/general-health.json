@@ -24,131 +24,112 @@
   "links": [],
   "panels": [
     {
-      "datasource": "InfluxDB",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "fillOpacity": 70,
-            "lineWidth": 0
-          },
-          "mappings": [
-            {
-              "options": {
-                "green": {
-                  "color": "green",
-                  "index": 0,
-                  "text": "OK"
-                },
-                "orange:Broadcast traffic out of physical links": {
-                  "color": "dark-orange",
-                  "index": 5,
-                  "text": "Broadcast traffic out of physical links T2"
-                },
-                "red:Any changes in link or interface operational state": {
-                  "color": "light-red",
-                  "index": 1,
-                  "text": "Interface down"
-                },
-                "red:Balanced uplinks": {
-                  "color": "light-orange",
-                  "index": 2,
-                  "text": "Highly unbalanced uplinks"
-                },
-                "red:Broadcast traffic out of physical links": {
-                  "color": "dark-red",
-                  "index": 6,
-                  "text": "Broadcast traffic out of physical links T3"
-                },
-                "yellow:Balanced uplinks": {
-                  "color": "super-light-yellow",
-                  "index": 3,
-                  "text": "Lightly unbalanced uplinks"
-                },
-                "yellow:Broadcast traffic out of physical links": {
-                  "color": "dark-yellow",
-                  "index": 4,
-                  "text": "Broadcast traffic out of physical links T1"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
+      "datasource": null,
+      "flowchartsData": {
+        "flowcharts": [
+          {
+            "allowDrawio": false,
+            "bgColor": null,
+            "center": true,
+            "csv": "## See more information for the syntax at https://drawio-app.com/import-from-csv-to-drawio/\n##\n## Example CSV. Use ## for comments and # for configuration.\n## The following names are reserved and should not be used (or ignored):\n## id, tooltip, placeholder(s), link and label (see below)\n##\n#\n## Node label with placeholders and HTML.\n## Default is '%name_of_first_column%'.\n#\n# label: %name%<br><i style=\"color:gray;\">%position%</i><br><a href=\"mailto:%email%\">Email</a>\n#\n## Node style (placeholders are replaced once).\n## Default is the current style for nodes.\n#\n# style: label;image=%image%;whiteSpace=wrap;html=1;rounded=1;fillColor=%fill%;strokeColor=%stroke%;\n#\n## Parent style for nodes with child nodes (placeholders are replaced once).\n#\n# parentstyle: swimlane;whiteSpace=wrap;html=1;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;\n#\n## Optional column name that contains a reference to a named style in styles.\n## Default is the current style for nodes.\n#\n# stylename: -\n#\n## JSON for named styles of the form {\"name\": \"style\", \"name\": \"style\"} where style is a cell style with\n## placeholders that are replaced once.\n#\n# styles: -\n#\n## Optional column name that contains a reference to a named label in labels.\n## Default is the current label.\n#\n# labelname: -\n#\n## JSON for named labels of the form {\"name\": \"label\", \"name\": \"label\"} where label is a cell label with\n## placeholders.\n#\n# labels: -\n#\n## Uses the given column name as the identity for cells (updates existing cells).\n## Default is no identity (empty value or -).\n#\n# identity: -\n#\n## Uses the given column name as the parent reference for cells. Default is no parent (empty or -).\n## The identity above is used for resolving the reference so it must be specified.\n#\n# parent: -\n#\n## Adds a prefix to the identity of cells to make sure they do not collide with existing cells (whose\n## IDs are numbers from 0..n, sometimes with a GUID prefix in the context of realtime collaboration).\n## Default is csvimport-.\n#\n# namespace: csvimport-\n#\n## Connections between rows (\"from\": source colum, \"to\": target column).\n## Label, style and invert are optional. Defaults are '', current style and false.\n## If placeholders are used in the style, they are replaced with data from the source.\n## An optional placeholders can be set to target to use data from the target instead.\n## In addition to label, an optional fromlabel and tolabel can be used to name the column\n## that contains the text for the label in the edges source or target (invert ignored).\n## The label is concatenated in the form fromlabel + label + tolabel if all are defined.\n## The target column may contain a comma-separated list of values.\n## Multiple connect entries are allowed.\n#\n# connect: {\"from\": \"manager\", \"to\": \"name\", \"invert\": true, \"label\": \"manages\", \\\n#          \"style\": \"curved=1;endArrow=blockThin;endFill=1;fontSize=11;\"}\n# connect: {\"from\": \"refs\", \"to\": \"id\", \"style\": \"curved=1;fontSize=11;\"}\n#\n## Node x-coordinate. Possible value is a column name. Default is empty. Layouts will\n## override this value.\n#\n# left: \n#\n## Node y-coordinate. Possible value is a column name. Default is empty. Layouts will\n## override this value.\n#\n# top: \n#\n## Node width. Possible value is a number (in px), auto or an @ sign followed by a column\n## name that contains the value for the width. Default is auto.\n#\n# width: auto\n#\n## Node height. Possible value is a number (in px), auto or an @ sign followed by a column\n## name that contains the value for the height. Default is auto.\n#\n# height: auto\n#\n## Padding for autosize. Default is 0.\n#\n# padding: -12\n#\n## Comma-separated list of ignored columns for metadata. (These can be\n## used for connections and styles but will not be added as metadata.)\n#\n# ignore: id,image,fill,stroke,refs,manager\n#\n## Column to be renamed to link attribute (used as link).\n#\n# link: url\n#\n## Spacing between nodes. Default is 40.\n#\n# nodespacing: 40\n#\n## Spacing between levels of hierarchical layouts. Default is 100.\n#\n# levelspacing: 100\n#\n## Spacing between parallel edges. Default is 40. Use 0 to disable.\n#\n# edgespacing: 40\n#\n## Name or JSON of layout. Possible values are auto, none, verticaltree, horizontaltree,\n## verticalflow, horizontalflow, organic, circle or a JSON string as used in Layout, Apply.\n## Default is auto.\n#\n# layout: auto\n#\n## ---- CSV below this line. First line are column names. ----\nname,position,id,location,manager,email,fill,stroke,refs,url,image\nEvan Miller,CFO,emi,Office 1,,me@example.com,#dae8fc,#6c8ebf,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-9-2-128.png\nEdward Morrison,Brand Manager,emo,Office 2,Evan Miller,me@example.com,#d5e8d4,#82b366,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-10-3-128.png\nRon Donovan,System Admin,rdo,Office 3,Evan Miller,me@example.com,#d5e8d4,#82b366,\"emo,tva\",https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-2-128.png\nTessa Valet,HR Director,tva,Office 4,Evan Miller,me@example.com,#d5e8d4,#82b366,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-3-128.png\n",
+            "download": false,
+            "editorTheme": "dark",
+            "editorUrl": "https://www.draw.io",
+            "enableAnim": true,
+            "grid": false,
+            "lock": true,
+            "name": "Main",
+            "scale": true,
+            "tooltip": true,
+            "type": "xml",
+            "url": "http://<YourUrl>/<Your XML/drawio file/api>",
+            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-08T19:33:38.498Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"uGLE1hIVtz3oEwk5a9e2\" version=\"15.1.2\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">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</diagram></mxfile>",
+            "zoom": "100%"
           }
-        },
-        "overrides": []
+        ]
       },
+      "format": "short",
+      "graphId": "flowchart_23763571993",
       "gridPos": {
-        "h": 11,
+        "h": 8,
         "w": 12,
         "x": 0,
         "y": 0
       },
-      "id": 2,
-      "options": {
-        "alignValue": "left",
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "mergeValues": true,
-        "rowHeight": 0.9,
-        "showValue": "never",
-        "tooltip": {
-          "mode": "single"
-        }
+      "id": 7,
+      "newFlag": false,
+      "rulesData": {
+        "rulesData": [
+          {
+            "aggregation": "current",
+            "alias": "myRule",
+            "colors": [
+              "rgba(245, 54, 54, 0.9)",
+              "rgba(237, 129, 40, 0.89)",
+              "rgba(50, 172, 45, 0.97)"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": false,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": true,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 1,
+            "overlayIcon": false,
+            "pattern": ".*",
+            "rangeData": [],
+            "reduce": true,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [],
+            "shapeProp": "id",
+            "shapeRegEx": true,
+            "stringThresholds": [
+              "/.*/",
+              "/.*/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [
+              50,
+              80
+            ],
+            "tooltip": false,
+            "tooltipColors": false,
+            "tooltipLabel": "",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "number",
+            "unit": "short",
+            "valueData": []
+          }
+        ]
       },
-      "pluginVersion": "8.1.1",
       "targets": [
         {
-          "alias": "$col $tag_source",
-          "groupBy": [
-            {
-              "params": [
-                "source"
-              ],
-              "type": "tag"
-            }
-          ],
-          "measurement": "SRL_docter-agent-dataplane",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric_status\" AS \"Overall Health\", \"/docter_agent:docter_agent/metrics/metric_cause\" AS \"Cause\", \"/docter_agent:docter_agent/metrics/metric/contribution_name-copy\" AS \"Name\" FROM \"SRL_docter-agent-dataplane\" WHERE $timeFilter",
           "queryType": "randomWalk",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "/docter_agent:docter_agent/metrics/metric_status-summary"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [
-                  "Overall Health"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "tags": []
+          "refId": "A"
         }
       ],
-      "title": "Data Plane on change Health",
-      "type": "state-timeline"
+      "title": "Topology View",
+      "type": "agenty-flowcharting-panel",
+      "valueName": "current",
+      "version": "0.9.0"
     },
     {
       "datasource": "InfluxDB",
@@ -272,6 +253,133 @@
       ],
       "title": "Data Plane on change Health Log",
       "type": "table"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 0
+          },
+          "mappings": [
+            {
+              "options": {
+                "green": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "orange:Broadcast traffic out of physical links": {
+                  "color": "dark-orange",
+                  "index": 5,
+                  "text": "Broadcast traffic out of physical links T2"
+                },
+                "red:Any changes in link or interface operational state": {
+                  "color": "light-red",
+                  "index": 1,
+                  "text": "Interface down"
+                },
+                "red:Balanced uplinks": {
+                  "color": "light-orange",
+                  "index": 2,
+                  "text": "Highly unbalanced uplinks"
+                },
+                "red:Broadcast traffic out of physical links": {
+                  "color": "dark-red",
+                  "index": 6,
+                  "text": "Broadcast traffic out of physical links T3"
+                },
+                "yellow:Balanced uplinks": {
+                  "color": "super-light-yellow",
+                  "index": 3,
+                  "text": "Lightly unbalanced uplinks"
+                },
+                "yellow:Broadcast traffic out of physical links": {
+                  "color": "dark-yellow",
+                  "index": 4,
+                  "text": "Broadcast traffic out of physical links T1"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "never",
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.1.1",
+      "targets": [
+        {
+          "alias": "$col $tag_source",
+          "groupBy": [
+            {
+              "params": [
+                "source"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "SRL_docter-agent-dataplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric_status\" AS \"Overall Health\", \"/docter_agent:docter_agent/metrics/metric_cause\" AS \"Cause\", \"/docter_agent:docter_agent/metrics/metric/contribution_name-copy\" AS \"Name\" FROM \"SRL_docter-agent-dataplane\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Overall Health"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Data Plane on change Health",
+      "type": "state-timeline"
     },
     {
       "datasource": "InfluxDB",
@@ -481,7 +589,7 @@
         "h": 10,
         "w": 12,
         "x": 0,
-        "y": 11
+        "y": 19
       },
       "id": 4,
       "options": {
