@@ -34,7 +34,7 @@ COPY ./src /opt/srlinux/agents/
 # RUN sudo python3 -m pip install netns ryu eventlet
 
 # run pylint to catch any obvious errors
-RUN PYTHONPATH=$AGENT_PYTHONPATH pylint --load-plugins=pylint_protobuf -E /opt/srlinux/agents/docter-agent
+RUN PYTHONPATH=$AGENT_PYTHONPATH pylint --load-plugins=pylint_protobuf -E /opt/srlinux/agents/
 
 # Using a build arg to set the release tag, set a default for running docker build manually
 ARG SRL_AUTO_CONFIG_RELEASE="[custom build]"
