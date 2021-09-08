@@ -577,7 +577,14 @@ class MonitoringThread(Thread):
                             username="admin",password="admin",
                             insecure=True, debug=True) as c:
         logging.info( f"gNMIclient: subscribe={subscribe}" )
-        telemetry_stream = c.subscribe(subscribe=subscribe)
+        try:
+           from pygnmi.path_generator import gnmi_path_generator
+           for s in subscribe['subscription']:
+               logging.info( f"Path {s['path']} -> { gnmi_path_generator(s['path'])}" )
+
+           telemetry_stream = c.subscribe(subscribe=subscribe)
+        except Exception as ex:
+           logging.error( ex )
         for m in telemetry_stream:
           if m.HasField('update'): # both update and delete events
               # Filter out only toplevel events
