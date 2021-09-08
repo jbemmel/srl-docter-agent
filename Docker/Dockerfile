@@ -30,6 +30,9 @@ RUN sudo mkdir -p /etc/opt/srlinux/appmgr/ /opt/srlinux/agents/
 COPY --chown=srlinux:srlinux ./docter-agent.yml /etc/opt/srlinux/appmgr
 COPY ./src /opt/srlinux/agents/
 
+# Install BGP dependencies
+RUN sudo python3 -m pip install netns ryu eventlet
+
 # run pylint to catch any obvious errors
 RUN PYTHONPATH=$AGENT_PYTHONPATH pylint --load-plugins=pylint_protobuf -E /opt/srlinux/agents/docter-agent
 
