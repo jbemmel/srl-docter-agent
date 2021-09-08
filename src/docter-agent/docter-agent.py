@@ -190,11 +190,16 @@ def Grafana_Test():
 reports_count = 0 # Total
 filter_count = 0
 
-def Color(o,val):
+def Color(o,val,history=None):
     if 'thresholds' in o['conditions']:
         # XXX could do this one when processing config
         thresholds = [ t['value'] for t in o['conditions']['thresholds'] ]
-        return Threshold_Color(val,thresholds), thresholds
+        if len(thresholds)>0 and thresholds[0]=="availability" and history is not None:
+            sla = val = Calculate_SLA(history)
+        else:
+            sla = None
+        color = Threshold_Color(val,thresholds)
+        return color, thresholds, sla
     else:
         for c in ["red","orange","yellow","green"]:
             if c in o['conditions']:
@@ -359,10 +364,9 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
     response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
 
-    color, thresholds = Color(o,value)
+    color, thresholds, sla = Color(o,value,history) # May calculate SLA if "availability" in thresholds
     data = { 'status' : { 'value' : color } }
-    if thresholds is not None:
-        sla = Calculate_SLA(history)
+    if sla is not None:
         data['availability'] = { 'value': sla }
         # TODO more?
 
@@ -386,7 +390,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
       # Legacy reporting structure of route availability
       # js_path += f'.availability{{.name=="{name}"}}' # crashes SRL mgr
       js_path = '.' + agent_name + '.health.route'
-      logging.info( f"SLA Add_Telemetry({o}): {js_path}={data} {val}" )
+      logging.info( f"SLA Add_Telemetry({name}): {js_path}={data} {val}" )
       response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
       # logging.info(f"Telemetry_Update_Response history :: {response}")
 
