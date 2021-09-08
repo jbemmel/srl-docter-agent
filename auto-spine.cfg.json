@@ -32,7 +32,7 @@
                "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics/total-paths",
                "metric": "CONTROL_PLANE",
                "reset": 30,
-               "value": "abs( max(history_ints()) - int(_) )",
+               "value": "abs( max_in_history() - int(_) )",
                "metric": "CONTROL_PLANE",
                "thresholds": [ 0, 2, 5, 8 ]
              }

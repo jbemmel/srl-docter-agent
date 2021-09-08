@@ -630,15 +630,22 @@ class MonitoringThread(Thread):
 
                         def history_ints():
                           # List over a single path's history
-                          history = o['history'][index] if index in o['history'] else []
+                          history = o['history'][index] if index in o['history'] else {}
                           # history = { path -> (ts,val) } ??
                           logging.info( f"history_ints: {history}" )
-                          return [ int(v) for t,v in history ]
+                          values = history[index] if index in history else []
+                          return [ int(v) for t,v in values ]
+
+                        def max_in_history(value_if_no_history=0):
+                            hist = history_ints()
+                            return max(hist) if hist!=[] else int(value_if_no_history)
 
                         _globals = { "ipaddress" : ipaddress }
                         _locals  = { "_" : u['val'], **o,
                                      "last_known_ints": last_known_ints,
-                                     "history_ints": history_ints        }
+                                     "history_ints": history_ints,
+                                     "max_in_history": max_in_history
+                                   }
 
                         # Custom value calculation, before filter
                         if 'value' in o['conditions']:
