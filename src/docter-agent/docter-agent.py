@@ -434,9 +434,11 @@ def Handle_Notification(obj, state):
                     else:
                        state.observations[ name ] = { 'path' : path, **data }
 
-                elif obj.config.key.js_path == ".docter_agent.intensive_care":
-                    if 'startup_delay' in data:
-                        state.startup_delay = int( data['startup_delay']['value'] )
+                elif obj.config.key.js_path == ".docter_agent":
+                    if 'intensive_care' in data:
+                      _ic = data['intensive_care']
+                      if 'startup_delay' in _ic:
+                         state.startup_delay = int( _ic['startup_delay']['value'] )
 
                 return True # subscribe to LLDP
         elif obj.config.key.js_path == ".commit.end":
