@@ -35,7 +35,7 @@ topology:
     client2:
       kind: linux
       binds:
-        - configs/client2/ffr.conf:/etc/frr/frr.conf
+        - configs/client2/frr.conf:/etc/frr/frr.conf
       mgmt_ipv4: 172.20.20.32 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::32
     client3:
