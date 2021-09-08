@@ -3,8 +3,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 # Add IPv4
-ip address add 172.17.22.2/24 dev eth1
-ip route add 172.17.0.0/16 via 172.17.22.1
+ip address add 10.10.10.12/24 dev eth1
+ip route add 0.0.0.0/0 via 10.10.10.1
 
 # Add IPv6
 ip -6 address add 2002::172:17:22:2/112 dev eth1
