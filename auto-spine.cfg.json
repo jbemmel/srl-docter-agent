@@ -7,20 +7,8 @@
   },
   "docter-agent:docter-agent": {
    "intensive-care": {
+      "startup-delay": 10,
       "observe": [
-        {
-          "name": "bgp-flaps-due-to-mac-table-overflow",
-          "report": [
-            "/network-instance[name=lag3]/bridge-table/statistics/total-entries",
-            "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/xdp/resource[name=mac-addresses]/used-entries"
-          ],
-          "conditions": [
-            {
-              "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=*]/session-state",
-              "filter": "_ == 'established'"
-            }
-          ]
-        },
         {
       "name": "route-propagation",
       "report": [
@@ -89,15 +77,7 @@
           "thresholds": [ "up" ]
         }
       ]
-    },
-    {
-      "name": "ASIC resources",
-      "conditions": [
-        {
-          "gnmi-path": "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]"
-        }
-      ]
-    }
+     }
       ]
     }
   },

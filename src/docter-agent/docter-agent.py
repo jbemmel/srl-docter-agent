@@ -434,10 +434,14 @@ def Handle_Notification(obj, state):
                     else:
                        state.observations[ name ] = { 'path' : path, **data }
 
+                elif obj.config.key.js_path == ".docter_agent.intensive_care":
+                    if 'startup_delay' in data:
+                        state.startup_delay = int( data['startup_delay']['value'] )
+
                 return True # subscribe to LLDP
         elif obj.config.key.js_path == ".commit.end":
            if state.observations != {}:
-              MonitoringThread( state.observations ).start()
+              MonitoringThread( state.observations, state.startup_delay ).start()
 
     else:
         logging.info(f"Unexpected notification : {obj}")
@@ -464,19 +468,22 @@ def Handle_Notification(obj, state):
 #
 from threading import Thread
 class MonitoringThread(Thread):
-   def __init__(self, observations):
+   def __init__(self, observations, startup_delay):
        Thread.__init__(self)
        self.observations = observations
-
+       self.startup_delay = startup_delay
        # Check that gNMI is connected now
        # grpc.channel_ready_future(gnmi_channel).result(timeout=5)
+
 
    def run(self):
 
       # Create per-thread gNMI stub, using a global channel
       # gnmi_stub = gNMIStub( gnmi_channel )
     try:
-      logging.info( f"MonitoringThread: {self.observations}")
+      logging.info( f"MonitoringThread: {self.observations} startup-delay={self.startup_delay}s")
+      if self.startup_delay > 0:
+          time.sleep( self.startup_delay )
 
       # TODO expand paths like in opergroup agent, to allow regex generators
       subscribe = {
@@ -726,15 +733,7 @@ class MonitoringThread(Thread):
 
 class State(object):
     def __init__(self):
-        # self.role = None       # May not be set in config
-        self.bfd_flaps = {}    # Indexed by peer IP
-        self.nhg_map = {}      # Map of nhg_id -> peer IP
-        self.owner_id_map = {} # Map of owner_id (from add route) -> peer IP
-        self.route_flaps = {}  # Indexed by next hop IP
-        self.flap_period_mins = 60 # Make sure this is defined
-        self.flap_threshold = 0
-        self.max_flaps_history = 0
-
+        self.startup_delay = 0
         self.observations = {} # Map of [name] -> { paths: [], reports: [] }
 
     def __str__(self):

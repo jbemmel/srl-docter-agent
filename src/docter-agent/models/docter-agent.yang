@@ -188,7 +188,11 @@ module docter-agent {
             }
 
             container intensive-care {
-
+              leaf startup-delay {
+                description "Optional time to wait (seconds) before starting gNMI subscription loop";
+                type uint16;
+                default 0;
+              }
               list observe {
                 key name;
                 leaf name { type string; mandatory "true"; }
