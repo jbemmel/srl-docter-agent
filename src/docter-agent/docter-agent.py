@@ -285,10 +285,10 @@ def Calculate_SLA(history):
     ts_end, v_end = history[-1]
 
     if v_end == "<MISSING>":
-        return "0.000" # Dont report a stale availability value, it will stay the same until samples continue
+        return 0 # Dont report a stale availability value, it will stay the same until samples continue
 
     if ts_start == ts_end:
-        return "100.000"
+        return 100
 
     ts_cur = ts_start
     missing_ns = 0
@@ -302,7 +302,7 @@ def Calculate_SLA(history):
             in_missing = False
         ts_cur = ts
     avail = 100.0 * (1.0 - (missing_ns / (ts_end - ts_start)))
-    return f'{avail:.3f}' # 3 digits, e.g. 99.999
+    return avail # f'{avail:.3f}' # 3 digits, e.g. 99.999
 
 def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, history, value=None):
     global filter_count
