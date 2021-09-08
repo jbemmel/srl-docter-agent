@@ -43,12 +43,12 @@
                   "text": "OK"
                 },
                 "orange:Broadcast traffic out of physical links": {
-                  "color": "dark-orange",
+                  "color": "semi-dark-blue",
                   "index": 5,
                   "text": "Broadcast traffic out of physical links T2"
                 },
                 "red:Any changes in link or interface operational state": {
-                  "color": "light-red",
+                  "color": "dark-red",
                   "index": 1,
                   "text": "Interface down"
                 },
@@ -58,7 +58,7 @@
                   "text": "Highly unbalanced uplinks"
                 },
                 "red:Broadcast traffic out of physical links": {
-                  "color": "dark-red",
+                  "color": "dark-purple",
                   "index": 6,
                   "text": "Broadcast traffic out of physical links T3"
                 },
@@ -68,7 +68,7 @@
                   "text": "Lightly unbalanced uplinks"
                 },
                 "yellow:Broadcast traffic out of physical links": {
-                  "color": "dark-yellow",
+                  "color": "light-blue",
                   "index": 4,
                   "text": "Broadcast traffic out of physical links T1"
                 }
@@ -287,7 +287,7 @@
             "tooltip": true,
             "type": "xml",
             "url": "http://<YourUrl>/<Your XML/drawio file/api>",
-            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-08T19:58:25.295Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"T8XPbK0tOReBRUZzriYy\" version=\"15.1.2\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">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</diagram></mxfile>",
+            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-08T20:35:15.625Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"kZ0Wkfzlh3CCJoyyjEzU\" version=\"15.1.2\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">7VpRk5owEP41PvYGSALcY/Xu2ofrzM340N5jDiKkh8SJ8dT++iaQCAS0alVaRx8cdzfZJPvtRzbBARhNV184nqXfWEyygefEqwF4GHhe4PvyWynWpQL696Ui4TQuVW6lGNNfRCsdrV3QmMwbDQVjmaCzpjJieU4i0dBhztmy2WzCsuaoM5yQlmIc4ayt/U5jkZbaEDmV/iuhSWpGho62vOHoPeFskevxBh7wi09pnmLjS7efpzhmy9qg4HEARpwxUf6arkYkU6E1YSv7PW2xbubNSS726gBB2eUDZwti5lzMTKxNNIr1ENXDHYDhMqWCjGc4UtalhF/qUjHNtHlCs2zEMsaLvuCp+Ej9XHD2TmqWCYjenHhjMXFGSmOiohwmHMdULsd0zVlOauoHymUGUJZL05wtlI9hOwo6MB+EC7Kywy2zmLApEXwtm2irBzVCOoNDLS6rdHANiGktFXytwzoDk43nCgX5QwOxDRR4A6ULFOi4PYKCbqB0gQJc1AAFIHhJVPwbKl2obCLeDyrBDZUuVJDn9olK2AKBxLLu0SLjImUJy3H2WGmHTZiqNs+MzbTyJxFirYs4vBCsCZ2MFl//kIJz5yEjvyrZCA+rhrTWUgtbEPoIv7WwDerYlm7iz6oIVGuSGVhqnmhmZhSxKY10W4F5QsQL4VTGk3CVgTRPpPGTWwyEubB8FbqaN7Kiolwe0tJrzVKtTQlmaVtTSeYaj0wRamqzco7WNqSQ25lynGRY0I9mRduVP7rrC6NyMtVj3Wk+QKSi6aKcqu5VLzEtR57lCASw6UhDYDuSYcfrWrOZajA/YMKhs3NeAKJd7eWPcgYVtzbB3ZNu933Q7b9jjbc/bY5+lPwN3/zL8G3ziNfp6AZH8s0FobXHWI628O2YFDeue9tRwJVvKcGB5NiMeoLEDy6T+NBK/M0l0KGJj5zmAx16Z9pogDXhYPdGg+wFBifeaJDBtC8WBtdNwgN2qD35BnvcaIB1MnTts8W+fAO+dfA/U2EHQfPQZHbKrQWn6+xqfwK+tQ+zN779y+eoTrpd6hwFTlTXgcCiW3gmuvkW3f5wjoLOmc9RCNzodk66hU5YJ9yd4wa7C00pHFlndhLxQnUmsN7ouOGxRAwtIt7vR8Sjcr/9Jmg8ozlpV3yCrMSumwB9wVm/SNUqnNFE3XNGEjsF6FDdZ9IIZ5+1YUrjuCBV1yVtRbQqD1oXoh2psf3NW9jEyZQntStS2HFD6p3ihhS13/EU4W5v+FcTbgjd/sLdfnnzTPDkipPbtc6C0LtkuNtvZVS4rzi5AbKvBC4Z7rAz3O1q5mrCjazS8YzhlmL1L5lyZ63+iQQefwM=</diagram></mxfile>",
             "zoom": "100%"
           }
         ]
@@ -295,7 +295,7 @@
       "format": "short",
       "graphId": "flowchart_23763571993",
       "gridPos": {
-        "h": 14,
+        "h": 16,
         "w": 24,
         "x": 0,
         "y": 7
@@ -444,7 +444,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 21
+        "y": 23
       },
       "id": 3,
       "options": {
@@ -579,7 +579,7 @@
         "h": 10,
         "w": 12,
         "x": 12,
-        "y": 21
+        "y": 23
       },
       "id": 5,
       "options": {
