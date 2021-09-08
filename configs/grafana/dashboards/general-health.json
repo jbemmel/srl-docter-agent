@@ -42,25 +42,35 @@
                   "index": 0,
                   "text": "OK"
                 },
+                "orange:Broadcast traffic out of physical links": {
+                  "color": "dark-orange",
+                  "index": 5,
+                  "text": "Broadcast traffic out of physical links T2"
+                },
                 "red:Any changes in link or interface operational state": {
-                  "color": "dark-red",
+                  "color": "light-red",
                   "index": 1,
                   "text": "Interface down"
                 },
                 "red:Balanced uplinks": {
-                  "color": "dark-orange",
+                  "color": "light-orange",
                   "index": 2,
                   "text": "Highly unbalanced uplinks"
                 },
+                "red:Broadcast traffic out of physical links": {
+                  "color": "dark-red",
+                  "index": 6,
+                  "text": "Broadcast traffic out of physical links T3"
+                },
                 "yellow:Balanced uplinks": {
-                  "color": "yellow",
+                  "color": "super-light-yellow",
                   "index": 3,
                   "text": "Lightly unbalanced uplinks"
                 },
                 "yellow:Broadcast traffic out of physical links": {
-                  "color": "blue",
+                  "color": "dark-yellow",
                   "index": 4,
-                  "text": "Broadcast traffic out of physical links"
+                  "text": "Broadcast traffic out of physical links T1"
                 }
               },
               "type": "value"
@@ -79,7 +89,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 11,
         "w": 12,
         "x": 0,
         "y": 0
@@ -88,7 +98,7 @@
       "options": {
         "alignValue": "left",
         "legend": {
-          "displayMode": "table",
+          "displayMode": "list",
           "placement": "bottom"
         },
         "mergeValues": true,
@@ -271,123 +281,6 @@
             "mode": "thresholds"
           },
           "custom": {
-            "fillOpacity": 70,
-            "lineWidth": 0
-          },
-          "mappings": [
-            {
-              "options": {
-                "green": {
-                  "color": "green",
-                  "index": 0,
-                  "text": "OK"
-                },
-                "orange:BGP peering sessions": {
-                  "color": "dark-orange",
-                  "index": 4,
-                  "text": "One or more BGP in Open-Sent state"
-                },
-                "red:BGP peering sessions": {
-                  "color": "dark-red",
-                  "index": 1,
-                  "text": "BGP session down"
-                },
-                "red:Changes in BGP path counts": {
-                  "color": "dark-purple",
-                  "index": 2,
-                  "text": "Changes in BGP path counts"
-                },
-                "yellow:BGP peering sessions": {
-                  "color": "light-yellow",
-                  "index": 3,
-                  "text": "One or more BGP in Open-Confirm state"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 0,
-        "y": 8
-      },
-      "id": 4,
-      "options": {
-        "alignValue": "left",
-        "legend": {
-          "displayMode": "table",
-          "placement": "bottom"
-        },
-        "mergeValues": true,
-        "rowHeight": 0.9,
-        "showValue": "never",
-        "tooltip": {
-          "mode": "single"
-        }
-      },
-      "pluginVersion": "8.1.1",
-      "targets": [
-        {
-          "alias": "$col $tag_source",
-          "groupBy": [
-            {
-              "params": [
-                "source"
-              ],
-              "type": "tag"
-            }
-          ],
-          "measurement": "SRL_docter-agent-controlplane",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric_status\" AS \"Overall Health\", \"/docter_agent:docter_agent/metrics/metric_cause\" AS \"Cause\", \"/docter_agent:docter_agent/metrics/metric/contribution_name-copy\" AS \"Name\" FROM \"SRL_docter-agent-dataplane\" WHERE $timeFilter",
-          "queryType": "randomWalk",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "/docter_agent:docter_agent/metrics/metric_status-summary"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [
-                  "Overall Health"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "Control Plane on change Health",
-      "type": "state-timeline"
-    },
-    {
-      "datasource": "InfluxDB",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
             "align": "auto",
             "displayMode": "auto"
           },
@@ -528,6 +421,123 @@
       ],
       "title": "Control Plane on change Health Log",
       "type": "table"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 0
+          },
+          "mappings": [
+            {
+              "options": {
+                "green": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "orange:BGP peering sessions": {
+                  "color": "dark-orange",
+                  "index": 4,
+                  "text": "One or more BGP in Open-Sent state"
+                },
+                "red:BGP peering sessions": {
+                  "color": "dark-red",
+                  "index": 1,
+                  "text": "BGP session down"
+                },
+                "red:Changes in BGP path counts": {
+                  "color": "dark-purple",
+                  "index": 2,
+                  "text": "Changes in BGP path counts"
+                },
+                "yellow:BGP peering sessions": {
+                  "color": "light-yellow",
+                  "index": 3,
+                  "text": "One or more BGP in Open-Confirm state"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 11
+      },
+      "id": 4,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "never",
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.1.1",
+      "targets": [
+        {
+          "alias": "$col $tag_source",
+          "groupBy": [
+            {
+              "params": [
+                "source"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "SRL_docter-agent-controlplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric_status\" AS \"Overall Health\", \"/docter_agent:docter_agent/metrics/metric_cause\" AS \"Cause\", \"/docter_agent:docter_agent/metrics/metric/contribution_name-copy\" AS \"Name\" FROM \"SRL_docter-agent-dataplane\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Overall Health"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Control Plane on change Health",
+      "type": "state-timeline"
     }
   ],
   "refresh": "5s",
