@@ -631,7 +631,8 @@ class MonitoringThread(Thread):
                         def history_ints():
                           # List over a single path's history
                           history = o['history'][index] if index in o['history'] else []
-                          logging.info( f"history_ints: {history_ints}" )
+                          # history = { path -> (ts,val) } ??
+                          logging.info( f"history_ints: {history}" )
                           return [ int(v) for t,v in history ]
 
                         _globals = { "ipaddress" : ipaddress }
