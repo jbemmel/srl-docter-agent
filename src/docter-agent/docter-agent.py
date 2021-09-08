@@ -7,7 +7,6 @@ import sys
 import logging
 import socket
 import os
-import time
 import re
 import ipaddress
 import json
@@ -486,6 +485,7 @@ class MonitoringThread(Thread):
     try:
       logging.info( f"MonitoringThread: {self.observations} startup-delay={self.startup_delay}s")
       if self.startup_delay > 0:
+          import time
           time.sleep( self.startup_delay )
 
       # TODO expand paths like in opergroup agent, to allow regex generators
