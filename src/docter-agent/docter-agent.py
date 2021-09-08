@@ -575,7 +575,8 @@ class MonitoringThread(Thread):
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
       with gNMIclient(target=('unix:///opt/srlinux/var/run/sr_gnmi_server',57400),
                             username="admin",password="admin",
-                            insecure=True, debug=False) as c:
+                            insecure=True, debug=True) as c:
+        logging.info( f"gNMIclient: subscribe={subscribe}" )
         telemetry_stream = c.subscribe(subscribe=subscribe)
         for m in telemetry_stream:
           if m.HasField('update'): # both update and delete events
