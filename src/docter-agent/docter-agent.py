@@ -252,7 +252,7 @@ def Threshold_Color( val, thresholds ):
            return "green"
        elif len(thresholds)==1:
            return "red" if val != thresholds[0] else "green"
-       elif isinstance(val, int) or val.isnumeric():
+       elif isinstance(val, (int,float)) or val.isnumeric():
          if len(thresholds)==2:
            return (colors[0] if int(val) <= int(thresholds[0]) else
                   (colors[1] if int(val) <= int(thresholds[1]) else
