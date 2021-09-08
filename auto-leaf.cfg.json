@@ -5,7 +5,8 @@
     "use-evpn": true,
     "base-as": 65000,
     "host-as": 65123,
-    "auto-lags": false
+    "auto-lags": false,
+    "anycast-gw": "10.10.10.1/24"
   },
   "docter-agent:docter-agent": {
    "intensive-care": {
