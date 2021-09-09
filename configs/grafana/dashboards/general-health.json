@@ -307,7 +307,7 @@
             "tooltip": true,
             "type": "xml",
             "url": "http://<YourUrl>/<Your XML/drawio file/api>",
-            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-08T20:35:15.625Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"kZ0Wkfzlh3CCJoyyjEzU\" version=\"15.1.2\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">7VpRk5owEP41PvYGSALcY/Xu2ofrzM340N5jDiKkh8SJ8dT++iaQCAS0alVaRx8cdzfZJPvtRzbBARhNV184nqXfWEyygefEqwF4GHhe4PvyWynWpQL696Ui4TQuVW6lGNNfRCsdrV3QmMwbDQVjmaCzpjJieU4i0dBhztmy2WzCsuaoM5yQlmIc4ayt/U5jkZbaEDmV/iuhSWpGho62vOHoPeFskevxBh7wi09pnmLjS7efpzhmy9qg4HEARpwxUf6arkYkU6E1YSv7PW2xbubNSS726gBB2eUDZwti5lzMTKxNNIr1ENXDHYDhMqWCjGc4UtalhF/qUjHNtHlCs2zEMsaLvuCp+Ej9XHD2TmqWCYjenHhjMXFGSmOiohwmHMdULsd0zVlOauoHymUGUJZL05wtlI9hOwo6MB+EC7Kywy2zmLApEXwtm2irBzVCOoNDLS6rdHANiGktFXytwzoDk43nCgX5QwOxDRR4A6ULFOi4PYKCbqB0gQJc1AAFIHhJVPwbKl2obCLeDyrBDZUuVJDn9olK2AKBxLLu0SLjImUJy3H2WGmHTZiqNs+MzbTyJxFirYs4vBCsCZ2MFl//kIJz5yEjvyrZCA+rhrTWUgtbEPoIv7WwDerYlm7iz6oIVGuSGVhqnmhmZhSxKY10W4F5QsQL4VTGk3CVgTRPpPGTWwyEubB8FbqaN7Kiolwe0tJrzVKtTQlmaVtTSeYaj0wRamqzco7WNqSQ25lynGRY0I9mRduVP7rrC6NyMtVj3Wk+QKSi6aKcqu5VLzEtR57lCASw6UhDYDuSYcfrWrOZajA/YMKhs3NeAKJd7eWPcgYVtzbB3ZNu933Q7b9jjbc/bY5+lPwN3/zL8G3ziNfp6AZH8s0FobXHWI628O2YFDeue9tRwJVvKcGB5NiMeoLEDy6T+NBK/M0l0KGJj5zmAx16Z9pogDXhYPdGg+wFBifeaJDBtC8WBtdNwgN2qD35BnvcaIB1MnTts8W+fAO+dfA/U2EHQfPQZHbKrQWn6+xqfwK+tQ+zN779y+eoTrpd6hwFTlTXgcCiW3gmuvkW3f5wjoLOmc9RCNzodk66hU5YJ9yd4wa7C00pHFlndhLxQnUmsN7ouOGxRAwtIt7vR8Sjcr/9Jmg8ozlpV3yCrMSumwB9wVm/SNUqnNFE3XNGEjsF6FDdZ9IIZ5+1YUrjuCBV1yVtRbQqD1oXoh2psf3NW9jEyZQntStS2HFD6p3ihhS13/EU4W5v+FcTbgjd/sLdfnnzTPDkipPbtc6C0LtkuNtvZVS4rzi5AbKvBC4Z7rAz3O1q5mrCjazS8YzhlmL1L5lyZ63+iQQefwM=</diagram></mxfile>",
+            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-09T17:43:27.235Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"74FS9P2Z_8NPs1zwR_t6\" version=\"15.1.2\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">7VpBk5sgFP41OXZHBdQ97mZ328N2ZmdyaPdIlVW6RjKEbJL++oJCVDQ2SZPYZuIh43vAA973PnlARmA8XX3meJZ+ZTHJRp4Tr0bgYeR5ge/LX6VYlwro35aKhNO4VLmVYkJ/Ea10tHZBYzJvVBSMZYLOmsqI5TmJREOHOWfLZrU3ljV7neGEtBSTCGdt7Tcai7TUhsip9F8ITVLTM3R0yQ8cvSecLXLd38gDfvGUxVNsbOn68xTHbFnrFDyOwJgzJsq36WpMMuVa47ay3dOW0s24OcnFTg0gKJt84GxBzJiLkYm18UYxH6JauCNwv0ypIJMZjlTpUsIvdamYZrr4jWbZmGWMF23BU/FI/Vxw9r7xJlIaM3fVLOE4pnLQpmnOclJTP1AucaYsl0VztlA2tMVaX+op+mp7QTvmg3BBVra7ZRQTNiWCr2UVXepBjZCO4FCLyyocXANiWgsFX+uwjsBkY7lCQb5oILaBAq+gdIECHXdAUNAVlC5QgIsaoAAEz4mKf0WlC5WNx4dBJbii0oUK8twhUQlbIJBY5j1aZFykLGE5zh4r7X0TpqrOM2MzrfxJhFjrJA4vBGtCJ73F19+l4Nx4yMivSjbCw6ohrbXURiL0Ef7RQj2oo16aie9UEqjmJCOw1DzRzIwoYlMa6boC84SIF8Kp9CfhKgJpnsjCT27REebCslXoatbIiopyekhLr7WSam5KMFPbGkoyCnlkklCTm5VjtJYhhVxvyHGSYUE/mhltV/zopi+MysFUn3Wn+QGRiqaJcqi6VT3FtAx5liEQwKYhDYFtSLodr2vVZqrCfI8Bh07vuABEffXlSzmCilsb5+5It9sh6PbfscbbnTYHf0r+hm/+efi2+cTrcHSDA/nmgtBaYyxDW/h2SIgb04OtKODCl5RgT3Jsej1C4AfnCXxoBf7mEGjfwEdO84MOvRMtNMAacNC/0CB7gsGRFxpkMB2KhcFlk3CPFWpHvsEBFxpg7Qxde2+xK9+Ab238T5TYQdDcNJmVcmvC6Tp99Y/At/Zm9sq3f3kf1Um3c+2jwJHyOhBYdAtPRDffotsf9lHQOfE+CoEr3U5Jt9AJ64S7cdygP9GUwoF5ZicRz5RnAutGxw0PJWJoEfF2NyIeFPvtm6DJjOaknfEJshJ9JwH66LN+kKpVOKOJOgGNJHYK0Ht1nkkjnN3pgimN44JUXYe0FdF642CPm7ewiZNJT2pHpLDjhNQ7xgkpat/xFO5uL/gX424I3eHc3b68eSb47YKD27X2gtA7p7vbtzLK3Rcc3ADZRwLndHfY6e52NnMx7kZW6nhCd0ux+pdMubJW/0QCj78B</diagram></mxfile>",
             "zoom": "100%"
           }
         ]
@@ -328,8 +328,6 @@
             "aggregation": "current",
             "alias": "dataplane_leaf1",
             "colors": [
-              "#ccccdc",
-              "#5794F2",
               "#73BF69",
               "#F2CC0C",
               "#FA6400",
@@ -353,7 +351,7 @@
             "overlayIcon": true,
             "pattern": "dataplane_leaf1",
             "rangeData": [],
-            "reduce": false,
+            "reduce": true,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -367,8 +365,6 @@
             "shapeProp": "id",
             "shapeRegEx": true,
             "stringThresholds": [
-              "/pending.*/",
-              "/green.*/",
               "/yellow.*/",
               "/orange.*/",
               "/red.*/"
@@ -376,16 +372,13 @@
             "textData": [],
             "textProp": "id",
             "textRegEx": true,
-            "thresholds": [
-              50,
-              80
-            ],
+            "thresholds": [],
             "tooltip": true,
             "tooltipColors": true,
             "tooltipLabel": "",
             "tooltipOn": "a",
             "tpDirection": "v",
-            "tpGraph": false,
+            "tpGraph": true,
             "tpGraphHigh": null,
             "tpGraphLow": null,
             "tpGraphScale": "linear",
