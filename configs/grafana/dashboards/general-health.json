@@ -326,7 +326,7 @@
         "rulesData": [
           {
             "aggregation": "current",
-            "alias": "dataplane_leaf1",
+            "alias": "dataplane_leaf2",
             "colors": [
               "#73BF69",
               "#F2CC0C",
@@ -348,6 +348,134 @@
             "mappingType": 1,
             "metricType": "serie",
             "order": 1,
+            "overlayIcon": true,
+            "pattern": "dataplane_leaf2",
+            "rangeData": [],
+            "reduce": true,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "145",
+                "style": "fillColor"
+              }
+            ],
+            "shapeProp": "id",
+            "shapeRegEx": true,
+            "stringThresholds": [
+              "/yellow.*/",
+              "/orange.*/",
+              "/red.*/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [],
+            "tooltip": true,
+            "tooltipColors": true,
+            "tooltipLabel": "",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "string",
+            "unit": "short",
+            "valueData": []
+          },
+          {
+            "aggregation": "current",
+            "alias": "dataplane_leaf3",
+            "colors": [
+              "#73BF69",
+              "#F2CC0C",
+              "#FA6400",
+              "#C4162A"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": true,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": true,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 2,
+            "overlayIcon": true,
+            "pattern": "dataplane_leaf3",
+            "rangeData": [],
+            "reduce": true,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "147",
+                "style": "fillColor"
+              }
+            ],
+            "shapeProp": "id",
+            "shapeRegEx": true,
+            "stringThresholds": [
+              "/yellow.*/",
+              "/orange.*/",
+              "/red.*/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [],
+            "tooltip": true,
+            "tooltipColors": true,
+            "tooltipLabel": "",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "string",
+            "unit": "short",
+            "valueData": []
+          },
+          {
+            "aggregation": "current",
+            "alias": "dataplane_leaf1",
+            "colors": [
+              "#73BF69",
+              "#F2CC0C",
+              "#FA6400",
+              "#C4162A"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": true,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": true,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 3,
             "overlayIcon": true,
             "pattern": "dataplane_leaf1",
             "rangeData": [],
@@ -378,7 +506,7 @@
             "tooltipLabel": "",
             "tooltipOn": "a",
             "tpDirection": "v",
-            "tpGraph": true,
+            "tpGraph": false,
             "tpGraphHigh": null,
             "tpGraphLow": null,
             "tpGraphScale": "linear",
@@ -415,6 +543,62 @@
               "key": "source",
               "operator": "=",
               "value": "clab-srl-docter-lab-leaf1"
+            }
+          ]
+        },
+        {
+          "alias": "dataplane_leaf2",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "SRL_docter-agent-dataplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "queryType": "randomWalk",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-leaf2"
+            }
+          ]
+        },
+        {
+          "alias": "dataplane_leaf2",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "SRL_docter-agent-dataplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "queryType": "randomWalk",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-leaf3"
             }
           ]
         }
