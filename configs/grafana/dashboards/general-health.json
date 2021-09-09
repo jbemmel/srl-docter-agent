@@ -350,7 +350,7 @@
             "overlayIcon": false,
             "pattern": "dataplane_leaf1",
             "rangeData": [],
-            "reduce": true,
+            "reduce": false,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -364,8 +364,8 @@
             "shapeProp": "id",
             "shapeRegEx": true,
             "stringThresholds": [
-              "/pending:Booting/",
-              "/.red*/"
+              "/pending.*/",
+              "/red.*/"
             ],
             "textData": [],
             "textProp": "id",
@@ -375,7 +375,7 @@
               80
             ],
             "tooltip": true,
-            "tooltipColors": false,
+            "tooltipColors": true,
             "tooltipLabel": "",
             "tooltipOn": "a",
             "tpDirection": "v",
