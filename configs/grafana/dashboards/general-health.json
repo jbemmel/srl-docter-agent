@@ -288,7 +288,7 @@
       "type": "state-timeline"
     },
     {
-      "datasource": null,
+      "datasource": "InfluxDB",
       "flowchartsData": {
         "flowcharts": [
           {
@@ -313,7 +313,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_7",
+      "graphId": "flowchart_23763571993",
       "gridPos": {
         "h": 16,
         "w": 24,
@@ -326,11 +326,11 @@
         "rulesData": [
           {
             "aggregation": "current",
-            "alias": "myRule",
+            "alias": "dataplane_leaf1",
             "colors": [
-              "rgba(245, 54, 54, 0.9)",
-              "rgba(237, 129, 40, 0.89)",
-              "rgba(50, 172, 45, 0.97)"
+              "#ccccdc",
+              "#5794F2",
+              "#F2495C"
             ],
             "column": "Time",
             "dateFormat": "YYYY-MM-DD HH:mm:ss",
@@ -348,17 +348,24 @@
             "metricType": "serie",
             "order": 1,
             "overlayIcon": false,
-            "pattern": ".*",
+            "pattern": "dataplane_leaf1",
             "rangeData": [],
             "reduce": true,
             "refId": "A",
             "sanitize": false,
-            "shapeData": [],
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "146",
+                "style": "fillColor"
+              }
+            ],
             "shapeProp": "id",
             "shapeRegEx": true,
             "stringThresholds": [
-              "/.*/",
-              "/.*/"
+              "/pending:Booting/",
+              "/.red*/"
             ],
             "textData": [],
             "textProp": "id",
@@ -367,7 +374,7 @@
               50,
               80
             ],
-            "tooltip": false,
+            "tooltip": true,
             "tooltipColors": false,
             "tooltipLabel": "",
             "tooltipOn": "a",
@@ -378,7 +385,7 @@
             "tpGraphScale": "linear",
             "tpGraphSize": "100%",
             "tpGraphType": "line",
-            "type": "number",
+            "type": "string",
             "unit": "short",
             "valueData": []
           }
@@ -386,8 +393,31 @@
       },
       "targets": [
         {
+          "alias": "dataplane_leaf1",
+          "groupBy": [],
+          "measurement": "SRL_docter-agent-dataplane",
+          "orderByTime": "ASC",
+          "policy": "default",
           "queryType": "randomWalk",
-          "refId": "A"
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-leaf1"
+            }
+          ]
         }
       ],
       "title": "Topology View",
