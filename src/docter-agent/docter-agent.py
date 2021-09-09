@@ -494,19 +494,23 @@ class MonitoringThread(Thread):
       logging.info( f"MonitoringThread: {self.observations} startup-delay={self.startup_delay}s")
 
       # Publish some pending gNMI state so subscriptions work
-      for key,value in self.observations.items():
+      def Set_Booting(status):
+        for key,value in self.observations.items():
           if 'metric' in value['conditions']:
             metric = value['conditions']['metric']['value']
-            Update_Metric( 0, metric, "Booting", "pending" )
+            Update_Metric( 0, metric, "Booting", status )
 
-      # Legacy health too
-      js_path = '.' + agent_name + '.health.route'
-      data = { 'status' : { 'value' : "pending" }, 'availability' : { 'value': 0 } }
-      Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+        # Legacy health too
+        js_path = '.' + agent_name + '.health.route'
+        data = { 'status' : { 'value' : status }, 'availability' : { 'value': 0 } }
+        Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+
+      Set_Booting("pending" if self.startup_delay > 0 else "green")
 
       if self.startup_delay > 0:
           import time
           time.sleep( self.startup_delay )
+          Set_Booting("green")
 
       # TODO expand paths like in opergroup agent, to allow regex generators
       subscribe = {
