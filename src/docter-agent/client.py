@@ -542,6 +542,7 @@ class gNMIclient(object):
             return self.set( delete=delete, replace=replace, update=update, encoding=encoding )
 
         except Exception as rpc_ex:
+            # pylint: disable=E1101
             grpc_error = rpc_ex.__cause__ # pygnmi wrapped this on line 530 above
             # May happen e.g. during system startup or due to lock contention, retry once
 
