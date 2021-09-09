@@ -21,88 +21,9 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1630536457456,
+  "iteration": 1631196712413,
   "links": [],
   "panels": [
-    {
-      "datasource": "InfluxDB",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "align": null,
-            "displayMode": "auto",
-            "filterable": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 0
-      },
-      "id": 6,
-      "options": {
-        "frameIndex": 0,
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Time"
-          }
-        ]
-      },
-      "pluginVersion": "8.1.1",
-      "targets": [
-        {
-          "groupBy": [],
-          "measurement": "SRL_docter-agent",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT source AS \"Node\",  \"/docter_agent:docter_agent/health/route_status\" AS \"Status\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
-          "queryType": "randomWalk",
-          "rawQuery": true,
-          "refId": "A",
-          "resultFormat": "table",
-          "select": [
-            [
-              {
-                "params": [
-                  "/docter_agent:docter_agent/health/route_status"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [
-                  "Status"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Prefix monitoring",
-      "type": "table"
-    },
     {
       "datasource": "InfluxDB",
       "fieldConfig": {
@@ -143,7 +64,7 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
+        "x": 0,
         "y": 0
       },
       "id": 7,
@@ -206,6 +127,98 @@
     },
     {
       "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "displayMode": "auto",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 162
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 6,
+      "options": {
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time"
+          }
+        ]
+      },
+      "pluginVersion": "8.1.1",
+      "targets": [
+        {
+          "groupBy": [],
+          "measurement": "SRL_docter-agent",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"source\" AS \"Node\",  \"/docter_agent:docter_agent/health/route_status\" AS \"Status\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_status"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Status"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Prefix monitoring",
+      "type": "table"
+    },
+    {
+      "datasource": "InfluxDB",
       "flowchartsData": {
         "flowcharts": [
           {
@@ -232,7 +245,7 @@
       "format": "short",
       "graphId": "flowchart_4",
       "gridPos": {
-        "h": 8,
+        "h": 14,
         "w": 24,
         "x": 0,
         "y": 8
@@ -966,7 +979,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 22
       },
       "id": 2,
       "options": {
@@ -1220,7 +1233,7 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
