@@ -351,7 +351,7 @@
             "overlayIcon": true,
             "pattern": "dataplane_leaf1",
             "rangeData": [],
-            "reduce": true,
+            "reduce": false,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -399,33 +399,6 @@
           "policy": "default",
           "queryType": "randomWalk",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "/docter_agent:docter_agent/metrics/metric_status-summary"
-                ],
-                "type": "field"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "source",
-              "operator": "=",
-              "value": "clab-srl-docter-lab-leaf1"
-            }
-          ]
-        },
-        {
-          "alias": "controlplane_leaf1",
-          "groupBy": [],
-          "hide": false,
-          "measurement": "SRL_docter-agent-controlplane",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
           "resultFormat": "time_series",
           "select": [
             [
