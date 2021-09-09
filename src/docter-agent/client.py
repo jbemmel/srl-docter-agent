@@ -441,7 +441,7 @@ class gNMIclient(object):
                     if isinstance(ue, tuple):
                         u_path = gnmi_path_generator(ue[0])
                         u_val = json.dumps(ue[1]).encode('utf-8')
-
+                        # pylint: disable=E5903
                         if encoding == 'json':
                             update_msg.append(Update(path=u_path, val=TypedValue(json_val=u_val)))
                         elif encoding == 'bytes':
@@ -630,7 +630,7 @@ class gNMIclient(object):
             subscribe.update({'prefix': None})
 
         if subscribe['prefix']:
-            # pylint: disable=E1101
+            # pylint: disable=E5905
             request.prefix = gnmi_path_generator(subscribe['prefix'])
 
         # subscription
