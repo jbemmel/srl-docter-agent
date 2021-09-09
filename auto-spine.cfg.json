@@ -21,7 +21,7 @@
          ],
          "conditions": [
            {
-             "gnmi-path": "/network-instance[name=default]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes[ip-prefix=10.10.10.10/32]",
+             "gnmi-path": "/network-instance[name=default]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes[ip-prefix=10.1.1.11/32]",
 	           "update-path-match": "/network-instance\\[name=default\\]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes\\[.*\\]/next-hop",
 	           "sample-period": 10,
 	           "history-window": 100,
