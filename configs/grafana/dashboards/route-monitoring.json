@@ -21,7 +21,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1631196712413,
+  "iteration": 1631198933309,
   "links": [],
   "panels": [
     {
@@ -93,7 +93,7 @@
               "type": "tag"
             }
           ],
-          "measurement": "SRL_docter-agent",
+          "measurement": "SRL_docter-agent-health",
           "orderByTime": "ASC",
           "policy": "default",
           "query": "SELECT \"/docter_agent:docter_agent/health/route_availability\" FROM \"SRL_docter-agent\" WHERE $timeFilter GROUP BY \"source\"",
@@ -243,7 +243,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_4",
+      "graphId": "flowchart_23763571993",
       "gridPos": {
         "h": 14,
         "w": 24,
@@ -616,7 +616,7 @@
         {
           "alias": "route_status_leaf1",
           "groupBy": [],
-          "measurement": "SRL_docter-agent",
+          "measurement": "SRL_docter-agent-health",
           "orderByTime": "ASC",
           "policy": "default",
           "queryType": "randomWalk",
@@ -643,7 +643,7 @@
         {
           "alias": "route_status_leaf2",
           "groupBy": [],
-          "measurement": "SRL_docter-agent",
+          "measurement": "SRL_docter-agent-health",
           "orderByTime": "ASC",
           "policy": "default",
           "queryType": "randomWalk",
@@ -670,7 +670,7 @@
         {
           "alias": "route_status_leaf3",
           "groupBy": [],
-          "measurement": "SRL_docter-agent",
+          "measurement": "SRL_docter-agent-health",
           "orderByTime": "ASC",
           "policy": "default",
           "queryType": "randomWalk",
@@ -697,7 +697,7 @@
         {
           "alias": "route_status_spine1",
           "groupBy": [],
-          "measurement": "SRL_docter-agent",
+          "measurement": "SRL_docter-agent-health",
           "orderByTime": "ASC",
           "policy": "default",
           "queryType": "randomWalk",
@@ -724,7 +724,7 @@
         {
           "alias": "route_status_spine2",
           "groupBy": [],
-          "measurement": "SRL_docter-agent",
+          "measurement": "SRL_docter-agent-health",
           "orderByTime": "ASC",
           "policy": "default",
           "queryType": "randomWalk",
@@ -985,7 +985,12 @@
       "options": {
         "frameIndex": 0,
         "showHeader": true,
-        "sortBy": []
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time"
+          }
+        ]
       },
       "pluginVersion": "8.1.1",
       "targets": [
