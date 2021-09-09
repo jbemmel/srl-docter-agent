@@ -6,7 +6,7 @@ topology:
       # Need IXR D2 or D3 for EVPN/VXLAN support
       type: ixrd2 # See https://www.nokia.com/networks/products/7250-interconnect-router/
       image: srl/docter-agent:latest
-      agents: [ ../srl-self-organizing/auto-config-agent.yml, docter-agent.yml, stress-agent.yml ]
+      agents: [ ../srl-self-organizing/auto-config-agent.yml, docter-agent.yml ]
     linux:
       # image: ghcr.io/hellt/network-multitool
       image: frr-with-lldp:latest

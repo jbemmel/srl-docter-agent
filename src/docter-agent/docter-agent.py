@@ -206,11 +206,11 @@ def Color(o,val,history=None):
                 exp = o['conditions'][c]['value']
                 try:
                   if eval( exp, {}, { 'value': val } ):
-                    return c, None
+                    return c, None, None
                 except Exception as ex:
                   logging.error( f"Error evaluating color {c}={exp}: {ex} (value={val} type={type(val)})" )
         logging.error( f"None of the color expressions matched '{val}' -> red" )
-        return "red", None
+        return "red", None, None
 
 def Update_Filtered(o, timestamp_ns, path, val):
     global reports_count

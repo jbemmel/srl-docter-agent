@@ -117,7 +117,8 @@
           "name": "Platform ASIC resource usage",
           "conditions": [
             {
-              "gnmi-path": "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries"
+              "gnmi-path": "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries",
+              "thresholds": [ "0" ]
             }
           ]
         }
