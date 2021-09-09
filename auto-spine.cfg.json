@@ -3,7 +3,11 @@
     "role": "spine",
     "evpn": "symmetric-irb",
     "use-ospfv3": true,
-    "base-as": 65000
+    "base-as": 65000,
+    "peerlinks": {
+        "prefix": "192.168.127.0/24",
+        "host-subnet-size": 30
+    }
   },
   "docter-agent:docter-agent": {
    "intensive-care": {
