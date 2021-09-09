@@ -307,7 +307,7 @@
             "tooltip": true,
             "type": "xml",
             "url": "http://<YourUrl>/<Your XML/drawio file/api>",
-            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-09T17:45:33.626Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"x2N8fYMd4DxqXoVGYUz4\" version=\"15.1.4\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">7VpLc9sgEP41OjYjCZCUY+Ik7SGdyYwPbY5EwjKNLDwYx3Z/fUECPZDs2q4fjcfKTEYssCx8+4llsQMGk+VXjqfj7ywhmeO7ydIBD47vh0Eg/yvBqhTA4LYUpJwmpcirBUP6m2ihq6VzmpBZq6FgLBN02hbGLM9JLFoyzDlbtJuNWNYedYpT0hEMY5x1pT9oIsalNEJuLf9GaDo2I0NX17zh+D3lbJ7r8RwfBMVTVk+w0aXbz8Y4YYvGoODRAQPOmCjfJssBydTSmmUr+z2tqa3s5iQXW3WAoOzygbM5MTYXlomVWY1iPkT18BxwvxhTQYZTHKvahYRfysZikunqEc2yAcsYL/qCp+KR8png7L1aTaQkZu6qW8pxQqXRpmvOctIQP1AucaYsl1UzNlc6tMbGWOopxuqugl6YD8IFWdrLLb2YsAkRfCWb6FofaoS0B0e6uKjdwTMgjhuuEGgZ1h6YVpprFOSLBmIdKPAKSh8o0PXOCAq6gtIHCvBQCxSA4ClRCa6o9KFSrfh5UAmvqPShgnzvnKhEHRBIIuMeXWRcjFnKcpw91tL7Nkx1m2fGplr4iwix0kEcngvWhk6uFl/9lAX3xkem/KrKpvCwbJVWutRFIgoQfuugHjZRL9UkdyoIVHOSHlhKnmhmLIrZhMa6rcA8JeKFcCrXk3DlgTRPZeUXrxgIc2HpKmQNbWRJRTk9pEuvjZp6bqpgprbWlaQX8tgEoSY2K220tiGF3EaX4yTDgn60I9o+/9FdXxiVxtSfdbf9AZGCtorSVN2rGWJainxLEQhhW5GGwFYklx2vGs2mqsFsB4Mjd6NdAKJN7eVLaUHNrWpxt6Tb7Tno9ulY429Pm70/Jf/Ct+A0fKs+8dodvXBPvnkgsvYYS9Eavu3j4kb12XYUcOFbSrgjOapRD+D44WkcH1qOXyWBdnV85LY/6NA/0kYDLIPDzRsNsicYHnijQQbTc7EwvGwS7rBDbck3eMaNBlgnQ88+W2zLNxBYB/8jBXYQtA9NZqdcG3B67qb2B+Bb9zB75dv/fI7qpdupzlHgQHEdCC26RUeiW2DR7S/nKOge+RyFwJVux6Rb5EZNwt24Xrg50JSFPePMXiKeKM4E1o2OF+1LxMgi4u12RNzL97s3QcMpzUk34hNkKTZlAnTqs5lI1SKc0VRlQGOJnQL0XuUzaYyzO10xoUlSkKovSVsTTfnBiNXJVkelZNSzyT92uJGL2viZsKWROoU9mVP/EJlT1L37KWDoBgIXDwOE3vlg6F72PBM8+ixkKP4Og4JnnSmhf0oYurc7CobPQoYDwgCQnXI4JQxRLwzdaOniYUBWyHpEGGSx/nVOuaPXv4ACj38A</diagram></mxfile>",
+            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-09T17:43:27.235Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"74FS9P2Z_8NPs1zwR_t6\" version=\"15.1.2\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">7VpBk5sgFP41OXZHBdQ97mZ328N2ZmdyaPdIlVW6RjKEbJL++oJCVDQ2SZPYZuIh43vAA973PnlARmA8XX3meJZ+ZTHJRp4Tr0bgYeR5ge/LX6VYlwro35aKhNO4VLmVYkJ/Ea10tHZBYzJvVBSMZYLOmsqI5TmJREOHOWfLZrU3ljV7neGEtBSTCGdt7Tcai7TUhsip9F8ITVLTM3R0yQ8cvSecLXLd38gDfvGUxVNsbOn68xTHbFnrFDyOwJgzJsq36WpMMuVa47ay3dOW0s24OcnFTg0gKJt84GxBzJiLkYm18UYxH6JauCNwv0ypIJMZjlTpUsIvdamYZrr4jWbZmGWMF23BU/FI/Vxw9r7xJlIaM3fVLOE4pnLQpmnOclJTP1AucaYsl0VztlA2tMVaX+op+mp7QTvmg3BBVra7ZRQTNiWCr2UVXepBjZCO4FCLyyocXANiWgsFX+uwjsBkY7lCQb5oILaBAq+gdIECHXdAUNAVlC5QgIsaoAAEz4mKf0WlC5WNx4dBJbii0oUK8twhUQlbIJBY5j1aZFykLGE5zh4r7X0TpqrOM2MzrfxJhFjrJA4vBGtCJ73F19+l4Nx4yMivSjbCw6ohrbXURiL0Ef7RQj2oo16aie9UEqjmJCOw1DzRzIwoYlMa6boC84SIF8Kp9CfhKgJpnsjCT27REebCslXoatbIiopyekhLr7WSam5KMFPbGkoyCnlkklCTm5VjtJYhhVxvyHGSYUE/mhltV/zopi+MysFUn3Wn+QGRiqaJcqi6VT3FtAx5liEQwKYhDYFtSLodr2vVZqrCfI8Bh07vuABEffXlSzmCilsb5+5It9sh6PbfscbbnTYHf0r+hm/+efi2+cTrcHSDA/nmgtBaYyxDW/h2SIgb04OtKODCl5RgT3Jsej1C4AfnCXxoBf7mEGjfwEdO84MOvRMtNMAacNC/0CB7gsGRFxpkMB2KhcFlk3CPFWpHvsEBFxpg7Qxde2+xK9+Ab238T5TYQdDcNJmVcmvC6Tp99Y/At/Zm9sq3f3kf1Um3c+2jwJHyOhBYdAtPRDffotsf9lHQOfE+CoEr3U5Jt9AJ64S7cdygP9GUwoF5ZicRz5RnAutGxw0PJWJoEfF2NyIeFPvtm6DJjOaknfEJshJ9JwH66LN+kKpVOKOJOgGNJHYK0Ht1nkkjnN3pgimN44JUXYe0FdF642CPm7ewiZNJT2pHpLDjhNQ7xgkpat/xFO5uL/gX424I3eHc3b68eSb47YKD27X2gtA7p7vbtzLK3Rcc3ADZRwLndHfY6e52NnMx7kZW6nhCd0ux+pdMubJW/0QCj78B</diagram></mxfile>",
             "zoom": "100%"
           }
         ]
@@ -351,7 +351,7 @@
             "overlayIcon": true,
             "pattern": "dataplane_leaf1",
             "rangeData": [],
-            "reduce": false,
+            "reduce": true,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -362,7 +362,7 @@
                 "style": "fillColor"
               }
             ],
-            "shapeProp": "value",
+            "shapeProp": "id",
             "shapeRegEx": true,
             "stringThresholds": [
               "/yellow.*/",
@@ -378,7 +378,7 @@
             "tooltipLabel": "",
             "tooltipOn": "a",
             "tpDirection": "v",
-            "tpGraph": false,
+            "tpGraph": true,
             "tpGraphHigh": null,
             "tpGraphLow": null,
             "tpGraphScale": "linear",
