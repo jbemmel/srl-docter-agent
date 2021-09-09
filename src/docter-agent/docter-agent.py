@@ -501,9 +501,9 @@ class MonitoringThread(Thread):
             Update_Metric( 0, metric, "Booting", status )
 
         # Legacy health too
-        js_path = '.' + agent_name + '.health.route'
-        data = { 'status' : { 'value' : status }, 'availability' : { 'value': 0 } }
-        Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+        # js_path = '.' + agent_name + '.health.route'
+        # data = { 'status' : { 'value' : status }, 'availability' : { 'value': 0 } }
+        # Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
 
       Set_Booting("pending" if self.startup_delay > 0 else "green")
 
@@ -595,7 +595,7 @@ class MonitoringThread(Thread):
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
       with gNMIclient(target=('unix:///opt/srlinux/var/run/sr_gnmi_server',57400),
                             username="admin",password="admin",
-                            insecure=True, debug=True) as c:
+                            insecure=True, debug=False) as c:
         logging.info( f"gNMIclient: subscribe={subscribe}" )
 
         #
