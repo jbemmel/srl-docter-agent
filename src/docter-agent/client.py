@@ -629,7 +629,7 @@ class gNMIclient(object):
             subscribe.update({'prefix': None})
 
         if subscribe['prefix']:
-            request.prefix = gnmi_path_generator(subscribe['prefix'])
+            request.prefix.add( gnmi_path_generator(subscribe['prefix']) )
 
         # subscription
         if 'subscription' not in subscribe or not subscribe['subscription']:
