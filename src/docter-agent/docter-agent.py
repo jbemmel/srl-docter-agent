@@ -437,6 +437,7 @@ def Handle_Notification(obj, state):
                     if name in state.observations:
                        state.observations[ name ].update( { 'path': path, **data } )
                     else:
+                       logging.info( f"Check insertion order: {name}" )
                        state.observations[ name ] = { 'path' : path, **data }
 
                 elif obj.config.key.js_path == ".docter_agent":
@@ -758,7 +759,8 @@ class MonitoringThread(Thread):
 class State(object):
     def __init__(self):
         self.startup_delay = 0
-        self.observations = {} # Map of [name] -> { paths: [], reports: [] }
+        from collections import OrderedDict # From 3.6 default dict should be ordered
+        self.observations = OrderedDict() # Map of [name] -> { paths: [], reports: [] }
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
