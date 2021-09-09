@@ -330,7 +330,10 @@
             "colors": [
               "#ccccdc",
               "#5794F2",
-              "#F2495C"
+              "#73BF69",
+              "#F2CC0C",
+              "#FA6400",
+              "#C4162A"
             ],
             "column": "Time",
             "dateFormat": "YYYY-MM-DD HH:mm:ss",
@@ -340,14 +343,14 @@
             "eventRegEx": false,
             "gradient": false,
             "hidden": false,
-            "invert": false,
+            "invert": true,
             "linkData": [],
             "linkProp": "id",
             "linkRegEx": true,
             "mappingType": 1,
             "metricType": "serie",
             "order": 1,
-            "overlayIcon": false,
+            "overlayIcon": true,
             "pattern": "dataplane_leaf1",
             "rangeData": [],
             "reduce": false,
@@ -365,6 +368,9 @@
             "shapeRegEx": true,
             "stringThresholds": [
               "/pending.*/",
+              "/green.*/",
+              "/yellow.*/",
+              "/orange.*/",
               "/red.*/"
             ],
             "textData": [],
