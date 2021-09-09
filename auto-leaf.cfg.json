@@ -30,6 +30,10 @@
         },
         {
           "name": "Balanced uplinks",
+          "report": [
+            "/interface[name=ethernet-1/1]/statistics/out-unicast-packets",
+            "/interface[name=ethernet-1/2]/statistics/out-unicast-packets"
+          ],
           "conditions": [
             {
               "gnmi-path": "/interface[name=ethernet-1/*]/statistics/out-unicast-packets",
