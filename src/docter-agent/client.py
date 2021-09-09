@@ -527,7 +527,7 @@ class gNMIclient(object):
             print(f"Host: {self.__target_path}\nError: {err.details()}")
             logger.critical(f"GRPC ERROR Host: {self.__target_path}, Error: {err.details()}")
 
-            raise Exception (err)
+            raise Exception( "GRPC Error" ) from err
 
         except:
             logger.error(f'Collection of Set information failed is failed.')
@@ -542,7 +542,7 @@ class gNMIclient(object):
             return self.set( delete=delete, replace=replace, update=update, encoding=encoding )
 
         except Exception as rpc_ex:
-            grpc_error = rpc_ex.__context__ # pygnmi wrapped this on line 528 above
+            grpc_error = rpc_ex.__cause__ # pygnmi wrapped this on line 530 above
             # May happen e.g. during system startup or due to lock contention, retry once
 
             if grpc_error.code() == grpc.StatusCode.FAILED_PRECONDITION:
