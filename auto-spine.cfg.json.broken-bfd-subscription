@@ -7,49 +7,10 @@
   },
   "docter-agent:docter-agent": {
    "intensive-care": {
-      "startup-delay": 60,
+      "startup-delay": 10,
       "observe": [
         {
-         "name": "route-propagation",
-         "report": [
-           "/platform/linecard[slot=1]/forwarding-complex[name=0]/datapath/asic/resource[name=*]/used-entries",
-           "/network-instance[name=default]/protocols/bgp/evpn/received-routes"
-         ],
-         "conditions": [
-           {
-             "gnmi-path": "/network-instance[name=default]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes[ip-prefix=10.10.10.10/32]",
-	           "update-path-match": "/network-instance\\[name=default\\]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes\\[.*\\]/next-hop",
-	           "sample-period": 10,
-	           "history-window": 100,
-	           "thresholds": [ "availability", "50", "80", "90" ]
-           }
-          ]
-        },
-        {
-          "name": "Changes in BGP path counts",
-          "conditions": [
-             {
-               "gnmi-path": "/network-instance[name=default]/protocols/bgp/statistics/total-paths",
-               "metric": "CONTROL_PLANE",
-               "reset": 30,
-               "value": "abs( max_in_history() - int(_) )",
-               "metric": "CONTROL_PLANE",
-               "thresholds": [ 0, 2, 5, 8 ]
-             }
-           ]
-        },
-        {
-          "name": "BGP peering sessions",
-          "conditions": [
-             {
-               "gnmi-path": "/network-instance[name=default]/protocols/bgp/neighbor[peer-address=*]/session-state",
-               "metric": "CONTROL_PLANE",
-               "thresholds": [ "red-to-green", "connect", "opensent", "openconfirm", "established" ]
-             }
-           ]
-        },
-        {
-          "name": "BFD sessions (on OSPF)",
+          "name": "BFD sessions (on OSPF) hangs in gNMI?",
           "report": [
             "/bfd/network-instance[name=default]/peer[local-discriminator={local-discriminator}]"
           ],

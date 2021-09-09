@@ -27,8 +27,7 @@ import telemetry_service_pb2_grpc
 # See opt/rh/rh-python36/root/usr/lib/python3.6/site-packages/sdk_protos/bfd_service_pb2.py
 import bfd_service_pb2
 
-# from pygnmi.client import gNMIclient, telemetryParser
-from client import gNMIclient, telemetryParser
+from pygnmi.client import gNMIclient, telemetryParser
 
 from logging.handlers import RotatingFileHandler
 
@@ -579,14 +578,11 @@ class MonitoringThread(Thread):
                             username="admin",password="admin",
                             insecure=True, debug=True) as c:
         logging.info( f"gNMIclient: subscribe={subscribe}" )
-        try:
-           #from pygnmi.path_generator import gnmi_path_generator
-           #for s in subscribe['subscription']:
-           #   logging.info( f"Path {s['path']} -> { gnmi_path_generator(s['path'])}" )
 
-           telemetry_stream = c.subscribe(subscribe=subscribe)
-        except Exception as ex:
-           logging.error( ex )
+        #
+        # TODO check why this hangs for '/bfd/network-instance[name=default]/peer/oper-state'
+        #
+        telemetry_stream = c.subscribe(subscribe=subscribe)
         for m in telemetry_stream:
           if m.HasField('update'): # both update and delete events
               # Filter out only toplevel events
