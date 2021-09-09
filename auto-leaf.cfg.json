@@ -2,7 +2,7 @@
   "auto_config_agent:auto-config-agent": {
     "role": "leaf",
     "use-ospfv3": true,
-    "use-evpn": true,
+    "evpn": "symmetric-irb",
     "base-as": 65000,
     "host-as": 65123,
     "auto-lags": false,

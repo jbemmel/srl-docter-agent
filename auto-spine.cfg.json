@@ -1,7 +1,7 @@
 {
   "auto_config_agent:auto-config-agent": {
     "role": "spine",
-    "use-evpn": true,
+    "evpn": "symmetric-irb",
     "use-ospfv3": true,
     "base-as": 65000
   },
