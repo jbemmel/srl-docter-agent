@@ -73,7 +73,7 @@ topology:
         - configs/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       mgmt_ipv4: 172.20.20.11 # Pick a fixed IP
       mgmt_ipv6: 2001:172:20:20::11
-      startup-delay: 60
+#      startup-delay: 60
 
     influxdb: # Added, connect via mgmt network
       kind: linux
