@@ -454,7 +454,7 @@
           },
           {
             "aggregation": "current",
-            "alias": "controlplane_spine1",
+            "alias": "controlplane_spine2",
             "colors": [
               "#73BF69",
               "#F2CC0C",
@@ -477,9 +477,73 @@
             "metricType": "serie",
             "order": 3,
             "overlayIcon": true,
+            "pattern": "controlplane_spine2",
+            "rangeData": [],
+            "reduce": true,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "144",
+                "style": "fillColor"
+              }
+            ],
+            "shapeProp": "id",
+            "shapeRegEx": true,
+            "stringThresholds": [
+              "/yellow.*/",
+              "/orange.*/",
+              "/red.*/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [],
+            "tooltip": true,
+            "tooltipColors": true,
+            "tooltipLabel": "",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "string",
+            "unit": "short",
+            "valueData": []
+          },
+          {
+            "aggregation": "current",
+            "alias": "controlplane_spine1",
+            "colors": [
+              "#73BF69",
+              "#F2CC0C",
+              "#FA6400",
+              "#C4162A"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": true,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": true,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 4,
+            "overlayIcon": true,
             "pattern": "controlplane_spine1",
             "rangeData": [],
-            "reduce": false,
+            "reduce": true,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -539,7 +603,7 @@
             "linkRegEx": true,
             "mappingType": 1,
             "metricType": "serie",
-            "order": 4,
+            "order": 5,
             "overlayIcon": true,
             "pattern": "dataplane_leaf1",
             "rangeData": [],
@@ -691,6 +755,34 @@
               "key": "source",
               "operator": "=",
               "value": "clab-srl-docter-lab-spine1"
+            }
+          ]
+        },
+        {
+          "alias": "controlplane_spine2",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "SRL_docter-agent-controlplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "queryType": "randomWalk",
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-spine2"
             }
           ]
         }
