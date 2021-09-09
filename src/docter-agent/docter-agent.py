@@ -98,12 +98,15 @@ def Add_Telemetry(js_path, js_data):
 ## It updates command: info from state auto-config-agent
 ############################################################
 metrics = {}
-def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[] ):
+def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=None ):
     base_path = '.' + agent_name + f'.metrics.metric{{.name=="{metric}"}}'
     js_path = base_path + f'.contribution{{.name=="{contributor}"}}'
     metric_data = {
       'status' : { 'value' : contrib_status }
     }
+    if sla is not None:
+        metric_data['availability'] = { 'value' : sla }
+
     if updates!=[]:
         metric_data['reports'] = [ f'{path}={value}' for path,value in updates ]
 
@@ -236,8 +239,8 @@ def Update_Filtered(o, timestamp_ns, path, val):
       color = "green"
       if 'metric' in o['conditions']:
           metric = o['conditions']['metric']['value']
-          color, _ = Color(o, val)
-          Update_Metric( timestamp_ns, metric, o['name'], color )
+          color, _, sla = Color(o, val)
+          Update_Metric( timestamp_ns, metric, o['name'], color, sla=sla )
       o['reset_flag'] = color
 
 def Threshold_Color( val, thresholds ):
@@ -372,7 +375,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
 
     if 'metric' in o['conditions']:
        metric = o['conditions']['metric']['value']
-       Update_Metric( timestamp_ns, metric, name, color, updates )
+       Update_Metric( timestamp_ns, metric, name, color, updates, sla )
 
        # If requested, start a 'clear' timer to reset any non-green state
        if color != 'green' and 'reset' in o['conditions']:
