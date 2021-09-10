@@ -751,7 +751,10 @@ class MonitoringThread(Thread):
                       history = update_history( int( update['timestamp'] ), o, index, updates )
                       s_index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
-                      Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history, value )
+                      try:
+                         Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history, value )
+                      except Exception as ex:
+                         logging.error( f"Exception while updating telemetry: {ex}" )
 
                 #  if unique_count_o is not None:
                 #      vals = sorted( list(unique_count_matches.keys()) )
