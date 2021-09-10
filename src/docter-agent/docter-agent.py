@@ -658,7 +658,7 @@ class MonitoringThread(Thread):
                           history = o['history'][index] if index in o['history'] else {}
                           # history = { path -> (ts,val) } ??
                           logging.info( f"history_ints: {history}" )
-                          values = history[index] if index in history else []
+                          values = history[index] if index in history else [(0,0)]
                           return [ int(v) for t,v in values ]
 
                         def max_in_history(value_if_no_history=0):
