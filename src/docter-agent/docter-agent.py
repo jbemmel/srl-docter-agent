@@ -343,7 +343,9 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     gnmi_ts = datetime.fromtimestamp(timestamp_ns // 1e9, tz=timezone.utc)
     gnmi_str = '{}.{:09.0f}'.format(gnmi_ts.strftime('%Y-%m-%dT%H:%M:%S'), timestamp_ns % 1e9)
 
-    event_path = js_path + f'.events{{.event=="{gnmi_str} {name}"}}'
+    # event_path = js_path + f'.events{{.event=="{gnmi_str} {name}"}}'
+    # Try to avoid crashes, keep keys small?
+    event_path = js_path + f'.events{{.event=="{gnmi_str}"}}'
     update_data = {
       'name': { 'value': name },
       'timestamp': timestamp_ns,  # Use gNMI reported timestamp
@@ -355,8 +357,8 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
 
     # Try to avoid SDK mgr crash
     path,val = updates[0]
-    #js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
-    #response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
+    js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
+    response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
 
     color, thresholds, sla = Color(o,value,history) # May calculate SLA if "availability" in thresholds
     data = { 'status' : { 'value' : color } }
