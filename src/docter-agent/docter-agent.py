@@ -18,7 +18,6 @@ from threading import Timer
 import sdk_service_pb2
 import sdk_service_pb2_grpc
 import config_service_pb2
-import sdk_common_pb2
 
 # To report state back
 import telemetry_service_pb2
@@ -52,8 +51,7 @@ stub = sdk_service_pb2_grpc.SdkMgrServiceStub(channel)
 
 ############################################################
 ## Subscribe to required event
-## This proc handles subscription of: Interface, LLDP,
-##                      Route, Network Instance, Config
+## This proc handles subscription of: Config
 ############################################################
 def Subscribe(stream_id, option):
     op = sdk_service_pb2.NotificationRegisterRequest.AddSubscription
@@ -783,8 +781,6 @@ class State(object):
 ## If there are critical errors, Unregisters the fib_agent gracefully.
 ##################################################################################################
 def Run():
-    sub_stub = sdk_service_pb2_grpc.SdkNotificationServiceStub(channel)
-
     # optional agent_liveliness=<seconds> to have system kill unresponsive agents
     response = stub.AgentRegister(request=sdk_service_pb2.AgentRegistrationRequest(), metadata=metadata)
     logging.info(f"Registration response : {response.status}")
@@ -796,6 +792,7 @@ def Run():
 
     Subscribe_Notifications(stream_id)
 
+    sub_stub = sdk_service_pb2_grpc.SdkNotificationServiceStub(channel)
     stream_request = sdk_service_pb2.NotificationStreamRequest(stream_id=stream_id)
     stream_response = sub_stub.NotificationStream(stream_request, metadata=metadata)
 
