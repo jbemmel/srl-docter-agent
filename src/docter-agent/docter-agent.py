@@ -107,8 +107,9 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
     if sla is not None:
         metric_data['availability'] = { 'value' : sla }
 
-    if updates!=[]:
-        metric_data['reports'] = [ f'{path}={value}' for path,value in updates ]
+    # Try to avoid SDK mgr crash
+    # if updates!=[]:
+    #    metric_data['reports'] = [ f'{path}={value}' for path,value in updates ]
 
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(metric_data) )
     logging.info(f"Update_Metric Telemetry_Update_Response :: {response}")
