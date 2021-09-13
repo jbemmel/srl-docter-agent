@@ -107,9 +107,8 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
     if sla is not None:
         metric_data['availability'] = { 'value' : sla }
 
-    # Try to avoid SDK mgr crash
-    # if updates!=[]:
-    #    metric_data['reports'] = [ f'{path}={value}' for path,value in updates ]
+    if updates!=[]:
+        metric_data['reports'] = [ f'{path}={value}' for path,value in updates ]
 
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(metric_data) )
     logging.info(f"Update_Metric Telemetry_Update_Response :: {response}")
@@ -356,17 +355,10 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     }
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
-    # XXX very inefficient, could use a bulk method
-    # Add only this new measurement to history, use now_ts instead of gNMI reported ts
-    # for path in history:
-    #  for ts,val in history[path]:
+    # Try to avoid SDK mgr crash
     path,val = updates[0]
-    # js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{now_ts}"}}'
-    # js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}'
-    # response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'t': now.timestamp(), 'v': {'value':val} }) )
-
-    js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
-    response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
+    #js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
+    #response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
 
     color, thresholds, sla = Color(o,value,history) # May calculate SLA if "availability" in thresholds
     data = { 'status' : { 'value' : color } }
