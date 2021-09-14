@@ -616,6 +616,12 @@
                 "hidden": false,
                 "pattern": "146",
                 "style": "fillColor"
+              },
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "149",
+                "style": "fillColor"
               }
             ],
             "shapeProp": "id",
@@ -987,7 +993,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 208
+                "value": 472
               }
             ]
           }
@@ -1074,7 +1080,7 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-7d",
     "to": "now"
   },
   "timepicker": {},
