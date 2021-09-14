@@ -307,7 +307,7 @@
             "tooltip": true,
             "type": "xml",
             "url": "http://<YourUrl>/<Your XML/drawio file/api>",
-            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-14T16:23:38.175Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"Eugmeum9ZNue9fKqJfL-\" version=\"15.1.4\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">7VpNc9sgEP01PjYjCZCUY+Ik7SGdyYwPbY5EIhKNLDwYx3Z/fUECSyDZtT3+yHisg0e7wAL79sGCPADD8eI7x5P8J0tJMQi8dDEAD4MgiMJQ/irFslbA8LZWZJymtcpvFCP6l2ilp7UzmpKpVVEwVgg6sZUJK0uSCEuHOWdzu9o7K+xeJzgjHcUowUVX+4umIq+1MfIa/Q9Cs9z0DD1d8oaTj4yzWan7GwQgrJ66eIyNLV1/muOUzVudgscBGHLGRP02XgxJoVxr3Fa3e1pTuho3J6XYqgEEdZNPXMyIGXM1MrE03qjmQ1QLfwDu5zkVZDTBiSqdS/ilLhfjQhe/06IYsoLxqi14qh6pnwrOPlbeREpj5q6aZRynVA7aNC1ZSVrqB8olzpSVsmjKZsqGttjqSz1VX10vaMd8Ei7IwnW3jGLCxkTwpayiSwOoEdIRHGtx3oSDb0DMW6EQah3WEZitLDcoyBcNxDpQ4BWUPlCg558RFHQFpQ8U4CMLFIDgKVEJr6j0obLy+HlQia6o9KGCAv+cqMQdEEgq8x4tMi5ylrESF4+N9t6GqanzzNhEK/8QIZY6icMzwWzopLf48rcUvJsAGflVyUZ4WFjSUktdJOIQ4bcO6lEb9dpMeqeSQDUnGYG15okWZkQJG9NE1xWYZ0S8EE6lPwlXEUjLTBZ+86uOMBeOrUrXskYWVNTTQ1p6bZU0c1OCmdraUJJRyBOThJrcrB6jsw0p5DaGHCcFFvTTzmj74kc3fWFUDqZZ1j17AZEK20Q9VN2qnWI6hgLHEIigbUhD4BqSbsfLVrWJqjDdYcCxt3FcAKJN9eVLPYKGWyvnbkm32z3otgfBbDb4t1+FDsH2fNh7jbBXp+kHEUl+AI6Fp+HYalnXIehHe3LMB7GzrziG1nBsn7A2ps+2i4AL30aiHXmz6vUAgR+dJvChE/iri59dAx959iIOgyNtLsAZcLR5c0HuBKMDby7IYHouFkaXTcIdNq8t+QbPuNEA5zTou+eJbfkGQuewf6RkDgL7oGR2yrVJpu9tqn8AvnUPsFe+feWzUy/dTnV2AgfK60Dk0C0+Et1Ch27/OTtB78hnJwSudDsm3WIvbhPuxvOjzYmmFPbMM3uJeKI8Ezhfcfx4XyLGDhFvtyPiXrHf/fozmtCSdDM+QRai7y7Aue5sX55qFS5opm49E4mdAvRe3WHSBBd3umBM07QiVd/FbEO0jXGww9e22MbJpCeta1HYcysaHOJWFHW/61Tu7m74F+NuCP3zubv7weaZ4PcLDm7fOQvC4JTu7n6JUe6+4OAGyL0SOKW74153d7OZi3E3clLHI7pbis0/Y+qdtfn3EXj8Bw==</diagram></mxfile>",
+            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-14T16:36:42.342Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"AOk9Msm4Oxj9EEqUhG5a\" version=\"15.2.5\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">7VpNc9sgEP01PjYjCZCUY+Ik7SGdyYwPbY5UIhKNLDwYx3Z/fUECSyDZtV1/ZDzWwSMWWGDfPnZBHoDhePGV40n+naWkGAReuhiAh0EQRGEof5VgWQtgeFsLMk7TWuQ3ghH9Q7TQ09IZTcnUaigYKwSd2MKElSVJhCXDnLO53eyNFfaoE5yRjmCU4KIr/UFTkdfSGHmN/BuhWW5Ghp6u+YWT94yzWanHGwQgrJ66eoyNLt1+muOUzVuDgscBGHLGRP02XgxJoUxrzFb3e1pTu5o3J6XYqgMEdZcPXMyImXM1M7E01qjWQ1QPfwDu5zkVZDTBiaqdS/ilLBfjQle/0aIYsoLxqi94qh4pnwrO3lfWREpi1q66ZRynVE7adC1ZSVriB8olzpSVsmrKZkqH1tgaSz3VWF0raMN8EC7IwjW39GLCxkTwpWyiawOoEdIeHOvivHEH34CYt1wh1DKsPTBbaW5QkC8aiHWgwCsofaBAzz8jKOgKSh8owEcWKADBU6ISXlHpQ2Vl8fOgEl1R6UMFBf45UYk7IJBU5j26yLjIWcZKXDw20nsbpqbNM2MTLfxNhFjqJA7PBLOhk9biy5+y4N0EyJRfVdkUHhZWaalLXSTiEOFfHdSjNuq1mvROJYFqTdIDa8kTLcyMEjamiW4rMM+IeCGcSnsSrjyQlpms/OJXA2EuHF2VrKWNLKiol4d06bVV06xNFczS1rqS9EKemCTU5Gb1HJ0wpJDb6HKcFFjQDzuj7fMf3fWFUTmZZlv37A1ECmwV9VR1r3aK6SgKHEUggrYiDYGrSJodL1vNJqrBdIcJx97GeQGINrWXL/UMGm6tjLsl3W73oNseBLPZ4N9+FjoE2/Nh7z3C3p2m70Qk+abt4+7+P9kXnoZ9qw1fO6cf7ck+H8ROxHEUrWHfPg5vVJ8tvoALDzDRjoxajXqAsBOdxvGh4/irK6FdHR959vYOgyOFHeBMONocdpC7wOjAYQcZTM/FwuiySbhDWNuSb/CMgQY450TfPWlsyzcQOtcAR0rzILCPUCZSrk0/fW9T+wPwrXu0vfLtM5+qeul2qlMVOFBeByKHbvGR6BY6dPvHqQp6Rz5VIXCl2zHpFntxm3A3nh9tTjRlYc88s5eIJ8ozgfN9x4/3JWLsEPF2OyLu5fvd70KjCS1JN+MTZCH6bgmci9D2taoW4YJm6j40kdgpQO/V7SZNcHGnK8Y0TStS9V3ZNkTb6Ac7fIeLbZxMetK6MIU996XBIe5LUfeLT2XubsC/GHND6J/P3N1POc8Ev12wc/vOWRAGpzR39xuNMvcFOzdA7pXAKc0d95q7m81cjLmRkzoe0dyy2Pxnpo6szf+SwONf</diagram></mxfile>",
             "zoom": "100%"
           }
         ]
@@ -607,14 +607,14 @@
             "overlayIcon": true,
             "pattern": "dataplane_leaf1",
             "rangeData": [],
-            "reduce": false,
+            "reduce": true,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
               {
                 "colorOn": "a",
                 "hidden": false,
-                "pattern": "149",
+                "pattern": "146",
                 "style": "fillColor"
               }
             ],
