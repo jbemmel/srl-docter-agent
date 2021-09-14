@@ -307,7 +307,7 @@
             "tooltip": true,
             "type": "xml",
             "url": "http://<YourUrl>/<Your XML/drawio file/api>",
-            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-09T17:43:27.235Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"74FS9P2Z_8NPs1zwR_t6\" version=\"15.1.2\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">7VpBk5sgFP41OXZHBdQ97mZ328N2ZmdyaPdIlVW6RjKEbJL++oJCVDQ2SZPYZuIh43vAA973PnlARmA8XX3meJZ+ZTHJRp4Tr0bgYeR5ge/LX6VYlwro35aKhNO4VLmVYkJ/Ea10tHZBYzJvVBSMZYLOmsqI5TmJREOHOWfLZrU3ljV7neGEtBSTCGdt7Tcai7TUhsip9F8ITVLTM3R0yQ8cvSecLXLd38gDfvGUxVNsbOn68xTHbFnrFDyOwJgzJsq36WpMMuVa47ay3dOW0s24OcnFTg0gKJt84GxBzJiLkYm18UYxH6JauCNwv0ypIJMZjlTpUsIvdamYZrr4jWbZmGWMF23BU/FI/Vxw9r7xJlIaM3fVLOE4pnLQpmnOclJTP1AucaYsl0VztlA2tMVaX+op+mp7QTvmg3BBVra7ZRQTNiWCr2UVXepBjZCO4FCLyyocXANiWgsFX+uwjsBkY7lCQb5oILaBAq+gdIECHXdAUNAVlC5QgIsaoAAEz4mKf0WlC5WNx4dBJbii0oUK8twhUQlbIJBY5j1aZFykLGE5zh4r7X0TpqrOM2MzrfxJhFjrJA4vBGtCJ73F19+l4Nx4yMivSjbCw6ohrbXURiL0Ef7RQj2oo16aie9UEqjmJCOw1DzRzIwoYlMa6boC84SIF8Kp9CfhKgJpnsjCT27REebCslXoatbIiopyekhLr7WSam5KMFPbGkoyCnlkklCTm5VjtJYhhVxvyHGSYUE/mhltV/zopi+MysFUn3Wn+QGRiqaJcqi6VT3FtAx5liEQwKYhDYFtSLodr2vVZqrCfI8Bh07vuABEffXlSzmCilsb5+5It9sh6PbfscbbnTYHf0r+hm/+efi2+cTrcHSDA/nmgtBaYyxDW/h2SIgb04OtKODCl5RgT3Jsej1C4AfnCXxoBf7mEGjfwEdO84MOvRMtNMAacNC/0CB7gsGRFxpkMB2KhcFlk3CPFWpHvsEBFxpg7Qxde2+xK9+Ab238T5TYQdDcNJmVcmvC6Tp99Y/At/Zm9sq3f3kf1Um3c+2jwJHyOhBYdAtPRDffotsf9lHQOfE+CoEr3U5Jt9AJ64S7cdygP9GUwoF5ZicRz5RnAutGxw0PJWJoEfF2NyIeFPvtm6DJjOaknfEJshJ9JwH66LN+kKpVOKOJOgGNJHYK0Ht1nkkjnN3pgimN44JUXYe0FdF642CPm7ewiZNJT2pHpLDjhNQ7xgkpat/xFO5uL/gX424I3eHc3b68eSb47YKD27X2gtA7p7vbtzLK3Rcc3ADZRwLndHfY6e52NnMx7kZW6nhCd0ux+pdMubJW/0QCj78B</diagram></mxfile>",
+            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2021-09-14T16:23:38.175Z\" agent=\"5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 Edg/92.0.902.84\" etag=\"Eugmeum9ZNue9fKqJfL-\" version=\"15.1.4\" type=\"embed\"><diagram id=\"M2Kj8bjgcATGG53Vu1Hk\" name=\"Page-1\">7VpNc9sgEP01PjYjCZCUY+Ik7SGdyYwPbY5EIhKNLDwYx3Z/fUECSyDZtT3+yHisg0e7wAL79sGCPADD8eI7x5P8J0tJMQi8dDEAD4MgiMJQ/irFslbA8LZWZJymtcpvFCP6l2ilp7UzmpKpVVEwVgg6sZUJK0uSCEuHOWdzu9o7K+xeJzgjHcUowUVX+4umIq+1MfIa/Q9Cs9z0DD1d8oaTj4yzWan7GwQgrJ66eIyNLV1/muOUzVudgscBGHLGRP02XgxJoVxr3Fa3e1pTuho3J6XYqgEEdZNPXMyIGXM1MrE03qjmQ1QLfwDu5zkVZDTBiSqdS/ilLhfjQhe/06IYsoLxqi14qh6pnwrOPlbeREpj5q6aZRynVA7aNC1ZSVrqB8olzpSVsmjKZsqGttjqSz1VX10vaMd8Ei7IwnW3jGLCxkTwpayiSwOoEdIRHGtx3oSDb0DMW6EQah3WEZitLDcoyBcNxDpQ4BWUPlCg558RFHQFpQ8U4CMLFIDgKVEJr6j0obLy+HlQia6o9KGCAv+cqMQdEEgq8x4tMi5ylrESF4+N9t6GqanzzNhEK/8QIZY6icMzwWzopLf48rcUvJsAGflVyUZ4WFjSUktdJOIQ4bcO6lEb9dpMeqeSQDUnGYG15okWZkQJG9NE1xWYZ0S8EE6lPwlXEUjLTBZ+86uOMBeOrUrXskYWVNTTQ1p6bZU0c1OCmdraUJJRyBOThJrcrB6jsw0p5DaGHCcFFvTTzmj74kc3fWFUDqZZ1j17AZEK20Q9VN2qnWI6hgLHEIigbUhD4BqSbsfLVrWJqjDdYcCxt3FcAKJN9eVLPYKGWyvnbkm32z3otgfBbDb4t1+FDsH2fNh7jbBXp+kHEUl+AI6Fp+HYalnXIehHe3LMB7GzrziG1nBsn7A2ps+2i4AL30aiHXmz6vUAgR+dJvChE/iri59dAx959iIOgyNtLsAZcLR5c0HuBKMDby7IYHouFkaXTcIdNq8t+QbPuNEA5zTou+eJbfkGQuewf6RkDgL7oGR2yrVJpu9tqn8AvnUPsFe+feWzUy/dTnV2AgfK60Dk0C0+Et1Ch27/OTtB78hnJwSudDsm3WIvbhPuxvOjzYmmFPbMM3uJeKI8Ezhfcfx4XyLGDhFvtyPiXrHf/fozmtCSdDM+QRai7y7Aue5sX55qFS5opm49E4mdAvRe3WHSBBd3umBM07QiVd/FbEO0jXGww9e22MbJpCeta1HYcysaHOJWFHW/61Tu7m74F+NuCP3zubv7weaZ4PcLDm7fOQvC4JTu7n6JUe6+4OAGyL0SOKW74153d7OZi3E3clLHI7pbis0/Y+qdtfn3EXj8Bw==</diagram></mxfile>",
             "zoom": "100%"
           }
         ]
@@ -598,7 +598,15 @@
             "gradient": false,
             "hidden": false,
             "invert": true,
-            "linkData": [],
+            "linkData": [
+              {
+                "hidden": false,
+                "linkOn": "a",
+                "linkParams": false,
+                "linkUrl": "",
+                "pattern": "149"
+              }
+            ],
             "linkProp": "id",
             "linkRegEx": true,
             "mappingType": 1,
@@ -607,7 +615,7 @@
             "overlayIcon": true,
             "pattern": "dataplane_leaf1",
             "rangeData": [],
-            "reduce": true,
+            "reduce": false,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
