@@ -98,8 +98,8 @@
           ],
           "conditions": [
             {
-                 "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/local-rib/routes[prefix=10.1.1.11/32]",
-                 "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=10.1.1.11/32\\]/used-route",
+                 "gnmi-path": "/network-instance[name=overlay]/bgp-rib/ipv4-unicast/local-rib/routes[prefix=8.8.8.8/32]",
+                 "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=8.8.8.8/32\\]/used-route",
                  "filter": "bool(_) == True",
                  "sample-period": 10,
                  "history-window": 100,

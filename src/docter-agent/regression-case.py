@@ -72,6 +72,9 @@ def Add_Telemetry(js_path, js_data):
     return telemetry_response
 
 logging.info( "SDK mgr crash test..." )
-js_path = ".docter_agent.reports.history{.name==\"Broadcast traffic out of physical links\"}.path{.path==\"/interface[name=ethernet-1/2]/statistics/out-broadcast-packets\"}.event{.t==\"1631564696096902958\"}"
-response = Add_Telemetry( js_path=js_path, js_data=json.dumps({'v': {'value': "0" } }) )
-logging.info( f"SDK mgr crash test done...{response}" )
+# Key with spaces
+for i in range(0,100):
+  js_path = f".docter_agent.reports.history{{.name==\"Broadcast traffic out of physical links\"}}.path{{.path==\"/interface[name=ethernet-1/2]/statistics/out-broadcast-packets\"}}.event{{.t==\"{i}\"}}"
+  response = Add_Telemetry( js_path=js_path, js_data=json.dumps({'v': {'value': "0" } }) )
+  logging.info( f"Add_Telemetry response: '{response}'" )
+logging.info( f"SDK mgr crash test done..." )
