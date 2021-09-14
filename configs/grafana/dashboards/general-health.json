@@ -598,17 +598,9 @@
             "gradient": false,
             "hidden": false,
             "invert": true,
-            "linkData": [
-              {
-                "hidden": false,
-                "linkOn": "a",
-                "linkParams": false,
-                "linkUrl": "",
-                "pattern": "149"
-              }
-            ],
+            "linkData": [],
             "linkProp": "id",
-            "linkRegEx": true,
+            "linkRegEx": false,
             "mappingType": 1,
             "metricType": "serie",
             "order": 5,
@@ -619,12 +611,6 @@
             "refId": "A",
             "sanitize": false,
             "shapeData": [
-              {
-                "colorOn": "a",
-                "hidden": false,
-                "pattern": "146",
-                "style": "fillColor"
-              },
               {
                 "colorOn": "a",
                 "hidden": false,
@@ -1088,7 +1074,7 @@
     "list": []
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
