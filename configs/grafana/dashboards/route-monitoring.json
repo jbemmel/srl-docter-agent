@@ -21,7 +21,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1631725630614,
+  "iteration": 1631728095461,
   "links": [],
   "panels": [
     {
@@ -122,7 +122,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Prefix Availability",
+      "title": "DNS Prefix Availability (8.8.8.8/32)",
       "type": "state-timeline"
     },
     {
@@ -283,7 +283,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_4",
+      "graphId": "flowchart_23763571993",
       "gridPos": {
         "h": 14,
         "w": 24,
@@ -791,7 +791,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Topology",
+      "title": "DNS Prefix Availability (8.8.8.8/32)",
       "type": "agenty-flowcharting-panel",
       "valueName": "current",
       "version": "0.9.0"
@@ -1350,7 +1350,9 @@
         "datasource": "InfluxDB",
         "definition": "",
         "description": null,
-        "error": null,
+        "error": {
+          "message": "InfluxDB Error: database not found: telegraf"
+        },
         "hide": 0,
         "includeAll": true,
         "label": "hostname",
