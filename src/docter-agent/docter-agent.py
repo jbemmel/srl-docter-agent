@@ -747,7 +747,10 @@ class MonitoringThread(Thread):
                       try:
                          Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history, value )
                       except Exception as ex:
-                         logging.error( f"Exception while updating telemetry: {ex}" )
+                         logging.error( f"Exception while updating telemetry - EXITING: {ex}" )
+
+                         # Force agent to exit
+                         Exit_Gracefully(0,0)
 
                 #  if unique_count_o is not None:
                 #      vals = sorted( list(unique_count_matches.keys()) )
