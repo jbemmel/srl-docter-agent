@@ -213,6 +213,10 @@ module docter-agent {
                     type string;
                     default "";
                   }
+                  leaf index {
+                    description "Regular expression to apply to paths, for aggregating reports";
+                    type string;
+                  }
                   leaf filter {
                     description "Optional filter expression, for example != 'established'";
                     type string;
