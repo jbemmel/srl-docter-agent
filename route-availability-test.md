@@ -1,4 +1,6 @@
-   ``` 
+# Spine policy to reject DNS IP Prefix route
+
+``` 
    enter candidate 
    /routing-policy
     prefix-set dns {
@@ -25,3 +27,8 @@
 commit stay
 ```
 
+# Remove policy
+```
+/network-instance default protocols bgp group evpn delete import-policy
+commit stay
+```
