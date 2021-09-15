@@ -306,7 +306,7 @@ def Calculate_SLA(history):
     avail = 100.0 * (1.0 - (missing_ns / (ts_end - ts_start)))
     return avail # f'{avail:.3f}' # 3 digits, e.g. 99.999
 
-def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, history, value=None):
+def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, history ):
     global filter_count
     global reports_count
     reports_count = reports_count + 1
@@ -630,9 +630,11 @@ class MonitoringThread(Thread):
 
                       value = u['val']
 
-                      # Add path='val' as implicit reported value
-                      updates = [ (key,value) ]
+                      # Use regex to aggregate history values (common path)
                       history_key = regex if regex is not None else key
+
+                      # Add path='val' as implicit reported value
+                      updates = [ (history_key,value) ]
 
                       if 'conditions' in o: # Should be the case always
                         # To group subscriptions matching multiple paths, can collect by custom regex 'index'
@@ -750,7 +752,7 @@ class MonitoringThread(Thread):
                       s_index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
                       try:
-                         Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history, value )
+                         Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history )
                       except Exception as ex:
                          logging.error( f"Exception while updating telemetry - EXITING: {ex}" )
 
