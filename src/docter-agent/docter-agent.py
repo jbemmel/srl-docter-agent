@@ -306,7 +306,7 @@ def Calculate_SLA(history):
     avail = 100.0 * (1.0 - (missing_ns / (ts_end - ts_start)))
     return avail # f'{avail:.3f}' # 3 digits, e.g. 99.999
 
-def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, history ):
+def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, history, value=None ):
     global filter_count
     global reports_count
     reports_count = reports_count + 1
@@ -752,7 +752,7 @@ class MonitoringThread(Thread):
                       s_index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
                       try:
-                         Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history )
+                         Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history, value )
                       except Exception as ex:
                          logging.error( f"Exception while updating telemetry - EXITING: {ex}" )
 
