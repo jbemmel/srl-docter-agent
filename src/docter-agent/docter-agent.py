@@ -615,6 +615,7 @@ class MonitoringThread(Thread):
                           continue;
 
                       key = '/' + u['path'] # pygnmi strips '/'
+                      regex = None
                       if key in lookup:
                          o = lookup[ key ]
                       elif regexes!=[]:
@@ -623,28 +624,27 @@ class MonitoringThread(Thread):
                             logging.info( f"No matching regex found - skipping: '{key}' = {u['val']}" )
                             continue
 
-                         # Set regex as the key, to aggregate history
-                         key = regex
-
                       else:
                          logging.info( f"No matching key found and no regexes - skipping: '{key}' = {u['val']}" )
                          continue
 
                       value = u['val']
+
                       # Add path='val' as implicit reported value
                       updates = [ (key,value) ]
+                      history_key = regex if regex is not None else key
 
                       if 'conditions' in o: # Should be the case always
                         # To group subscriptions matching multiple paths, can collect by custom regex 'index'
-                        index = key
-                        if 'index' in o['conditions']:
-                            _re = o['conditions']['index']['value']
-                            _i = re.match( _re, key)
-                            if _i and len(_i.groups()) > 0:
-                              index = _i.groups()[0]
-                            else:
-                              logging.error( f"Error applying 'index' regex: {_re} to {key}" )
-                        o['last_known'][ index ] = u['val']
+                        # index = key
+                        #if 'index' in o['conditions']:
+                        #    _re = o['conditions']['index']['value']
+                        #    _i = re.match( _re, key)
+                        #    if _i and len(_i.groups()) > 0:
+                        #      index = _i.groups()[0]
+                        #    else:
+                        #      logging.error( f"Error applying 'index' regex: {_re} to {key}" )
+                        o['last_known'][ key ] = u['val']
 
                         # Helper function
                         def last_known_ints():
@@ -653,10 +653,10 @@ class MonitoringThread(Thread):
 
                         def history_ints():
                           # List over a single path's history
-                          history = o['history'][index] if index in o['history'] else {}
+                          history = o['history'][history_key] if history_key in o['history'] else {}
                           # history = { path -> (ts,val) } ??
                           logging.info( f"history_ints: {history}" )
-                          values = history[index] if index in history else [(0,0)]
+                          values = history[history_key] if history_key in history else [(0,0)]
                           return [ int(v) for t,v in values ]
 
                         def max_in_history(value_if_no_history=0):
@@ -686,7 +686,7 @@ class MonitoringThread(Thread):
                           try:
                             if not eval( filter, _globals, _locals ):
                               logging.info( f"Filter {filter} with _='{u['val']}' value='{value}' = False, skipping..." )
-                              Update_Filtered(o, int( update['timestamp'] ), index, value )
+                              Update_Filtered(o, int( update['timestamp'] ), key, value )
                               continue;
                           except Exception as ex:
                             logging.error( f"Exception during filter {filter}: {ex}" )
@@ -703,7 +703,7 @@ class MonitoringThread(Thread):
                              history = update_history( ts_ns, _o, _key, [ (_key,"<MISSING>") ] )
                              Update_Observation( _o, ts_ns, f"{_key[_i:]}=missing sample={sample_period}", int(_sample_period), [(_key,"<MISSING>")], history )
 
-                          timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, index, sample_period, int( update['timestamp'] ) ] )
+                          timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, history_key, sample_period, int( update['timestamp'] ) ] )
                           timer.start()
 
                         # Also process any 'count' regex, could compile once
@@ -746,7 +746,7 @@ class MonitoringThread(Thread):
                            i = i + 1
 
                       # Update historical data, indexed by key. Remove old entries
-                      history = update_history( int( update['timestamp'] ), o, index, updates )
+                      history = update_history( int( update['timestamp'] ), o, history_key, updates )
                       s_index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
                       try:
