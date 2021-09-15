@@ -61,7 +61,6 @@
             {
               "gnmi-path": "/bfd/network-instance[name=default]/peer[local-discriminator=*]/oper-state",
               "metric": "CONTROL_PLANE",
-              "reset": 10,
               "thresholds": [ "up" ]
             }
           ]
