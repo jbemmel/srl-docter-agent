@@ -633,8 +633,8 @@ class MonitoringThread(Thread):
                       # Use regex to aggregate history values (common path)
                       history_key = regex if regex is not None else key
 
-                      # Add path='val' as implicit reported value
-                      updates = [ (history_key,value) ]
+                      # Add regex='val' and path='val' as implicit reported value
+                      updates = [ (history_key,value), (key,value) ]
 
                       if 'conditions' in o: # Should be the case always
                         # To group subscriptions matching multiple paths, can collect by custom regex 'index'
