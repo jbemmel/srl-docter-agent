@@ -21,7 +21,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1631198933309,
+  "iteration": 1631725630614,
   "links": [],
   "panels": [
     {
@@ -129,81 +129,123 @@
       "datasource": "InfluxDB",
       "fieldConfig": {
         "defaults": {
-          "custom": {
-            "align": null,
-            "displayMode": "auto",
-            "filterable": false
+          "color": {
+            "mode": "thresholds"
           },
-          "mappings": [],
+          "custom": {
+            "fillOpacity": 70,
+            "lineWidth": 0
+          },
+          "mappings": [
+            {
+              "options": {
+                "green": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "OK"
+                },
+                "orange:BGP peering sessions": {
+                  "color": "dark-orange",
+                  "index": 4,
+                  "text": "One or more BGP in Open-Sent state"
+                },
+                "pending:Booting": {
+                  "color": "blue",
+                  "index": 5,
+                  "text": "Pending"
+                },
+                "red:BFD sessions (on OSPF)": {
+                  "color": "light-red",
+                  "index": 6,
+                  "text": "OSPF BFD Down"
+                },
+                "red:BGP peering sessions": {
+                  "color": "dark-red",
+                  "index": 1,
+                  "text": "BGP session down"
+                },
+                "red:Changes in BGP path counts": {
+                  "color": "semi-dark-red",
+                  "index": 2,
+                  "text": "Changes in BGP path counts"
+                },
+                "yellow:BGP peering sessions": {
+                  "color": "light-yellow",
+                  "index": 3,
+                  "text": "One or more BGP in Open-Confirm state"
+                },
+                "yellow:Changes in BGP path counts": {
+                  "color": "dark-yellow",
+                  "index": 7,
+                  "text": "Changes in BGP path counts"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Time"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 162
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 12,
         "x": 12,
         "y": 0
       },
-      "id": 6,
+      "id": 9,
       "options": {
-        "frameIndex": 0,
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Time"
-          }
-        ]
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "never",
+        "tooltip": {
+          "mode": "single"
+        }
       },
       "pluginVersion": "8.1.1",
       "targets": [
         {
-          "groupBy": [],
-          "measurement": "SRL_docter-agent",
+          "alias": "$col $tag_source",
+          "groupBy": [
+            {
+              "params": [
+                "source"
+              ],
+              "type": "tag"
+            }
+          ],
+          "measurement": "SRL_docter-agent-controlplane",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"source\" AS \"Node\",  \"/docter_agent:docter_agent/health/route_status\" AS \"Status\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
+          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric_status\" AS \"Overall Health\", \"/docter_agent:docter_agent/metrics/metric_cause\" AS \"Cause\", \"/docter_agent:docter_agent/metrics/metric/contribution_name-copy\" AS \"Name\" FROM \"SRL_docter-agent-dataplane\" WHERE $timeFilter",
           "queryType": "randomWalk",
-          "rawQuery": true,
+          "rawQuery": false,
           "refId": "A",
-          "resultFormat": "table",
+          "resultFormat": "time_series",
           "select": [
             [
               {
                 "params": [
-                  "/docter_agent:docter_agent/health/route_status"
+                  "/docter_agent:docter_agent/metrics/metric_status-summary"
                 ],
                 "type": "field"
               },
               {
                 "params": [
-                  "Status"
+                  "Overall Health"
                 ],
                 "type": "alias"
               }
@@ -212,10 +254,8 @@
           "tags": []
         }
       ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Prefix monitoring",
-      "type": "table"
+      "title": "Control Plane on change Health",
+      "type": "state-timeline"
     },
     {
       "datasource": "InfluxDB",
@@ -243,7 +283,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_23763571993",
+      "graphId": "flowchart_4",
       "gridPos": {
         "h": 14,
         "w": 24,
@@ -1196,6 +1236,98 @@
       "timeShift": null,
       "title": "Events",
       "type": "table"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "displayMode": "auto",
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 162
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 6,
+      "options": {
+        "frameIndex": 0,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Time"
+          }
+        ]
+      },
+      "pluginVersion": "8.1.1",
+      "targets": [
+        {
+          "groupBy": [],
+          "measurement": "SRL_docter-agent",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"source\" AS \"Node\",  \"/docter_agent:docter_agent/health/route_status\" AS \"Status\" FROM \"SRL_docter-agent\" WHERE $timeFilter",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/health/route_status"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "Status"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Prefix monitoring",
+      "type": "table"
     }
   ],
   "refresh": "5s",
@@ -1238,7 +1370,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
