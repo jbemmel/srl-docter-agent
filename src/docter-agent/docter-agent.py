@@ -299,7 +299,8 @@ def Calculate_SLA(history):
             missing_ns += (ts - ts_cur)
             in_missing = True
         elif in_missing:
-            missing_ns += (ts - ts_cur)
+            # Weigh more recent outages more, ts==ts_end = most recent
+            missing_ns += (ts - ts_cur) * (ts/ts_end)
             in_missing = False
         ts_cur = ts
     avail = 100.0 * (1.0 - (missing_ns / (ts_end - ts_start)))
