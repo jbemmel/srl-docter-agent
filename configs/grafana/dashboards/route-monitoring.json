@@ -21,7 +21,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1631728095461,
+  "iteration": 1631729840136,
   "links": [],
   "panels": [
     {
@@ -37,19 +37,19 @@
           },
           "mappings": [],
           "thresholds": {
-            "mode": "percentage",
+            "mode": "absolute",
             "steps": [
               {
                 "color": "red",
                 "value": null
               },
               {
-                "color": "orange",
-                "value": 80
+                "color": "dark-orange",
+                "value": 10
               },
               {
-                "color": "yellow",
-                "value": 90
+                "color": "semi-dark-yellow",
+                "value": 20
               },
               {
                 "color": "green",
@@ -283,7 +283,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_23763571993",
+      "graphId": "flowchart_4",
       "gridPos": {
         "h": 14,
         "w": 24,
@@ -1350,9 +1350,7 @@
         "datasource": "InfluxDB",
         "definition": "",
         "description": null,
-        "error": {
-          "message": "InfluxDB Error: database not found: telegraf"
-        },
+        "error": null,
         "hide": 0,
         "includeAll": true,
         "label": "hostname",
