@@ -306,7 +306,7 @@ def Calculate_SLA(history):
     avail = 100.0 * (1.0 - (missing_ns / (ts_end - ts_start)))
     return avail # f'{avail:.3f}' # 3 digits, e.g. 99.999
 
-def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, history, value=None ):
+def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, history, path=None, value=None ):
     global filter_count
     global reports_count
     reports_count = reports_count + 1
@@ -357,8 +357,9 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     response = Add_Telemetry( js_path=event_path, js_data=json.dumps(update_data) )
 
     # Try to avoid SDK mgr crash
-    path,val = updates[0]
-    js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
+    regex,val = updates[0]
+    _key = path if path is not None else regex
+    js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{_key}"}}.event{{.t=="{timestamp_ns}"}}'
     response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
 
     color, thresholds, sla = Color(o,value,history) # May calculate SLA if "availability" in thresholds
@@ -634,7 +635,7 @@ class MonitoringThread(Thread):
                       history_key = regex if regex is not None else key
 
                       # Add regex='val' and path='val' as implicit reported value
-                      updates = [ (history_key,value), (key,value) ]
+                      updates = [ (history_key,value) ]
 
                       if 'conditions' in o: # Should be the case always
                         # To group subscriptions matching multiple paths, can collect by custom regex 'index'
@@ -703,7 +704,7 @@ class MonitoringThread(Thread):
                              _i = _key.rindex('/') + 1
                              ts_ns = _ts + 1000000000 * int(_sample_period)
                              history = update_history( ts_ns, _o, _key, [ (_key,"<MISSING>") ] )
-                             Update_Observation( _o, ts_ns, f"{_key[_i:]}=missing sample={sample_period}", int(_sample_period), [(_key,"<MISSING>")], history )
+                             Update_Observation( _o, ts_ns, f"{_key[_i:]}=missing sample={sample_period}", int(_sample_period), [(_key,"<MISSING>")], history, path=_key )
 
                           timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, history_key, sample_period, int( update['timestamp'] ) ] )
                           timer.start()
@@ -752,7 +753,8 @@ class MonitoringThread(Thread):
                       s_index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
                       try:
-                         Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history, value )
+                         Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history,
+                           path=key, value=value ) # Use actual path for event reporting
                       except Exception as ex:
                          logging.error( f"Exception while updating telemetry - EXITING: {ex}" )
 
