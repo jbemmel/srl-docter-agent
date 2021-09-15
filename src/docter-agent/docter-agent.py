@@ -693,12 +693,12 @@ class MonitoringThread(Thread):
                               o['timer'].cancel()
                           def missing_sample( _o, _key, _sample_period, _ts ):
                              logging.info( f"Missing sample: {_key}" )
-                             index = _key.rindex('/') + 1
+                             _i = _key.rindex('/') + 1
                              ts_ns = _ts + 1000000000 * int(_sample_period)
                              history = update_history( ts_ns, _o, _key, [ (_key,"<MISSING>") ] )
-                             Update_Observation( _o, ts_ns, f"{_key[index:]}=missing sample={sample_period}", int(_sample_period), [(_key,"<MISSING>")], history )
+                             Update_Observation( _o, ts_ns, f"{_key[_i:]}=missing sample={sample_period}", int(_sample_period), [(_key,"<MISSING>")], history )
 
-                          timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
+                          timer = o['timer'] = Timer( int(sample_period) + 1, missing_sample, [ o, index, sample_period, int( update['timestamp'] ) ] )
                           timer.start()
 
                         # Also process any 'count' regex, could compile once
