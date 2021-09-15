@@ -555,8 +555,8 @@ class MonitoringThread(Thread):
       def find_regex( path ):
         for r,o in regexes:
           if r.match( path ):
-            return o
-        return None
+            return o,r
+        return None,None
 
       def update_history( ts_ns, o, key, updates ):
           history = o['history'][ key ] if key in o['history'] else {}
@@ -617,10 +617,14 @@ class MonitoringThread(Thread):
                       if key in lookup:
                          o = lookup[ key ]
                       elif regexes!=[]:
-                         o = find_regex( key )
+                         o, regex = find_regex( key )
                          if o is None:
                             logging.info( f"No matching regex found - skipping: '{key}' = {u['val']}" )
                             continue
+
+                         # Set regex as the key, to aggregate history
+                         key = regex
+
                       else:
                          logging.info( f"No matching key found and no regexes - skipping: '{key}' = {u['val']}" )
                          continue
