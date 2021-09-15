@@ -555,7 +555,7 @@ class MonitoringThread(Thread):
       def find_regex( path ):
         for r,o in regexes:
           if r.match( path ):
-            return o,r
+            return o, r.pattern
         return None,None
 
       def update_history( ts_ns, o, key, updates ):
