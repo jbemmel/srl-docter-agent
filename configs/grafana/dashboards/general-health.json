@@ -349,7 +349,7 @@
             "overlayIcon": true,
             "pattern": "leaf1-ports",
             "rangeData": [],
-            "reduce": true,
+            "reduce": false,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -746,8 +746,8 @@
             "shapeProp": "id",
             "shapeRegEx": true,
             "stringThresholds": [
-              "/.*=0.[6-7].*/",
-              "/.*=0.[0-5].*/"
+              "/.*=0.[5-7].*/",
+              "/.*=0.[0-4].*/"
             ],
             "textData": [],
             "textProp": "id",
