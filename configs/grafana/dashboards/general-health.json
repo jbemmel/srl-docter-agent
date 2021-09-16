@@ -326,7 +326,7 @@
         "rulesData": [
           {
             "aggregation": "current",
-            "alias": "leaf 1 ethernet-1/2 status",
+            "alias": "leaf 1 ethernet-1/1 status",
             "colors": [
               "#73BF69",
               "#F2495C"
@@ -347,67 +347,7 @@
             "metricType": "serie",
             "order": 1,
             "overlayIcon": true,
-            "pattern": "leaf1-ports",
-            "rangeData": [],
-            "reduce": false,
-            "refId": "A",
-            "sanitize": false,
-            "shapeData": [
-              {
-                "colorOn": "a",
-                "hidden": false,
-                "pattern": "151",
-                "style": "fillColor"
-              }
-            ],
-            "shapeProp": "id",
-            "shapeRegEx": true,
-            "stringThresholds": [
-              "/.*ethernet-1/2.*/"
-            ],
-            "textData": [],
-            "textProp": "id",
-            "textRegEx": true,
-            "thresholds": [],
-            "tooltip": true,
-            "tooltipColors": true,
-            "tooltipLabel": "ethernet-1/2 status",
-            "tooltipOn": "a",
-            "tpDirection": "v",
-            "tpGraph": false,
-            "tpGraphHigh": null,
-            "tpGraphLow": null,
-            "tpGraphScale": "linear",
-            "tpGraphSize": "100%",
-            "tpGraphType": "line",
-            "type": "string",
-            "unit": "short",
-            "valueData": []
-          },
-          {
-            "aggregation": "current",
-            "alias": "leaf 1 ethernet-1/1 status",
-            "colors": [
-              "#73BF69",
-              "#F2495C"
-            ],
-            "column": "Time",
-            "dateFormat": "YYYY-MM-DD HH:mm:ss",
-            "decimals": 2,
-            "eventData": [],
-            "eventProp": "id",
-            "eventRegEx": false,
-            "gradient": false,
-            "hidden": false,
-            "invert": true,
-            "linkData": [],
-            "linkProp": "id",
-            "linkRegEx": false,
-            "mappingType": 1,
-            "metricType": "serie",
-            "order": 2,
-            "overlayIcon": true,
-            "pattern": "leaf1-ports",
+            "pattern": "status-detail-leaf1",
             "rangeData": [],
             "reduce": true,
             "refId": "A",
@@ -467,7 +407,7 @@
             "linkRegEx": true,
             "mappingType": 1,
             "metricType": "serie",
-            "order": 3,
+            "order": 2,
             "overlayIcon": true,
             "pattern": "dataplane_leaf2",
             "rangeData": [],
@@ -531,7 +471,7 @@
             "linkRegEx": true,
             "mappingType": 1,
             "metricType": "serie",
-            "order": 4,
+            "order": 3,
             "overlayIcon": true,
             "pattern": "dataplane_leaf3",
             "rangeData": [],
@@ -595,7 +535,7 @@
             "linkRegEx": true,
             "mappingType": 1,
             "metricType": "serie",
-            "order": 5,
+            "order": 4,
             "overlayIcon": true,
             "pattern": "controlplane_spine2",
             "rangeData": [],
@@ -659,7 +599,7 @@
             "linkRegEx": true,
             "mappingType": 1,
             "metricType": "serie",
-            "order": 6,
+            "order": 5,
             "overlayIcon": true,
             "pattern": "controlplane_spine1",
             "rangeData": [],
@@ -722,7 +662,7 @@
             "linkRegEx": false,
             "mappingType": 1,
             "metricType": "serie",
-            "order": 7,
+            "order": 6,
             "overlayIcon": true,
             "pattern": "leaf1-ports",
             "rangeData": [],
@@ -791,7 +731,7 @@
             "linkRegEx": false,
             "mappingType": 1,
             "metricType": "serie",
-            "order": 8,
+            "order": 7,
             "overlayIcon": true,
             "pattern": "dataplane_leaf1",
             "rangeData": [],
@@ -831,10 +771,97 @@
             "type": "string",
             "unit": "short",
             "valueData": []
+          },
+          {
+            "aggregation": "current",
+            "alias": "leaf 1 ethernet-1/2 status",
+            "colors": [
+              "#73BF69",
+              "#F2495C"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": true,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": false,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 8,
+            "overlayIcon": true,
+            "pattern": "status-detail-leaf1",
+            "rangeData": [],
+            "reduce": false,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "151",
+                "style": "fillColor"
+              }
+            ],
+            "shapeProp": "id",
+            "shapeRegEx": true,
+            "stringThresholds": [
+              "/.*ethernet-1/2.*/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [],
+            "tooltip": true,
+            "tooltipColors": true,
+            "tooltipLabel": "ethernet-1/2 status",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "string",
+            "unit": "short",
+            "valueData": []
           }
         ]
       },
       "targets": [
+        {
+          "alias": "status-detail-leaf1",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "SRL_docter-agent-dataplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "G",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric_status-detail"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-leaf1"
+            }
+          ]
+        },
         {
           "alias": "dataplane_leaf1",
           "groupBy": [],
