@@ -140,7 +140,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
 
     # If this update made things worse, report detailed status too
     if cause == contributor:
-        detail = f"{contrib_status}:{[ f'{path}={value}' for path,value in updates[2:] ]}"
+        detail = f"{contrib_status}:{[ f'{path}={value}' for path,value in updates[1:] ]}"
     else:
         detail = overall
 
