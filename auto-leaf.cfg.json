@@ -17,7 +17,7 @@
    "intensive-care": {
       "observe": [
         {
-          "name": "Any changes in link or interface operational state",
+          "name": "Port down",
           "conditions": [
             {
               "gnmi-path": "/interface[name=*]/oper-state",
@@ -30,7 +30,7 @@
           ]
         },
         {
-          "name": "Balanced uplinks",
+          "name": "Unbalanced uplinks",
           "report": [
             "/interface[name=ethernet-1/1]/statistics/out-unicast-packets",
             "/interface[name=ethernet-1/2]/statistics/out-unicast-packets"
