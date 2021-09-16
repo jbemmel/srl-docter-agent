@@ -582,9 +582,9 @@
           },
           {
             "aggregation": "current",
-            "alias": "leaf1-port1",
+            "alias": "ports",
             "colors": [
-              "#73BF69",
+              "#FF9830",
               "#C4162A"
             ],
             "column": "Time",
@@ -603,7 +603,7 @@
             "metricType": "serie",
             "order": 5,
             "overlayIcon": true,
-            "pattern": "leaf1-ports",
+            "pattern": "reports1",
             "rangeData": [],
             "reduce": false,
             "refId": "A",
@@ -619,7 +619,7 @@
             "shapeProp": "id",
             "shapeRegEx": true,
             "stringThresholds": [
-              "/srl_nokia-interfaces:interface[name=ethernet-1/1]/oper-down-reason=port-admin-disabled/"
+              "/.*ethernet.*/"
             ],
             "textData": [],
             "textProp": "id",
@@ -676,12 +676,6 @@
                 "hidden": false,
                 "pattern": "146",
                 "style": "fillColor"
-              },
-              {
-                "colorOn": "a",
-                "hidden": false,
-                "pattern": "149",
-                "style": "strokeColor"
               }
             ],
             "shapeProp": "id",
@@ -853,13 +847,12 @@
           ]
         },
         {
-          "alias": "leaf1-ports",
+          "alias": "reports1",
           "groupBy": [],
           "hide": false,
           "measurement": "SRL_docter-agent-dataplane",
           "orderByTime": "ASC",
           "policy": "default",
-          "queryType": "randomWalk",
           "refId": "F",
           "resultFormat": "time_series",
           "select": [
@@ -872,17 +865,30 @@
               }
             ]
           ],
-          "tags": [
-            {
-              "key": "source",
-              "operator": "=",
-              "value": "clab-srl-docter-lab-leaf1"
-            }
-          ]
+          "tags": []
         }
       ],
       "title": "Topology View",
-      "transformations": [],
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "regex",
+                  "options": {
+                    "value": ".*ethernet.*"
+                  }
+                },
+                "fieldName": "reports1"
+              }
+            ],
+            "match": "all",
+            "type": "include"
+          }
+        }
+      ],
       "type": "agenty-flowcharting-panel",
       "valueName": "current",
       "version": "0.9.0"
