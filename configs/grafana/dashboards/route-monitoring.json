@@ -21,7 +21,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1631801836355,
+  "iteration": 1631810359510,
   "links": [],
   "panels": [
     {
@@ -196,7 +196,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
+        "h": 8,
         "w": 12,
         "x": 12,
         "y": 0
@@ -283,7 +283,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_23763571993",
+      "graphId": "flowchart_4",
       "gridPos": {
         "h": 14,
         "w": 24,
@@ -1350,7 +1350,9 @@
         "datasource": "InfluxDB",
         "definition": "",
         "description": null,
-        "error": null,
+        "error": {
+          "message": "InfluxDB Error: database not found: telegraf"
+        },
         "hide": 0,
         "includeAll": true,
         "label": "hostname",
