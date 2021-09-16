@@ -87,7 +87,11 @@ module docter-agent {
                   type string;
                 }
                 leaf status-summary {
-                  description "Consolidated status string with timestamp";
+                  description "Consolidated status string";
+                  type string;
+                }
+                leaf status-detail {
+                  description "Consolidated status string with details like port";
                   type string;
                 }
                 list contribution {

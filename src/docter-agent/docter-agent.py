@@ -137,11 +137,20 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
             cause = c
 
     logging.info( f"Updated metric {metric}: {overall} cause={cause}" )
+
+    # If this update made things worse, report detailed status too
+    if cause == contributor:
+        detail = f"{contrib_status}:{[ f'{path}={value}' for path,value in updates[2:] ]}"
+    else:
+        detail = overall
+
     data = {
        'status' : { 'value' : overall },
        'cause'  : { 'value' : cause },
-       'status_summary' : { 'value' : f"{overall}:{cause}" if overall!="green" else "green" }
+       'status_summary' : { 'value' : f"{overall}:{cause}" if overall!="green" else "green" },
+       'status_detail' : { 'value' : detail },
     }
+
     response = Add_Telemetry( js_path=base_path, js_data=json.dumps(data) )
 
 # No longer used
