@@ -139,7 +139,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
     logging.info( f"Updated metric {metric}: {overall} cause={cause}" )
 
     # If this update made things worse, report detailed status too
-    if cause == contributor:
+    if cause == contributor and contrib_status!="green":
         detail = f"{contributor}:{contrib_status}:{[ f'{path}={value}' for path,value in updates[1:] ]}"
     else:
         detail = overall
