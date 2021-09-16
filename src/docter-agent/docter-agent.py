@@ -23,9 +23,6 @@ import config_service_pb2
 import telemetry_service_pb2
 import telemetry_service_pb2_grpc
 
-# See opt/rh/rh-python36/root/usr/lib/python3.6/site-packages/sdk_protos/bfd_service_pb2.py
-import bfd_service_pb2
-
 from pygnmi.client import gNMIclient, telemetryParser
 
 from logging.handlers import RotatingFileHandler

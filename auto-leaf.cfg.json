@@ -44,9 +44,9 @@
               "metric": "DATA_PLANE",
               "sample-period": 30,
               "history-window": 3000,
-              "green": "value > 0.8",
-              "yellow": "value > 0.5 and value <= 0.8",
-              "red": "value <= 0.5"
+              "green": "value >= 0.8",
+              "yellow": "value >= 0.5 and value < 0.8",
+              "red": "value < 0.5"
             }
           ]
         },
