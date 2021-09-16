@@ -584,7 +584,7 @@
             "aggregation": "current",
             "alias": "ports",
             "colors": [
-              "#FF9830",
+              "#73BF69",
               "#C4162A"
             ],
             "column": "Time",
@@ -603,9 +603,9 @@
             "metricType": "serie",
             "order": 5,
             "overlayIcon": true,
-            "pattern": "reports1",
+            "pattern": "leaf1-ports",
             "rangeData": [],
-            "reduce": false,
+            "reduce": true,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -619,7 +619,7 @@
             "shapeProp": "id",
             "shapeRegEx": true,
             "stringThresholds": [
-              "/.*ethernet.*/"
+              "/.*ethernet-1/1.*/"
             ],
             "textData": [],
             "textProp": "id",
@@ -847,7 +847,7 @@
           ]
         },
         {
-          "alias": "reports1",
+          "alias": "leaf1-ports",
           "groupBy": [],
           "hide": false,
           "measurement": "SRL_docter-agent-dataplane",
@@ -865,30 +865,17 @@
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-leaf1"
+            }
+          ]
         }
       ],
       "title": "Topology View",
-      "transformations": [
-        {
-          "id": "filterByValue",
-          "options": {
-            "filters": [
-              {
-                "config": {
-                  "id": "regex",
-                  "options": {
-                    "value": ".*ethernet.*"
-                  }
-                },
-                "fieldName": "reports1"
-              }
-            ],
-            "match": "all",
-            "type": "include"
-          }
-        }
-      ],
+      "transformations": [],
       "type": "agenty-flowcharting-panel",
       "valueName": "current",
       "version": "0.9.0"
