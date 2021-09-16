@@ -582,7 +582,7 @@
           },
           {
             "aggregation": "current",
-            "alias": "dataplane_leaf1",
+            "alias": "leaf1-port1",
             "colors": [
               "#73BF69",
               "#F2CC0C",
@@ -605,9 +605,73 @@
             "metricType": "serie",
             "order": 5,
             "overlayIcon": true,
-            "pattern": "dataplane_leaf1",
+            "pattern": "leaf1-ports",
             "rangeData": [],
             "reduce": true,
+            "refId": "A",
+            "sanitize": false,
+            "shapeData": [
+              {
+                "colorOn": "a",
+                "hidden": false,
+                "pattern": "149",
+                "style": "strokeColor"
+              }
+            ],
+            "shapeProp": "id",
+            "shapeRegEx": true,
+            "stringThresholds": [
+              "/yellow.*/",
+              "/orange.*/",
+              "/srl_nokia-interfaces:interface[name=ethernet-1/1]/oper-down-reason=port-admin-disabled/"
+            ],
+            "textData": [],
+            "textProp": "id",
+            "textRegEx": true,
+            "thresholds": [],
+            "tooltip": true,
+            "tooltipColors": true,
+            "tooltipLabel": "",
+            "tooltipOn": "a",
+            "tpDirection": "v",
+            "tpGraph": false,
+            "tpGraphHigh": null,
+            "tpGraphLow": null,
+            "tpGraphScale": "linear",
+            "tpGraphSize": "100%",
+            "tpGraphType": "line",
+            "type": "string",
+            "unit": "short",
+            "valueData": []
+          },
+          {
+            "aggregation": "current",
+            "alias": "dataplane_leaf1",
+            "colors": [
+              "#73BF69",
+              "#F2CC0C",
+              "#FA6400",
+              "#C4162A"
+            ],
+            "column": "Time",
+            "dateFormat": "YYYY-MM-DD HH:mm:ss",
+            "decimals": 2,
+            "eventData": [],
+            "eventProp": "id",
+            "eventRegEx": false,
+            "gradient": false,
+            "hidden": false,
+            "invert": true,
+            "linkData": [],
+            "linkProp": "id",
+            "linkRegEx": false,
+            "mappingType": 1,
+            "metricType": "serie",
+            "order": 6,
+            "overlayIcon": true,
+            "pattern": "dataplane_leaf1",
+            "rangeData": [],
+            "reduce": false,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -791,6 +855,33 @@
               "value": "clab-srl-docter-lab-spine2"
             }
           ]
+        },
+        {
+          "alias": "leaf1-ports",
+          "groupBy": [],
+          "hide": false,
+          "measurement": "SRL_docter-agent-dataplane",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "F",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric/contribution_reports_1"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "source",
+              "operator": "=",
+              "value": "clab-srl-docter-lab-leaf1"
+            }
+          ]
         }
       ],
       "title": "Topology View",
@@ -861,6 +952,18 @@
                 "value": 215
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "alias 1"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 163
+              }
+            ]
           }
         ]
       },
@@ -905,6 +1008,20 @@
               {
                 "params": [
                   "/docter_agent:docter_agent/metrics/metric_status-summary"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "alias"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "/docter_agent:docter_agent/metrics/metric/contribution_reports_1"
                 ],
                 "type": "field"
               },
@@ -993,7 +1110,7 @@
             "properties": [
               {
                 "id": "custom.width",
-                "value": 472
+                "value": 301
               }
             ]
           }
