@@ -664,7 +664,7 @@
             "metricType": "serie",
             "order": 6,
             "overlayIcon": true,
-            "pattern": "leaf1-ports",
+            "pattern": "status-detail-leaf1",
             "rangeData": [],
             "reduce": true,
             "refId": "A",
@@ -686,8 +686,8 @@
             "shapeProp": "id",
             "shapeRegEx": true,
             "stringThresholds": [
-              "/.*=0.[5-7].*/",
-              "/.*=0.[0-4].*/"
+              "/Unbalanced uplinks:yellow.*/",
+              "/Unbalanced uplinks:red.*/"
             ],
             "textData": [],
             "textProp": "id",
@@ -797,7 +797,7 @@
             "overlayIcon": true,
             "pattern": "status-detail-leaf1",
             "rangeData": [],
-            "reduce": false,
+            "reduce": true,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
