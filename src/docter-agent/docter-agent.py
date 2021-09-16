@@ -706,7 +706,7 @@ class MonitoringThread(Thread):
                              logging.info( f"Missing sample: {_key}" )
                              _i = _key.rindex('/') + 1
                              ts_ns = _ts + 1000000000 * int(_sample_period)
-                             history = update_history( ts_ns, _o, history_key, [ (_key,"<MISSING>") ] )
+                             history = update_history( ts_ns, _o, history_key, [ (history_key,"<MISSING>") ] )
                              Update_Observation( _o, ts_ns, f"{_key[_i:]}=missing sample={sample_period}", int(_sample_period), [(_key,"<MISSING>")], history, path=_key )
 
                           timer = o['timer'][key] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
