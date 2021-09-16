@@ -52,11 +52,6 @@
                   "index": 7,
                   "text": "Pending"
                 },
-                "red:Any changes in link or interface operational state": {
-                  "color": "dark-red",
-                  "index": 1,
-                  "text": "Interface down"
-                },
                 "red:Balanced uplinks": {
                   "color": "light-red",
                   "index": 2,
@@ -67,6 +62,16 @@
                   "index": 6,
                   "text": "Broadcast traffic out of physical links T3"
                 },
+                "red:Port down": {
+                  "color": "dark-red",
+                  "index": 1,
+                  "text": "Interface down"
+                },
+                "red:Unbalanced uplinks": {
+                  "color": "light-red",
+                  "index": 9,
+                  "text": "Unbalanced uplinks"
+                },
                 "yellow:Balanced uplinks": {
                   "color": "semi-dark-yellow",
                   "index": 3,
@@ -76,6 +81,11 @@
                   "color": "super-light-yellow",
                   "index": 4,
                   "text": "Broadcast traffic out of physical links T1"
+                },
+                "yellow:Unbalanced uplinks": {
+                  "color": "yellow",
+                  "index": 8,
+                  "text": "Unbalanced uplinks"
                 }
               },
               "type": "value"
@@ -313,7 +323,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_23763571993",
+      "graphId": "flowchart_7",
       "gridPos": {
         "h": 16,
         "w": 24,
