@@ -47,6 +47,11 @@
                   "index": 5,
                   "text": "Broadcast traffic out of physical links T2"
                 },
+                "orange:Unbalanced uplinks": {
+                  "color": "semi-dark-orange",
+                  "index": 10,
+                  "text": "Unbalanced uplinks"
+                },
                 "pending:Booting": {
                   "color": "blue",
                   "index": 7,
@@ -323,7 +328,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_23763571993",
+      "graphId": "flowchart_7",
       "gridPos": {
         "h": 16,
         "w": 24,
@@ -676,7 +681,7 @@
             "overlayIcon": true,
             "pattern": "status-detail-leaf1",
             "rangeData": [],
-            "reduce": false,
+            "reduce": true,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
