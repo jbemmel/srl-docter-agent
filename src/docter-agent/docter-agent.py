@@ -105,7 +105,6 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
     if updates!=[]:
         # Hardcoded hack: show top CPU usage per process more nicely
         def show(data):
-            logging.info( f"show({data}) type={type(data)}" )
             if isinstance(data, dict) and 'srl_nokia-platform-cpu:process' in data:
                pid_data = data['srl_nokia-platform-cpu:process']
                vals = [ ( f'cpu={v["cpu-utilization"]:02d}%', f'process={v["pid"]}' )
