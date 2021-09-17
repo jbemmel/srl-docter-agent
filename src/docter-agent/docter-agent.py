@@ -112,14 +112,16 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                pid_2_app = {}
                if 'application' in updates[2][1]:
                    # Some apps are not running and have no pid
-                   pid_2_app = { p['pid'] : p['name'] for p in updates[2][1]['application'] if 'pid' in p }
+                   pid_2_app = { int(p['pid']) : p['name'] for p in updates[2][1]['application'] if 'pid' in p }
                    logging.info( f"PID mapping: {pid_2_app}" )
                else:
                    logging.warning( f"No application mapping available? {updates}")
 
                vals = [ ( f'cpu={v["cpu-utilization"]:02d}%',
-                          f'process={pid_2_app[ v["pid"] ] if v["pid"] in pid_2_app else v["pid"] }' )
-                        for v in pid_data if v['cpu-utilization'] > 0 ]
+                          f'process={ pid_2_app[ pid ] if pid in pid_2_app else pid }' )
+                        for v in pid_data if v['cpu-utilization'] > 0
+                        for pid in [ int(v["pid"]) ]
+                      ]
                return sorted(vals,reverse=True)[:5] # Top 5
             return data
 
