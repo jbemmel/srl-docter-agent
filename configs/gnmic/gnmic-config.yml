@@ -104,8 +104,9 @@ outputs:
   influxdb-output:
     type: influxdb
     url: http://clab-srl-docter-lab-influxdb:8086
-    bucket: telemetry # db name
-    token: gnmic:gnmic # username:password
+    bucket: telegraf # db name
+    # token: gnmic:gnmic # username:password
+    metric-prefix: gnmic
     batch-size: 1000
     flush-timer: 10s
  
