@@ -108,7 +108,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
             logging.info( f"show({data})" )
             if 'srl_nokia-platform-cpu:process' in data:
                pid_data = data['srl_nokia-platform-cpu:process']
-               vals = [ ( f'cpu={v['cpu-utilization']:02d}%', f'process={v['pid']}') 
+               vals = [ ( f'cpu={v["cpu-utilization"]:02d}%', f'process={v["pid"]}' )
                         for v in pid_data if v['cpu-utilization'] > 0 ]
                return sorted(vals,reverse=True)[:5] # Top 5
             return data
