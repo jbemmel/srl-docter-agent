@@ -107,7 +107,14 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
         def show(data):
             if isinstance(data, dict) and 'srl_nokia-platform-cpu:process' in data:
                pid_data = data['srl_nokia-platform-cpu:process']
-               vals = [ ( f'cpu={v["cpu-utilization"]:02d}%', f'process={v["pid"]}' )
+
+               # Config is arranged such that pid->application mapping is in updates[2][1]
+               pid_2_app = {}
+               if 'application' in updates[2][1]:
+                   pid_2_app = { p['pid'] : p['name'] for p in updates[2][1]['application'] }
+
+               vals = [ ( f'cpu={v["cpu-utilization"]:02d}%',
+                          f'process={pid_2_app[ v["pid"] ] if v["pid"] in pid_2_app else v["pid"] }' )
                         for v in pid_data if v['cpu-utilization'] > 0 ]
                return sorted(vals,reverse=True)[:5] # Top 5
             return data
