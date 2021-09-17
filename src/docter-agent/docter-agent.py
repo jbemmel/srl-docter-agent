@@ -104,12 +104,16 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
 
     if updates!=[]:
         # Hardcoded hack: show top CPU usage per process more nicely
-        if 'srl_nokia-platform-cpu:process' in updates[0][1]:
-           pid_data = updates[0][1]['srl_nokia-platform-cpu:process']
-           data = [ (v['cpu-utilization'],v['pid']) for v in pid_data if v['cpu-utilization'] > 0 ]
-           metric_data['reports'] = sorted(data,reverse=True)[:5] # Top 5
-        else:
-           metric_data['reports'] = [ f'{path}={value}' for path,value in updates ]
+        def show(data):
+            logging.info( f"show({data})" )
+            if 'srl_nokia-platform-cpu:process' in data:
+               pid_data = data['srl_nokia-platform-cpu:process']
+               vals = [ ( f'cpu={v['cpu-utilization']:02d}%', f'process={v['pid']}') 
+                        for v in pid_data if v['cpu-utilization'] > 0 ]
+               return sorted(vals,reverse=True)[:5] # Top 5
+            return data
+
+        metric_data['reports'] = [ f'{path}={show(value)}' for path,value in updates ]
 
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(metric_data) )
     logging.info(f"Update_Metric Telemetry_Update_Response :: {response}")
