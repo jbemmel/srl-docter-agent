@@ -210,7 +210,7 @@
                   "text": "BGP session down"
                 },
                 "red:Changes in BGP path counts": {
-                  "color": "semi-dark-red",
+                  "color": "light-red",
                   "index": 2,
                   "text": "Changes in BGP path counts"
                 },
@@ -328,7 +328,7 @@
         ]
       },
       "format": "short",
-      "graphId": "flowchart_7",
+      "graphId": "flowchart_23763571993",
       "gridPos": {
         "h": 16,
         "w": 24,
@@ -534,7 +534,7 @@
               "#73BF69",
               "#F2CC0C",
               "#FA6400",
-              "#C4162A"
+              "#FF7383"
             ],
             "column": "Time",
             "dateFormat": "YYYY-MM-DD HH:mm:ss",
@@ -554,7 +554,7 @@
             "overlayIcon": true,
             "pattern": "controlplane_spine2",
             "rangeData": [],
-            "reduce": true,
+            "reduce": false,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
