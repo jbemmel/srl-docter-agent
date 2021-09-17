@@ -249,6 +249,11 @@ module docter-agent {
                     description "Expression to report as 'red'";
                     type string;
                   }
+                  leaf missing {
+                    description "Expression to report when miss timer fires";
+                    type string;
+                    default "grey";
+                  }
                   //leaf count {
                   //  description "Optional regex to count unique matches in reported paths, e.g. BGP neighbor IPs: '\\[neighbor=.*\\]'";
                   //  type string;

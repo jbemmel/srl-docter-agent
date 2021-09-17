@@ -206,6 +206,8 @@ def Color(o,val,history=None):
             sla = None
         color = Threshold_Color(val,thresholds)
         return color, thresholds, sla
+    elif val is None: # <MISSING> case
+        return o['conditions']['missing']['value'] # Default: grey
     else:
         for c in ["red","orange","yellow","green"]:
             if c in o['conditions']:
