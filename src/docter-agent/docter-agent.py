@@ -120,9 +120,9 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                  pid_data = data['srl_nokia-platform-cpu:process']
                  vals = [ ( f'cpu={v["cpu-utilization"]:02d}%',
                           f'process={ pid_2_app[ pid ] if pid in pid_2_app else pid }' )
-                        for v in pid_data if v['cpu-utilization'] > 0
-                        for pid in [ int(v["pid"]) ]
-                      ]
+                          for v in pid_data if v['cpu-utilization'] > 0
+                          for pid in [ int(v["pid"]) ]
+                        ]
                  return sorted(vals,reverse=True)[:5] # Top 5
                else:
                  pid_cpu = re.match( ".*srl_nokia-platform-cpu:process\\[pid=([0-9]+)\\]/cpu-utilization=([0-9]+)$", data )
