@@ -708,7 +708,7 @@ class MonitoringThread(Thread):
 
                         def avg_in_history(value_if_no_history=0):
                             hist = history_ints()
-                            return avg(hist) if hist!=[] else int(value_if_no_history)
+                            return (sum(hist)/len(hist)) if hist!=[] else int(value_if_no_history)
 
                         _globals = { "ipaddress" : ipaddress }
                         _locals  = { "_" : u['val'], **o,
