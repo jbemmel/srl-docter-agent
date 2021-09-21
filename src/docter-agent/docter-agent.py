@@ -115,7 +115,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                    # Some apps are not running and have no pid
                    pid_2_app = { int(p['pid']) : p['name'] for p in updates[u][1]['application'] if 'pid' in p }
                    # logging.info( f"PID mapping: {pid_2_app}" )
-                   del updates[u][1]['application']
+                   # del updates[u][1]['application']
                else:
                    logging.warning( f"JvB no pid-2-app: u={u} ({updates})" )
 
@@ -131,8 +131,8 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                  pid_cpu = re.match( ".*\\[pid=([0-9]+)\\].*", path )
                  if pid_cpu:
                      _pid = int( pid_cpu.groups()[0] )
-                     _name = pid_2_app[ _pid ] if _pid in pid_2_app else str(_pid)
-                     return f"process {_name}({_pid}) CPU usage {data}%"
+                     _name = f"{pid_2_app[ _pid ]}({_pid})" if _pid in pid_2_app else str(_pid)
+                     return f"process {_name} CPU usage {data}%"
 
             return f'{path}={data}'
 
