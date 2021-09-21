@@ -507,6 +507,18 @@
                 "value": 212
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Node"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 218
+              }
+            ]
           }
         ]
       },
@@ -533,7 +545,9 @@
           "measurement": "SRL_docter-agent-cpu",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric/contribution_reports_1\" AS \"CPU %\" FROM \"SRL_docter-agent-cpu\" WHERE $timeFilter",
           "queryType": "randomWalk",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "logs",
           "select": [
