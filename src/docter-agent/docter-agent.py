@@ -106,7 +106,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
         # Hardcoded hack: show top CPU usage per process more nicely
         def show(path,data):
             if ((isinstance(data, dict) and 'srl_nokia-platform-cpu:process' in data)
-             or 'srl_nokia-platform-cpu:process' in path):
+             or re.match( ".*\\[pid=([0-9]+)\\].*", path )):
 
                # Config is arranged such that pid->application mapping is in updates[2][1] or updates[3][1]
                pid_2_app = {}
@@ -126,13 +126,13 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                         ]
                  return sorted(vals,reverse=True)[:5] # Top 5
                else:
-                 pid_cpu = re.match( ".*srl_nokia-platform-cpu:process\\[pid=([0-9]+)\\].*", path )
+                 pid_cpu = re.match( ".*\\[pid=([0-9]+)\\].*", path )
                  if pid_cpu:
                      _pid = int( pid_cpu.groups()[0] )
                      _name = pid_2_app[ _pid ] if _pid in pid_2_app else str(_pid)
                      return f"process {_name}({_pid}) CPU usage {data}%"
                  else:
-                     logging.warning( f"Mismatch: {data}" )
+                     logging.warning( f"Mismatch: {path}" )
 
             return data
 
