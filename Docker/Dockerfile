@@ -16,6 +16,9 @@ FROM srl/auto-config:$SR_LINUX_RELEASE
 # Install 'stress' tool for CPU overload emulation
 RUN sudo yum -y install epel-release && sudo yum install -y stress nmap
 
+# Add psutil for pid-2-name
+RUN sudo python3 -m pip install psutil
+
 # Integrate CLI agent, change CLI network namespace to 'default'
 COPY cliplugin/*.py /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux/mgmt/cli/plugins/reports/
 RUN sudo sh -c ' echo "fabric = srlinux.mgmt.cli.plugins.reports.fabric:Plugin" >> /opt/srlinux/python/virtual-env/lib/python3.6/site-packages/srlinux-0.1-py3.6.egg-info/entry_points.txt'
@@ -32,9 +35,6 @@ COPY ./src /opt/srlinux/agents/
 
 # Install BGP dependencies - removed for now
 # RUN sudo python3 -m pip install netns ryu eventlet
-
-# Add psutil for pid-2-name
-RUN sudo python3 -m pip install psutil
 
 # run pylint to catch any obvious errors
 RUN PYTHONPATH=$AGENT_PYTHONPATH pylint --load-plugins=pylint_protobuf -E /opt/srlinux/agents/docter-agent
