@@ -104,8 +104,9 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
 
     if updates!=[]:
         # Hardcoded hack: show top CPU usage per process more nicely
-        def show(data):
-            if isinstance(data, (dict,str)) and 'srl_nokia-platform-cpu:process' in data:
+        def show(path,data):
+            if ((isinstance(data, dict) and 'srl_nokia-platform-cpu:process' in data)
+                 or 'srl_nokia-platform-cpu:process' in path):
 
                # Config is arranged such that pid->application mapping is in updates[2][1] or updates[3][1]
                pid_2_app = {}
@@ -126,18 +127,17 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                         ]
                  return sorted(vals,reverse=True)[:5] # Top 5
                else:
-                 pid_cpu = re.match( ".*srl_nokia-platform-cpu:process\\[pid=([0-9]+)\\]/cpu-utilization=([0-9]+)", data )
+                 pid_cpu = re.match( ".*srl_nokia-platform-cpu:process\\[pid=([0-9]+)\\].*", path )
                  if pid_cpu:
-                     _gs = pid_cpu.groups()
-                     _pid = int( _gs[0] )
+                     _pid = int( pid_cpu.groups()[0] )
                      _name = pid_2_app[ _pid ] if _pid in pid_2_app else str(_pid)
-                     return f"process {_name}({_pid}) CPU usage {_gs[1]}%"
+                     return f"process {_name}({_pid}) CPU usage {data}%"
                  else:
                      logging.warning( f"Mismatch: {data}" )
 
             return data
 
-        metric_data['reports'] = [ f'{path}={show(value)}' for path,value in updates ]
+        metric_data['reports'] = [ f'{path}={show(path,value)}' for path,value in updates ]
 
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(metric_data) )
     logging.info(f"Update_Metric Telemetry_Update_Response :: {response}")
