@@ -65,3 +65,16 @@ report:
 Ordinary link flap or BGP session down events are a solved problem: They can easily be monitored today.
 But when it comes to one-off out-of-the-ordinary elusive behavior, correlation of system state and events over time,
 a local agent with programmable monitoring logic can provide the timely data points you need to draw the right conclusions
+
+# Lab installation
+Prerequisites:
+* Docker
+* Containerlab
+
+To deploy this prototype agent in a demo setup complete with Grafana, Telegraf, gNMIc, Prometheus, InfluxDb:
+```
+git clone --recurse-submodules https://github.com/jbemmel/srl-docter-agent.git
+cd srl-docter-agent
+make -C ./Docker
+sudo containerlab deploy -t ./srl-leafspine.lab
+```
