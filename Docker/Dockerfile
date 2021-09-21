@@ -33,6 +33,9 @@ COPY ./src /opt/srlinux/agents/
 # Install BGP dependencies - removed for now
 # RUN sudo python3 -m pip install netns ryu eventlet
 
+# Add psutil for pid-2-name
+RUN sudo python3 -m pip install psutil
+
 # run pylint to catch any obvious errors
 RUN PYTHONPATH=$AGENT_PYTHONPATH pylint --load-plugins=pylint_protobuf -E /opt/srlinux/agents/docter-agent
 

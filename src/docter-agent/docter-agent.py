@@ -108,21 +108,24 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
             if ((isinstance(data, dict) and 'srl_nokia-platform-cpu:process' in data)
              or re.match( ".*\\[pid=([0-9]+)\\].*", path )):
                # Config is arranged such that pid->application mapping is in updates[2][1] or updates[3][1]
-               pid_2_app = {}
+               # pid_2_app = {}
 
-               u = 2 if isinstance(data, dict) else 3
-               if 'application' in updates[u][1]:
-                   # Some apps are not running and have no pid
-                   pid_2_app = { int(p['pid']) : p['name'] for p in updates[u][1]['application'] if 'pid' in p }
-                   # logging.info( f"PID mapping: {pid_2_app}" )
-                   # del updates[u][1]['application']
-               else:
-                   logging.warning( f"JvB no pid-2-app: u={u} ({updates})" )
+               # u = 2 if isinstance(data, dict) else 3
+               # if 'application' in updates[u][1]:
+                #    # Some apps are not running and have no pid
+                #    pid_2_app = { int(p['pid']) : p['name'] for p in updates[u][1]['application'] if 'pid' in p }
+                #    # logging.info( f"PID mapping: {pid_2_app}" )
+                #    # del updates[u][1]['application']
+               # else:
+                #    logging.warning( f"JvB no pid-2-app: u={u} ({updates})" )
+               import psutil
+               def pid_2_proc(pid):
+                   return psutil.Process(pid).name()
 
                if isinstance(data, dict):
                  pid_data = data['srl_nokia-platform-cpu:process']
                  vals = [ ( f'cpu={v["cpu-utilization"]:02d}%',
-                          f'process={ pid_2_app[ pid ] if pid in pid_2_app else pid }' )
+                          f'process={ pid_2_proc( pid ) }' )
                           for v in pid_data if v['cpu-utilization'] > 0
                           for pid in [ int(v["pid"]) ]
                         ]
@@ -131,7 +134,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                  pid_cpu = re.match( ".*\\[pid=([0-9]+)\\].*", path )
                  if pid_cpu:
                      _pid = int( pid_cpu.groups()[0] )
-                     _name = f"{pid_2_app[ _pid ]}({_pid})" if _pid in pid_2_app else str(_pid)
+                     _name = f"{pid_2_proc( _pid )}({_pid})"
                      return f"process {_name} CPU usage {data}%"
 
             return f'{path}={data}'
