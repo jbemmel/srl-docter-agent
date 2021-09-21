@@ -17,3 +17,9 @@ build:
 	  --build-arg SR_LINUX_RELEASE="${SR_LINUX_RELEASE}" \
 		-f Docker/Dockerfile -t ${IMG} .
 	sudo docker tag ${IMG} ${NAME}:${SR_LINUX_RELEASE}
+
+build-submodules:
+	make -C ../srl-baseimage
+	make -C ../srl-self-organizing/Docker
+
+all: build-submodules build
