@@ -42,7 +42,7 @@
               "value": "(min(last_known_ints())+1) / (max(last_known_ints())+1)",
               "filter": "value < 0.8",
               "metric": "DATA_PLANE",
-              "sample-period": 30,
+              "sample-period": 10,
               "history-window": 3000,
               "green": "value >= 0.8",
               "yellow": "value >= 0.5 and value < 0.8",
