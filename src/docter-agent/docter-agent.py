@@ -704,11 +704,16 @@ class MonitoringThread(Thread):
                             hist = history_ints()
                             return max(hist) if hist!=[] else int(value_if_no_history)
 
+                        def avg_in_history(value_if_no_history=0):
+                            hist = history_ints()
+                            return avg(hist) if hist!=[] else int(value_if_no_history)
+
                         _globals = { "ipaddress" : ipaddress }
                         _locals  = { "_" : u['val'], **o,
                                      "last_known_ints": last_known_ints,
                                      "history_ints": history_ints,
-                                     "max_in_history": max_in_history
+                                     "max_in_history": max_in_history,
+                                     "avg_in_history": avg_in_history
                                    }
 
                         # Custom value calculation, before filter
