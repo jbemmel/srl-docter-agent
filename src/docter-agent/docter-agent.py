@@ -106,17 +106,16 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
         # Hardcoded hack: show top CPU usage per process more nicely
         def show(path,data):
             if ((isinstance(data, dict) and 'srl_nokia-platform-cpu:process' in data)
-                 or 'srl_nokia-platform-cpu:process' in path):
+             or 'srl_nokia-platform-cpu:process' in path):
 
                # Config is arranged such that pid->application mapping is in updates[2][1] or updates[3][1]
                pid_2_app = {}
 
-               for u in range(2,4):
-                 if 'application' in updates[u][1]:
+               u = 2 if isinstance(data, dict) else 3
+               if 'application' in updates[u][1]:
                    # Some apps are not running and have no pid
                    pid_2_app = { int(p['pid']) : p['name'] for p in updates[u][1]['application'] if 'pid' in p }
                    logging.info( f"PID mapping: {pid_2_app}" )
-                   break
 
                if isinstance(data, dict):
                  pid_data = data['srl_nokia-platform-cpu:process']
