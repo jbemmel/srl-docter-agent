@@ -125,12 +125,14 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                         ]
                  return sorted(vals,reverse=True)[:5] # Top 5
                else:
-                 pid_cpu = re.match( ".*srl_nokia-platform-cpu:process\\[pid=([0-9]+)\\]/cpu-utilization=([0-9]+)$", data )
+                 pid_cpu = re.match( ".*srl_nokia-platform-cpu:process\\[pid=([0-9]+)\\]/cpu-utilization=([0-9]+)", data )
                  if pid_cpu:
                      _gs = pid_cpu.groups()
                      _pid = int( _gs[0] )
                      _name = pid_2_app[ _pid ] if _pid in pid_2_app else str(_pid)
                      return f"process {_name}({_pid}) CPU usage {_gs[1]}%"
+                 else:
+                     logging.warning( f"Mismatch: {data}" )
 
             return data
 
