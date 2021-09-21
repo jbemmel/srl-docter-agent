@@ -107,7 +107,6 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
         def show(path,data):
             if ((isinstance(data, dict) and 'srl_nokia-platform-cpu:process' in data)
              or re.match( ".*\\[pid=([0-9]+)\\].*", path )):
-
                # Config is arranged such that pid->application mapping is in updates[2][1] or updates[3][1]
                pid_2_app = {}
 
@@ -115,7 +114,10 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                if 'application' in updates[u][1]:
                    # Some apps are not running and have no pid
                    pid_2_app = { int(p['pid']) : p['name'] for p in updates[u][1]['application'] if 'pid' in p }
-                   logging.info( f"PID mapping: {pid_2_app}" )
+                   # logging.info( f"PID mapping: {pid_2_app}" )
+                   del updates[u][1]['application']
+               else:
+                   logging.warning( f"JvB no pid-2-app: u={u} ({updates})" )
 
                if isinstance(data, dict):
                  pid_data = data['srl_nokia-platform-cpu:process']
@@ -124,19 +126,17 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                           for v in pid_data if v['cpu-utilization'] > 0
                           for pid in [ int(v["pid"]) ]
                         ]
-                 return sorted(vals,reverse=True)[:5] # Top 5
+                 return "Top 5:" + str(sorted(vals,reverse=True)[:5]) # Top 5
                else:
                  pid_cpu = re.match( ".*\\[pid=([0-9]+)\\].*", path )
                  if pid_cpu:
                      _pid = int( pid_cpu.groups()[0] )
                      _name = pid_2_app[ _pid ] if _pid in pid_2_app else str(_pid)
                      return f"process {_name}({_pid}) CPU usage {data}%"
-                 else:
-                     logging.warning( f"Mismatch: {path}" )
 
-            return data
+            return f'{path}={data}'
 
-        metric_data['reports'] = [ f'{path}={show(path,value)}' for path,value in updates ]
+        metric_data['reports'] = [ show(path,value) for path,value in updates ]
 
     response = Add_Telemetry( js_path=js_path, js_data=json.dumps(metric_data) )
     logging.info(f"Update_Metric Telemetry_Update_Response :: {response}")

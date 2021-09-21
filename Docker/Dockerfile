@@ -37,5 +37,5 @@ COPY ./src /opt/srlinux/agents/
 RUN PYTHONPATH=$AGENT_PYTHONPATH pylint --load-plugins=pylint_protobuf -E /opt/srlinux/agents/docter-agent
 
 # Using a build arg to set the release tag, set a default for running docker build manually
-ARG SRL_AUTO_CONFIG_RELEASE="[custom build]"
-ENV SRL_AUTO_CONFIG_RELEASE=$SRL_AUTO_CONFIG_RELEASE
+ARG SRL_DOCTER_AGENT_RELEASE="[custom build]"
+ENV SRL_DOCTER_AGENT_RELEASE=$SRL_DOCTER_AGENT_RELEASE
