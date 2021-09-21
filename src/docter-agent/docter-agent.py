@@ -726,6 +726,8 @@ class MonitoringThread(Thread):
                              updates.append( (value_exp,value) )
                           except Exception as e:
                              logging.error( f"Custom value {value_exp} failed: {e}")
+                        else:
+                          updates.append( ('value',value) )
 
                         # logging.info( f"Evaluate any filters: {o}" )
                         if 'filter' in o['conditions']:
