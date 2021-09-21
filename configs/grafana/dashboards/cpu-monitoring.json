@@ -545,7 +545,7 @@
           "measurement": "SRL_docter-agent-cpu",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric/contribution_reports_1\" AS \"CPU %\" FROM \"SRL_docter-agent-cpu\" WHERE $timeFilter",
+          "query": "SELECT \"source\" AS \"Node\", \"/docter_agent:docter_agent/metrics/metric/contribution_reports_2\" AS \"CPU %\" FROM \"SRL_docter-agent-cpu\" WHERE $timeFilter",
           "queryType": "randomWalk",
           "rawQuery": true,
           "refId": "A",
