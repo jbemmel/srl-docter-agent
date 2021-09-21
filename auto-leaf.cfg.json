@@ -126,7 +126,7 @@
         {
           "name": "Per process CPU usage spikes (onchange >20% delta)",
           "report": [
-            "/platform/control[slot=A]/process[pid=*]/cpu-utilization",
+            "/platform/control[slot=A]/process[pid={pid}]/cpu-utilization",
             "/system/app-management/application/pid"
           ],
           "conditions": [
