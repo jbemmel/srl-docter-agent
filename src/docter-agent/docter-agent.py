@@ -105,8 +105,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
     if updates!=[]:
         # Hardcoded hack: show top CPU usage per process more nicely
         def show(data):
-            if isinstance(data, dict) and 'srl_nokia-platform-cpu:process' in data:
-               pid_data = data['srl_nokia-platform-cpu:process']
+            if isinstance(data, (dict,str)) and 'srl_nokia-platform-cpu:process' in data:
 
                # Config is arranged such that pid->application mapping is in updates[2][1]
                pid_2_app = {}
@@ -117,12 +116,22 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                else:
                    logging.warning( f"No application mapping available? {updates}")
 
-               vals = [ ( f'cpu={v["cpu-utilization"]:02d}%',
+               if isinstance(data, dict):
+                 pid_data = data['srl_nokia-platform-cpu:process']
+                 vals = [ ( f'cpu={v["cpu-utilization"]:02d}%',
                           f'process={ pid_2_app[ pid ] if pid in pid_2_app else pid }' )
                         for v in pid_data if v['cpu-utilization'] > 0
                         for pid in [ int(v["pid"]) ]
                       ]
-               return sorted(vals,reverse=True)[:5] # Top 5
+                 return sorted(vals,reverse=True)[:5] # Top 5
+               else:
+                 pid_cpu = re.match( ".*srl_nokia-platform-cpu:process\\[pid=([0-9]+)\\]/cpu-utilization=([0-9]+)$")
+                 if pid_cpu:
+                     _gs = pid_cpu.groups()
+                     _pid = int( _gs[0] )
+                     _name = pid_2_app[ _pid ] if _pid in pid_2_app else str(_pid)
+                     return f"process {_name}({_pid}) CPU usage {_gs[1]}%"
+
             return data
 
         metric_data['reports'] = [ f'{path}={show(value)}' for path,value in updates ]
