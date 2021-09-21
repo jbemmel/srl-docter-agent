@@ -7,7 +7,7 @@ topology:
       type: ixrd2 # See https://www.nokia.com/networks/products/7250-interconnect-router/
       image: srl/docter-agent:latest
       extras:
-        srl-agents: [ ../srl-self-organizing/auto-config-agent.yml, docter-agent.yml ]
+        srl-agents: [ srl-self-organizing/auto-config-agent.yml, docter-agent.yml ]
     linux:
       # image: ghcr.io/hellt/network-multitool
       image: frr-with-lldp:latest
