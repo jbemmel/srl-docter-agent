@@ -75,6 +75,6 @@ To deploy this prototype agent in a demo setup complete with Grafana, Telegraf, 
 ```
 git clone --recurse-submodules https://github.com/jbemmel/srl-docter-agent.git
 cd srl-docter-agent
-make -C ./Docker
+make -C ./Docker all
 sudo containerlab deploy -t ./srl-leafspine.lab
 ```
