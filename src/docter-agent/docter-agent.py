@@ -107,14 +107,15 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
         def show(data):
             if isinstance(data, (dict,str)) and 'srl_nokia-platform-cpu:process' in data:
 
-               # Config is arranged such that pid->application mapping is in updates[2][1]
+               # Config is arranged such that pid->application mapping is in updates[2][1] or updates[3][1]
                pid_2_app = {}
-               if 'application' in updates[2][1]:
+
+               for u in range(2,4):
+                 if 'application' in updates[u][1]:
                    # Some apps are not running and have no pid
-                   pid_2_app = { int(p['pid']) : p['name'] for p in updates[2][1]['application'] if 'pid' in p }
+                   pid_2_app = { int(p['pid']) : p['name'] for p in updates[u][1]['application'] if 'pid' in p }
                    logging.info( f"PID mapping: {pid_2_app}" )
-               else:
-                   logging.warning( f"No application mapping available? {updates}")
+                   break
 
                if isinstance(data, dict):
                  pid_data = data['srl_nokia-platform-cpu:process']
@@ -674,8 +675,8 @@ class MonitoringThread(Thread):
                       # Use regex to aggregate history values (common path)
                       history_key = regex if regex is not None else key
 
-                      # Add regex='val' and path='val' as implicit reported value
-                      updates = [ (history_key,value) ]
+                      # Add regex='val' and path='val' as implicit reported value? Just key=val for now
+                      updates = [ (key,value) ]
 
                       if 'conditions' in o: # Should be the case always
                         # To group subscriptions matching multiple paths, can collect by custom regex 'index'
