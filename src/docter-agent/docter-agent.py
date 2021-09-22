@@ -110,19 +110,21 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                # Config is arranged such that pid->application mapping is in updates[2][1] or updates[3][1]
                pid_2_app = {}
 
-               u = 2 if isinstance(data, dict) else 3
-               if 'application' in updates[u][1]:
+               if isinstance(data, dict):
+                 if 'application' in updates[2][1]:
                     # Some apps are not running and have no pid
-                    pid_2_app = { int(p['pid']) : p['name'] for p in updates[u][1]['application'] if 'pid' in p }
+                    pid_2_app = { int(p['pid']) : p['name'] for p in updates[2][1]['application'] if 'pid' in p }
                     # logging.info( f"PID mapping: {pid_2_app}" )
                     # del updates[u][1]['application']
                # else:
                 #    logging.warning( f"JvB no pid-2-app: u={u} ({updates})" )
                import psutil
                def pid_2_proc(pid):
-                   return pid_2_app[pid] if pid in pid_2_app else psutil.Process(pid).name()
+                   return (pid_2_app[pid] if pid in pid_2_app else
+                           data['name'] if 'name' in data else
+                           psutil.Process(pid).name())
 
-               if isinstance(data, dict):
+               if 'srl_nokia-platform-cpu:process' in data:
                  pid_data = data['srl_nokia-platform-cpu:process']
                  vals = [ ( f'cpu={v["cpu-utilization"]:02d}%',
                           f'process={ pid_2_proc( pid ) }' )
