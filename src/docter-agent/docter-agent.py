@@ -137,7 +137,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                  if pid_cpu:
                      _pid = int( pid_cpu.groups()[0] )
                      _name = f"{pid_2_proc( _pid )}({_pid})"
-                     return f"process {_name} CPU usage {data}%"
+                     return f"process {_name} details {data}"
 
             return f'{path}={data}'
 
