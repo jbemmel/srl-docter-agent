@@ -137,7 +137,8 @@
               "metric": "CPU",
           	  "history-window": 60,
           	  "orange": "float(_) > 1.5",
-              "yellow": "float(_) > 1.2"
+              "yellow": "float(_) > 1.2",
+              "reset": 10
             }
           ]
         },
