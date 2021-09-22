@@ -133,11 +133,11 @@
             {
               "gnmi-path": "/platform/control[slot=A]/process[pid=*]/cpu-utilization",
               "value": "(int(_)+1) / (avg_in_history()+1)",
-              "filter": "float(_) > 1.2",
+              "filter": "float(value) > 1.2",
               "metric": "CPU",
           	  "history-window": 60,
-          	  "orange": "float(_) > 1.5",
-              "yellow": "float(_) > 1.2",
+          	  "orange": "float(value) > 1.5",
+              "yellow": "float(value) > 1.2",
               "reset": 10
             }
           ]
