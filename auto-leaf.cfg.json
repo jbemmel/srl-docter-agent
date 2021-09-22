@@ -138,6 +138,7 @@
           	  "history-window": 60,
           	  "orange": "float(value) > 1.5",
               "yellow": "float(value) > 1.2",
+              "green": "True",
               "reset": 10
             }
           ]
