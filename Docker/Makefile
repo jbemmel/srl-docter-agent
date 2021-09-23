@@ -20,6 +20,6 @@ build:
 
 build-submodules:
 	make -C ../srl-baseimage
-	make -C ../srl-self-organizing/Docker
+	make -C ../srl-self-organizing/Docker all
 
 all: build-submodules build
