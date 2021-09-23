@@ -68,6 +68,7 @@ a local agent with programmable monitoring logic can provide the timely data poi
 
 # Lab installation
 Prerequisites:
+* A Linux machine with 4 vCPUs and 16GB of RAM (or more)
 * Docker
 * Containerlab
 
