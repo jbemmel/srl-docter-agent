@@ -17,7 +17,7 @@ function main()
 {
     trap _term SIGTERM
     local virtual_env="/opt/srlinux/python/virtual-env/bin/activate"
-    local main_module="/opt/srlinux/agents/docter-agent/docter-agent.py"
+    local main_module="/opt/demo-agents/docter-agent/docter-agent.py"
 
     # source the virtual-environment, which is used to ensure the correct python packages are installed,
     # and the correct python version is used
