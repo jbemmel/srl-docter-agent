@@ -695,9 +695,13 @@ class MonitoringThread(Thread):
                         o['last_known'][ key ] = u['val']
 
                         # Helper function
-                        def last_known_ints():
+                        def last_known_ints(diff=0):
                           # List over all subpaths matching this observation
-                          return list(map(int,o['last_known'].values()))
+                          vs = list(map(int,o['last_known'].values()))
+                          while diff>0:
+                              vs = [ vs[n]-vs[n-1] for n in range(1,len(vs)) ]
+                              diff -= 1
+                          return vs
 
                         def history_ints():
                           # List over a single path's history
