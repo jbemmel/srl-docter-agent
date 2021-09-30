@@ -725,7 +725,8 @@ class MonitoringThread(Thread):
                             return min(vals) if vals!=[] else x
 
                         def last_known_deltas():
-                            return [ abs(int(v)-int(o['prev_known'][k])) for k,v in o['last_known'].items() ]
+                            ds = [ abs(int(v)-int(o['prev_known'][k])) for k,v in o['last_known'].items() ]
+                            return ds if ds!=[] else [0] # Allow min/max to work
 
                         _globals = { "ipaddress" : ipaddress }
                         _locals  = { "_" : u['val'], **o,
