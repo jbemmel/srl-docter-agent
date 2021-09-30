@@ -579,7 +579,7 @@ class MonitoringThread(Thread):
       for name,atts in self.observations.items():
           path = atts['path']     # normalized in pygnmi patch
           update_match = atts['conditions']['update_path_match']['value']
-          obj = { 'name': name, 'history': {}, 'last_known': {}, **atts }
+          obj = { 'name': name, 'history': {}, 'last_known': {}, 'prev_known': {}, **atts }
           # range_match = re.match("(.*)(\\[\d+[-]\d+\\])(.*)",path)
 
           # Turn path into a Python regex
@@ -692,16 +692,13 @@ class MonitoringThread(Thread):
                         #      index = _i.groups()[0]
                         #    else:
                         #      logging.error( f"Error applying 'index' regex: {_re} to {key}" )
+                        o['prev_known'][ key ] = o['last_known'][ key ] if key in o['last_known'] else 0
                         o['last_known'][ key ] = u['val']
 
                         # Helper function
-                        def last_known_ints(diff=0):
+                        def last_known_ints():
                           # List over all subpaths matching this observation
-                          vs = list(map(int,o['last_known'].values()))
-                          while diff>0:
-                              vs = [ abs(vs[n]-vs[n-1]) for n in range(1,len(vs)) ]
-                              diff -= 1
-                          return vs
+                          return list(map(int,o['last_known'].values()))
 
                         def history_ints():
                           # List over a single path's history
@@ -709,6 +706,8 @@ class MonitoringThread(Thread):
                           # history = { path -> (ts,val) } ??
                           logging.info( f"history_ints: {history}" )
                           values = history[history_key] if history_key in history else [(0,0)]
+
+                          # Could calculate diffs: [ abs(vs[n]-vs[n-1]) for n in range(1,len(vs)) ]
                           return [ int(v) for t,v in values ]
 
                         def max_in_history(value_if_no_history=0):
@@ -724,6 +723,9 @@ class MonitoringThread(Thread):
 
                         def min_or_0(vals,x=0):
                             return min(vals) if vals!=[] else x
+
+                        def last_known_deltas():
+                            return [ abs(int(v)-int(o['prev_known'][k])) for k,v in o['last_known'].items() ]
 
                         _globals = { "ipaddress" : ipaddress }
                         _locals  = { "_" : u['val'], **o,
