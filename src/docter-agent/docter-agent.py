@@ -699,7 +699,7 @@ class MonitoringThread(Thread):
                           # List over all subpaths matching this observation
                           vs = list(map(int,o['last_known'].values()))
                           while diff>0:
-                              vs = [ vs[n]-vs[n-1] for n in range(1,len(vs)) ]
+                              vs = [ abs(vs[n]-vs[n-1]) for n in range(1,len(vs)) ]
                               diff -= 1
                           return vs
 
