@@ -735,6 +735,7 @@ class MonitoringThread(Thread):
                                      "avg_in_history": avg_in_history,
                                      "max_or_0": max_or_0,
                                      "min_or_0": min_or_0,
+                                     "last_known_deltas": last_known_deltas,
                                    }
 
                         # Custom value calculation, before filter
