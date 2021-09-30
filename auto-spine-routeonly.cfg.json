@@ -1,9 +1,13 @@
 {
   "auto_config_agent:auto-config-agent": {
     "role": "spine",
-    "use-evpn": true,
-    "use-ospfv3": true,
-    "base-as": 65000
+    "evpn": "symmetric-irb",
+    "igp": "ospf",
+    "base-as": 65000,
+    "peerlinks": {
+        "prefix": "192.168.127.0/24",
+        "host-subnet-size": 30
+    }
   },
   "docter-agent:docter-agent": {
    "intensive-care": {
@@ -16,13 +20,13 @@
          ],
          "conditions": [
            {
-            "gnmi-path": "/network-instance[name=default]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes[ip-prefix=10.10.10.10/32]",
-   	        "update-path-match": "/network-instance\\[name=default\\]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes\\[.*\\]/next-hop",
-   	        "sample-period": 10,
-   	        "history-window": 100,
-   	        "thresholds": [ "availability", "50", "80", "90" ]
+             "gnmi-path": "/network-instance[name=default]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes[ip-prefix=8.8.8.8/32]",
+	           "update-path-match": "/network-instance\\[name=default\\]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes\\[.*\\]/next-hop",
+	           "sample-period": 10,
+	           "history-window": 100,
+	           "thresholds": [ "availability", "50", "80", "90" ]
            }
-         ]
+          ]
         },
         {
          "name": "Changes in BGP EVPN routes",
