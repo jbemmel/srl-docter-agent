@@ -255,8 +255,8 @@ def Color(o,val,history=None):
                     return c, None, None
                 except Exception as ex:
                   logging.error( f"Error evaluating color {c}={exp}: {ex} (value={val} type={type(val)})" )
-        logging.error( f"None of the color expressions matched '{val}' -> red" )
-        return "red", None, None
+        logging.error( f"None of the color expressions matched '{val}' -> None" )
+        return None, None, None
 
 def Update_Filtered(o, timestamp_ns, path, val):
     global reports_count
@@ -279,12 +279,13 @@ def Update_Filtered(o, timestamp_ns, path, val):
     if 'reset_flag' not in o or o['reset_flag'] != "green":
       js_path2 = js_path + f'.history{{.name=="{o["name"]}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val}, 'filter': False }) )
-      color = "green"
+      color = None
       if 'metric' in o['conditions']:
           metric = o['conditions']['metric']['value']
           color, _, sla = Color(o, val)
-          Update_Metric( timestamp_ns, metric, o['name'], color, sla=sla )
-      o['reset_flag'] = color
+          if color:
+             Update_Metric( timestamp_ns, metric, o['name'], color, sla=sla )
+      o['reset_flag'] = color or "green"
 
 def Threshold_Color( val, thresholds ):
     logging.info( f"Threshold_Color({val}) with thresholds={thresholds}" )
@@ -408,34 +409,35 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
 
     color, thresholds, sla = Color(o,value,history) # May calculate SLA if "availability" in thresholds
-    data = { 'status' : { 'value' : color } }
-    if sla is not None:
+    if color:
+      data = { 'status' : { 'value' : color } }
+      if sla is not None:
         data['availability'] = { 'value': sla }
         # TODO more?
 
-    if 'metric' in o['conditions']:
-       metric = o['conditions']['metric']['value']
-       Update_Metric( timestamp_ns, metric, name, color, updates, sla )
+      if 'metric' in o['conditions']:
+         metric = o['conditions']['metric']['value']
+         Update_Metric( timestamp_ns, metric, name, color, updates, sla )
 
-       # If requested, start a 'clear' timer to reset any non-green state
-       if color != 'green' and 'reset' in o['conditions']:
-           reset_timer_s = int(o['conditions']['reset']['value'])
-           logging.info( f"Starting reset timer({reset_timer_s}) to clear {color} for {name}" )
-           def reset_status():
-              ts = timestamp_ns + 1e9 * reset_timer_s
-              Update_Metric( ts, metric, name, "green",
-                [ (gnmi_str+f"+{reset_timer_s}s", f"reset '{color}' to green" ) ] )
-           # Could save this in o['reset_timer']
-           timer = Timer( reset_timer_s, reset_status )
-           timer.start()
+         # If requested, start a 'clear' timer to reset any non-green state
+         if color != 'green' and 'reset' in o['conditions']:
+             reset_timer_s = int(o['conditions']['reset']['value'])
+             logging.info( f"Starting reset timer({reset_timer_s}) to clear {color} for {name}" )
+             def reset_status():
+                ts = timestamp_ns + 1e9 * reset_timer_s
+                Update_Metric( ts, metric, name, "green",
+                  [ (gnmi_str+f"+{reset_timer_s}s", f"reset '{color}' to green" ) ] )
+             # Could save this in o['reset_timer']
+             timer = Timer( reset_timer_s, reset_status )
+             timer.start()
 
-    else:
-      # Legacy reporting structure of route availability
-      # js_path += f'.availability{{.name=="{name}"}}' # crashes SRL mgr
-      js_path = '.' + agent_name + '.health.route'
-      logging.info( f"SLA Add_Telemetry({name}): {js_path}={data} {val}" )
-      response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
-      # logging.info(f"Telemetry_Update_Response history :: {response}")
+      else:
+        # Legacy reporting structure of route availability
+        # js_path += f'.availability{{.name=="{name}"}}' # crashes SRL mgr
+        js_path = '.' + agent_name + '.health.route'
+        logging.info( f"Legacy Add_Telemetry({name}): {js_path}={data} {val}" )
+        response = Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+        # logging.info(f"Telemetry_Update_Response history :: {response}")
 
 def Update_Global_State(state, var, val):
     js_path = '.' + agent_name + '.' + var
