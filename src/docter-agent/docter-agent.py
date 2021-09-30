@@ -698,7 +698,8 @@ class MonitoringThread(Thread):
                         # Helper function
                         def last_known_ints():
                           # List over all subpaths matching this observation
-                          return list(map(int,o['last_known'].values()))
+                          vs = list(map(int,o['last_known'].values()))
+                          return vs if vs!=[] else [0]
 
                         def history_ints():
                           # List over a single path's history
