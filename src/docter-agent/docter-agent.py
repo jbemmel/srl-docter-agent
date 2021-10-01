@@ -841,7 +841,8 @@ class MonitoringThread(Thread):
                                              int(sample), updates, history,
                                              path=key, value=value ) # Use actual path for event reporting
                       except Exception as ex:
-                         logging.error( f"Exception while updating telemetry - EXITING: {ex}" )
+                         traceback_str = ''.join(traceback.format_tb(ex.__traceback__))
+                         logging.error( f"Exception while updating telemetry - EXITING: {ex} ~ {traceback_str}" )
 
                          # Force agent to exit
                          Exit_Gracefully(0,0)
