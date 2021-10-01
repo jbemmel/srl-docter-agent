@@ -238,7 +238,7 @@ def Color(o,val,history=None):
     if 'thresholds' in o['conditions']:
         # XXX could do this one when processing config
         thresholds = [ t['value'] for t in o['conditions']['thresholds'] ]
-        if len(thresholds)>0 and thresholds[0]=="availability" and history is not None:
+        if len(thresholds)>0 and thresholds[0]=="availability" and history:
             sla = val = Calculate_SLA(history)
         else:
             sla = None
@@ -609,7 +609,6 @@ class MonitoringThread(Thread):
 
       def update_history( ts_ns, o, key, updates ):
           history = o['history'][ key ] if key in o['history'] else {}
-
           if 'history_window' in o['conditions']:
             window = ts_ns - int(o['conditions']['history_window']['value']) * 1000000000 # X seconds ago
           else:
@@ -623,6 +622,15 @@ class MonitoringThread(Thread):
           for path, val in updates:
              subitem = history[path] if path in history else []
              if window>0:
+                if subitem!=[]:
+                    ts1, first = subitem[0]
+                    ts2, last = subitem[-1]
+                    if (ts2<window and last=="<MISSING>"):
+                        # Move <MISSING> to edge of window, rest gets flushed
+                        subitem = [ (window,last) ]
+                    elif ts1!=ts2 and ts1<window and first=="<MISSING>":
+                        if subitem[1][0] > window:
+                           subitem = [ (window,first) ] + subitem[1:] # Move it along
                 subitem = [ (ts,val) for ts,val in subitem if ts>=window ]
              if max_items>0:
                 subitem = subitem[ -max_items: ]
@@ -630,9 +638,9 @@ class MonitoringThread(Thread):
              history[ path ] = subitem
           o['history'][ key ] = history
 
-          # Return top path history
-          logging.info( f'update_history max={max_items} window={window} -> returning "{updates[0][0]}"={ history[ updates[0][0] ] }' )
-          return history[ updates[0][0] ]
+          # Return aggregated regex path history
+          logging.info( f'update_history key={key} max={max_items} window={window} -> returning { history[ key ] }' )
+          return history[ key ]
 
       # with Namespace('/var/run/netns/srbase-mgmt', 'net'):
       with gNMIclient(target=('unix:///opt/srlinux/var/run/sr_gnmi_server',57400),
@@ -682,7 +690,7 @@ class MonitoringThread(Thread):
                       history_key = regex if regex is not None else key
 
                       # Add regex='val' and path='val' as implicit reported value? Just key=val for now
-                      updates = [ (key,value) ]
+                      updates = [ (key,value) ] + ( [ (history_key,value) ] if regex else [] )
 
                       if 'conditions' in o: # Should be the case always
                         # To group subscriptions matching multiple paths, can collect by custom regex 'index'
@@ -773,14 +781,16 @@ class MonitoringThread(Thread):
                                  o['timer'][key].cancel()
                           else:
                               o['timer'] = {}
-                          def missing_sample( _o, _key, _sample_period, _ts ):
-                             logging.info( f"Missing sample: {_key}" )
+                          def missing_sample(_o,_key,_hist_key,_ts_ns,_sample_period):
+                             logging.info( f"Missing sample timer: {_key} aggregate history_key={_hist_key}" )
                              _i = _key.rindex('/') + 1
-                             ts_ns = _ts + 1000000000 * int(_sample_period)
-                             history = update_history( ts_ns, _o, history_key, [ (history_key,"<MISSING>") ] )
-                             Update_Observation( _o, ts_ns, f"{_key[_i:]}=missing sample={sample_period}", int(_sample_period), [(_key,"<MISSING>")], history, path=_key )
+                             _history = update_history( _ts_ns, _o, _hist_key, [ (_key,"<MISSING>"),( _hist_key,"<MISSING>") ] )
+                             Update_Observation( _o, _ts_ns, f"{_key[_i:]}=missing sample={_sample_period}",
+                                                 int(_sample_period), [(_hist_key,"<MISSING>")], _history, path=_key )
 
-                          timer = o['timer'][key] = Timer( int(sample_period) + 1, missing_sample, [ o, key, sample_period, int( update['timestamp'] ) ] )
+                          ts_ns = int( update['timestamp'] ) + 1000000000 * int(sample_period)
+                          timer = o['timer'][key] = Timer( int(sample_period) + 1, missing_sample,
+                                                           [o,key,history_key,ts_ns,sample_period] )
                           timer.start()
 
                         # Also process any 'count' regex, could compile once
@@ -827,8 +837,9 @@ class MonitoringThread(Thread):
                       s_index = key.rindex('/') + 1
                       sample = o['conditions']['sample_period']['value']
                       try:
-                         Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}", int(sample), updates, history,
-                           path=key, value=value ) # Use actual path for event reporting
+                         Update_Observation( o, int( update['timestamp'] ), f"{key[s_index:]}={value} sample={sample}",
+                                             int(sample), updates, history,
+                                             path=key, value=value ) # Use actual path for event reporting
                       except Exception as ex:
                          logging.error( f"Exception while updating telemetry - EXITING: {ex}" )
 

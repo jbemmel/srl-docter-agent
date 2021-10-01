@@ -102,7 +102,7 @@
                  "update-path-match": "/network-instance\\[name=overlay\\]/bgp-rib/ipv4-unicast/local-rib/routes\\[neighbor=.*\\]\\[origin-protocol=.*\\]\\[prefix=8.8.8.8/32\\]/used-route",
                  "filter": "bool(_) == True",
                  "sample-period": 10,
-                 "history-window": 100,
+                 "history-window": 300,
                  "thresholds": [ "availability", "50", "80", "90" ]
             }
           ]
