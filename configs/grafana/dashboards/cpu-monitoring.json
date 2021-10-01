@@ -510,7 +510,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Traditional Monitoring",
+      "title": "Traditional Monitoring (sample interval:10s)",
       "tooltip": {
         "shared": true,
         "sort": 0,
