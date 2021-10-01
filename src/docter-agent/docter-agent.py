@@ -111,6 +111,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                pid_2_app = {}
 
                if isinstance(data, dict):
+                 logging.info( f"DEBUG: Update_Metric updates={updates}" )
                  if 'application' in updates[2][1]:
                     # Some apps are not running and have no pid
                     pid_2_app = { int(p['pid']) : p['name'] for p in updates[2][1]['application'] if 'pid' in p }
