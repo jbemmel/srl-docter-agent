@@ -29,6 +29,7 @@ commit stay
 
 # Remove policy
 ```
+enter candidate
 /network-instance default protocols bgp group evpn delete import-policy
 commit stay
 ```
