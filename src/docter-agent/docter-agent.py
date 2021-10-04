@@ -625,7 +625,9 @@ class MonitoringThread(Thread):
           for path, val in updates:
              subitem = history[path] if path in history else []
              if window>0:
-                if subitem!=[]:
+                if subitem==[]:
+                   subitem = [(window,"<MISSING>")] # Start as MISSING
+                else:
                     ts1, first = subitem[0]
                     ts2, last = subitem[-1]
                     if (ts2<window and last=="<MISSING>"):
