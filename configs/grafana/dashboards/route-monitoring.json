@@ -21,7 +21,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1631810359510,
+  "iteration": 1633359177603,
   "links": [],
   "panels": [
     {
@@ -45,11 +45,11 @@
               },
               {
                 "color": "dark-orange",
-                "value": 10
+                "value": 50
               },
               {
                 "color": "semi-dark-yellow",
-                "value": 20
+                "value": 80
               },
               {
                 "color": "green",
@@ -1350,9 +1350,7 @@
         "datasource": "InfluxDB",
         "definition": "",
         "description": null,
-        "error": {
-          "message": "InfluxDB Error: database not found: telegraf"
-        },
+        "error": null,
         "hide": 0,
         "includeAll": true,
         "label": "hostname",
