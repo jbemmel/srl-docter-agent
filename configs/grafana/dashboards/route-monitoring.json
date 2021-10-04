@@ -122,7 +122,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "DNS Prefix Availability (8.8.8.8/32)",
+      "title": "Critical Application Prefix Availability (8.8.8.8/32)",
       "type": "state-timeline"
     },
     {
@@ -791,7 +791,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "DNS Prefix Availability (8.8.8.8/32)",
+      "title": "Critical Application Prefix Availability (8.8.8.8/32)",
       "type": "agenty-flowcharting-panel",
       "valueName": "current",
       "version": "0.9.0"
