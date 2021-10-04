@@ -16,7 +16,7 @@ topology:
 
   ###### DC FABRIC ######
 
-    spine1: { kind: srl, group: spines, mgmt_ipv4: 172.20.20.4, startup-config: auto-spine.cfg.json }
+    spine1: { kind: srl, group: spines, mgmt_ipv4: 172.20.20.4, startup-config: auto-spine-broken-policy.cfg.json }
     spine2: { kind: srl, group: spines, mgmt_ipv4: 172.20.20.5, startup-config: auto-spine.cfg.json }
     leaf1:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.6, startup-config: auto-leaf.cfg.json }
     leaf2:  { kind: srl, group: leaves, mgmt_ipv4: 172.20.20.7, startup-config: auto-leaf.cfg.json }
