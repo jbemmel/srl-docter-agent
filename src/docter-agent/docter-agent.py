@@ -111,8 +111,7 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                pid_2_app = {}
 
                if isinstance(data, dict):
-                 logging.info( f"JvB: updates={updates}" )
-                 if 'application' in updates[3][1]:
+                 if len(updates)>3 and 'application' in updates[3][1]:
                     # Some apps are not running and have no pid
                     pid_2_app = { int(p['pid']) : p['name'] for p in updates[3][1]['application'] if 'pid' in p }
                     # logging.info( f"PID mapping: {pid_2_app}" )
