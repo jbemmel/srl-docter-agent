@@ -541,11 +541,14 @@ class MonitoringThread(Thread):
           if 'metric' in value['conditions']:
             metric = value['conditions']['metric']['value']
             Update_Metric( 0, metric, "Booting", status )
-
-        # Legacy health too
-        # js_path = '.' + agent_name + '.health.route'
-        # data = { 'status' : { 'value' : status }, 'availability' : { 'value': 0 } }
-        # Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
+          else:
+            # Legacy health too, default to "red"
+            js_path = '.' + agent_name + '.health.route'
+            data = {
+              'status' : { 'value' : status if status!="green" else "red" },
+              'availability' : { 'value': 0 }
+            }
+            Add_Telemetry( js_path=js_path, js_data=json.dumps(data) )
 
       Set_Booting("pending" if self.startup_delay > 0 else "green")
 
