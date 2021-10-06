@@ -894,7 +894,7 @@
       "type": "table"
     }
   ],
-  "refresh": "10s",
+  "refresh": "5s",
   "schemaVersion": 30,
   "style": "dark",
   "tags": [],
