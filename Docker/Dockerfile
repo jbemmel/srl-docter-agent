@@ -1,5 +1,5 @@
 ARG SR_LINUX_RELEASE
-FROM srl/auto-config:$SR_LINUX_RELEASE
+FROM srl/auto-config-v2:$SR_LINUX_RELEASE
 # FROM srl/custombase:$SR_LINUX_RELEASE
 # FROM ghcr.io/nokia/srlinux:$SR_LINUX_RELEASE
 # FROM registry.srlinux.dev/pub/srlinux:$SR_LINUX_RELEASE
