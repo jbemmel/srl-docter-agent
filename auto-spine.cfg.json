@@ -10,7 +10,7 @@
   },
   "docter-agent:docter-agent": {
    "intensive-care": {
-      "startup-delay": 60,
+      "startup-delay": 30,
       "observe": [
         {
          "name": "route-propagation",
