@@ -19,7 +19,6 @@ build:
 	sudo docker tag ${IMG} ${NAME}:${SR_LINUX_RELEASE}
 
 build-submodules:
-	make -C ../srl-baseimage
 	make -C ../srl-self-organizing/Docker all
 
 all: build-submodules build
