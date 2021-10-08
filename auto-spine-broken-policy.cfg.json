@@ -1449,6 +1449,8 @@
       "name": "default",
       "protocols": {
        "srl_nokia-bgp:bgp": {
+         "router-id": "1.1.1.1",
+         "autonomous-system": 65535,
          "group": [
            {
              "group-name": "evpn-leaves",
