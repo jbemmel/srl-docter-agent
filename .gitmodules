@@ -2,4 +2,4 @@
 	path = srl-self-organizing
 	url = https://github.com/jbemmel/srl-self-organizing.git
 	# update = merge
-	branch = main
+	branch = .
