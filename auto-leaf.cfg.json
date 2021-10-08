@@ -1,6 +1,5 @@
 {
   "auto_config_agent:auto-config-agent": {
-    "role": "leaf",
     "igp": "ospf",
     "evpn": "symmetric-irb",
     "base-as": 65000,
