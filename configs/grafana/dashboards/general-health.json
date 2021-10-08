@@ -855,7 +855,7 @@
             "overlayIcon": true,
             "pattern": "controlplane_spine2",
             "rangeData": [],
-            "reduce": false,
+            "reduce": true,
             "refId": "A",
             "sanitize": false,
             "shapeData": [
@@ -898,7 +898,8 @@
             "alias": "controlplane_spine1",
             "colors": [
               "#73BF69",
-              "#F2CC0C",
+              "#5794F2",
+              "#f6a108",
               "#FA6400",
               "#C4162A"
             ],
@@ -934,6 +935,7 @@
             "shapeProp": "id",
             "shapeRegEx": true,
             "stringThresholds": [
+              "/pending:Booting.*/",
               "/yellow.*/",
               "/orange.*/",
               "/red.*/"
