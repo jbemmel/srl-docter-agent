@@ -31,6 +31,19 @@
           ]
         },
         {
+          "name": "EVPN Overlay",
+          "conditions": [
+            {
+              "gnmi-path": "/network-instance[name=overlay]/protocols/bgp-evpn/bgp-instance[id=1]/oper-state",
+              "metric": "CONTROL_PLANE",
+          	  "thresholds": [ "up" ]
+            }
+          ],
+          "report": [
+            "/network-instance[name=overlay]/protocols/bgp-evpn/bgp-instance[id=1]/oper-down-reason"
+          ]
+        },
+        {
           "name": "Unbalanced uplinks",
           "report": [
             "/interface[name=ethernet-1/1]/statistics/out-unicast-packets",
