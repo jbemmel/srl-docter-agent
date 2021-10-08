@@ -23,13 +23,13 @@
             }
         }
     }
-/network-instance default protocols bgp group evpn import-policy no-dns    
+/network-instance default protocols bgp group evpn-leaves import-policy no-dns    
 commit stay
 ```
 
 # Remove policy
 ```
 enter candidate
-/network-instance default protocols bgp group evpn delete import-policy
+/network-instance default protocols bgp group evpn-leaves delete import-policy
 commit stay
 ```
