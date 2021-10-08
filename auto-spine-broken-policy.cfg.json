@@ -1447,23 +1447,12 @@
   "srl_nokia-network-instance:network-instance": [
     {
       "name": "default",
-      "admin-state": "enable",
-      "interface": [
-        {
-          "name": "lo0.0"
-        }
-      ],
       "protocols": {
        "srl_nokia-bgp:bgp": {
-         "admin-state": "enable",
-         "autonomous-system": 65000,
-         "router-id": "1.1.0.1",
          "group": [
            {
-             "group-name": "evpn",
-             "admin-state": "enable",
-             "import-policy": "no-dns",
-             "peer-as": 65000
+             "group-name": "evpn-leaves",
+             "import-policy": "no-dns"
            }
          ]
        }
