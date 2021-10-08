@@ -24,7 +24,7 @@
 	           "update-path-match": "/network-instance\\[name=default\\]/bgp-rib/evpn/rib-in-out/rib-out-post/ip-prefix-routes\\[.*\\]/next-hop",
 	           "sample-period": 10,
 	           "history-window": 100,
-	           "thresholds": [ "availability", "50", "80", "90" ]
+	           "thresholds": [ "availability", "10", "50", "90" ]
            }
           ]
         },

@@ -116,7 +116,7 @@
                  "filter": "bool(_) == True",
                  "sample-period": 10,
                  "history-window": 100,
-                 "thresholds": [ "availability", "50", "80", "90" ]
+                 "thresholds": [ "availability", "10", "50", "90" ]
             }
           ]
         },
