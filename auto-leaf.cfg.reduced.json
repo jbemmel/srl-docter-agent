@@ -2,11 +2,12 @@
   "auto_config_agent:auto-config-agent": {
     "igp": "ospf",
     "evpn": {
-      "model": "symmetric-irb"
+      "model": "symmetric-irb",
+      "bgp-peering": "ipv4",
+      "auto-lags": "disabled"
     },
     "base-as": 65000,
     "host-as": 65123,
-    "evpn-auto-lags": "disabled",
     "gateway": {
       "ipv4": "10.10.10.1/24"
     },

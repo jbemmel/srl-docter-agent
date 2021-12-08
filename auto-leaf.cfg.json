@@ -3,7 +3,8 @@
     "igp": "ospf",
     "evpn": {
       "model": "symmetric-irb",
-      "auto-lags": "disabled"
+      "auto-lags": "disabled",
+      "bgp-peering": "ipv4"
     },
     "base-as": 65000,
     "host-as": 65123,

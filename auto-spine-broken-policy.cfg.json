@@ -1,7 +1,8 @@
 {
   "auto_config_agent:auto-config-agent": {
     "evpn": {
-      "model": "symmetric-irb"
+      "model": "symmetric-irb",
+      "bgp-peering": "ipv4"
     },
     "igp": "ospf",
     "base-as": 65000,
