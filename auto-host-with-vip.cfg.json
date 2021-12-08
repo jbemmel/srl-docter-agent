@@ -1,6 +1,5 @@
 {
   "auto_config_agent:auto-config-agent": {
-    "role": "endpoint",
     "base-as": 65000,
     "host-as": 65123
   },

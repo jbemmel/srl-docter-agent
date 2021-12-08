@@ -1,11 +1,15 @@
 {
   "auto_config_agent:auto-config-agent": {
     "igp": "ospf",
-    "evpn": "symmetric-irb",
+    "evpn": {
+      "model": "symmetric-irb",
+      "auto-lags": "disabled"
+    },
     "base-as": 65000,
     "host-as": 65123,
-    "evpn-auto-lags": "disabled",
-    "anycast-gw": "10.10.10.1/24",
+    "gateway": {
+      "ipv4": "10.10.10.1/24"
+    },
     "peerlinks": {
         "prefix": "192.168.127.0/24",
         "host-subnet-size": 30,

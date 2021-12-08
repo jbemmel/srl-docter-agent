@@ -1,6 +1,8 @@
 {
   "auto_config_agent:auto-config-agent": {
-    "evpn": "symmetric-irb",
+    "evpn": {
+      "model": "symmetric-irb"
+    },
     "igp": "ospf",
     "base-as": 65000,
     "peerlinks": {
