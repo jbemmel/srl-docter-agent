@@ -46,6 +46,10 @@ stub = sdk_service_pb2_grpc.SdkMgrServiceStub(channel)
 #gnmi_channel = grpc.insecure_channel(
 #   'unix:///opt/srlinux/var/run/sr_gnmi_server', options = gnmi_options )
 
+# Filter out whitespace and other possibly problematic characters
+def clean(str):
+    return str.replace(' ','_')
+
 ############################################################
 ## Subscribe to required event
 ## This proc handles subscription of: Config
@@ -95,7 +99,7 @@ def Add_Telemetry(js_path, js_data):
 metrics = {}
 def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=None ):
     base_path = '.' + agent_name + f'.metrics.metric{{.name=="{metric}"}}'
-    js_path = base_path + f'.contribution{{.name=="{contributor}"}}'
+    js_path = base_path + f'.contribution{{.name=="{ clean(contributor) }"}}'
     metric_data = {
       'status' : { 'value' : contrib_status }
     }
@@ -281,7 +285,7 @@ def Update_Filtered(o, timestamp_ns, path, val):
 
     # Use the first value not matching the filter to reset any threshold alarms
     if 'reset_flag' not in o or o['reset_flag'] != "green":
-      js_path2 = js_path + f'.history{{.name=="{o["name"]}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
+      js_path2 = js_path + f'.history{{.name=="{clean(o["name"])}"}}.path{{.path=="{path}"}}.event{{.t=="{timestamp_ns}"}}'
       response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value':val}, 'filter': False }) )
       color = None
       if 'metric' in o['conditions']:
@@ -409,7 +413,7 @@ def Update_Observation(o, timestamp_ns, trigger, sample_interval, updates, histo
     # Try to avoid SDK mgr crash
     regex,val = updates[0]
     _key = path if path is not None else regex
-    js_path2 = js_path + f'.history{{.name=="{name}"}}.path{{.path=="{_key}"}}.event{{.t=="{timestamp_ns}"}}'
+    js_path2 = js_path + f'.history{{.name=="{clean(name)}"}}.path{{.path=="{_key}"}}.event{{.t=="{timestamp_ns}"}}'
     response = Add_Telemetry( js_path=js_path2, js_data=json.dumps({'v': {'value': str(val) } }) )
 
     color, thresholds, sla = Color(o,value,history) # May calculate SLA if "availability" in thresholds
