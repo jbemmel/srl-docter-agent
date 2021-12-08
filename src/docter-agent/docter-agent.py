@@ -120,9 +120,13 @@ def Update_Metric(ts_ns, metric, contributor, contrib_status, updates=[], sla=No
                 #    logging.warning( f"JvB no pid-2-app: u={u} ({updates})" )
                import psutil
                def pid_2_proc(pid):
-                   return (pid_2_app[pid] if pid in pid_2_app else
+                   try:
+                       return (pid_2_app[pid] if pid in pid_2_app else
                            data['name'] if 'name' in data else
                            psutil.Process(pid).name())
+                   except Exception as ex: # psutil may fail
+                       logging.error( f"Error mapping pid to process name: {ex}" )
+                       return str(pid)
 
                if 'srl_nokia-platform-cpu:process' in data:
                  pid_data = data['srl_nokia-platform-cpu:process']
