@@ -169,6 +169,16 @@
               "metric": "Platform resources"
             }
           ]
+        },
+        {
+          "name": "Platform XDP ARP entries",
+          "conditions": [
+            {
+              "gnmi-path": "/platform/linecard[slot=*]/forwarding-complex[name=*]/datapath/xdp/resource[name=arp-nd-entries]/used-percent",
+              "thresholds": [ "90", "95", "99" ],
+              "metric": "Platform resources"
+            }
+          ]
         }
      ]
     }
@@ -1317,7 +1327,8 @@
       },
       "server-group": [
         {
-          "name": "local"
+          "name": "local",
+          "type": "local"
         }
       ]
     },
