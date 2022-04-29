@@ -14,7 +14,7 @@ FROM srl/auto-config-v2:$SR_LINUX_RELEASE
 # RUN curl -sfL https://balena.io/engine/install.sh | sh
 
 # Install 'stress' tool for CPU overload emulation
-RUN sudo yum -y install epel-release && sudo yum install -y stress nmap
+RUN sudo yum -y install epel-release && sudo yum install -y stress-ng nmap
 
 # Add psutil for pid-2-name
 RUN sudo python3 -m pip install psutil
